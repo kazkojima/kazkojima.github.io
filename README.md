@@ -1,0 +1,1 @@
+# kazkojima.github.io
