@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>GnuRadio companion で新しい機能ブロック</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">My Bug Has A Program! </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="./category/articles.html">articles</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./gr-neug.html" rel="bookmark"
+           title="Permalink to GnuRadio companion で新しい機能ブロック">GnuRadio companion で新しい機能ブロック</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-06-25T00:00:00+09:00">
+                Published: Sun 25 June 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/gnuradio.html">gnuradio</a> </p>
+</footer><!-- /.post-info -->      <p><em>(元の文章は2015/05/13のものです)</em></p>
+<p><a class="reference external" href="https://wiki.gnuradio.org/index.php/Main_Page">GnuRadio</a> companion でGUIベースで用意された信号処理ブロックを結線してラジオをはじめいろいろなものが作れます. 新しいブロックの作成は意外に簡単です.</p>
+<p><a class="reference external" href="https://wiki.gnuradio.org/index.php/OutOfTreeModules">Extending GNU Radio with own functionality and blocks</a></p>
+<p>に従ってg新部さんの <a class="reference external" href="http://www.gniibe.org/memo/development/gnuk/rng/neug.html">NeuG</a> を信号ソースにしてみました.</p>
+<p>neugはg新部さんの <a class="reference external" href="http://www.gniibe.org/category/fst-01.html">FST-01</a> を使った乱数発生器です. FSFでも紹介されています <a class="footnote-reference" href="#id2" id="id1">[1]</a></p>
+<p>作業はDebien jessieでやったのですがパッケージとして gnuradio-dev, cmake, boost, libcppunit-dev, liblog4cpp5-devなどをインストールしておくことが必要でした.</p>
+<blockquote>
+<ul>
+<li><p class="first">ツリーを作製:</p>
+<pre class="literal-block">
+gr_modtool newmod neug         # これで gr-neugができるので
+cd gr-neug
+gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolator...
+</pre>
+</li>
+<li><p class="first">python/qa_neug.pyを編集: unit testをかく</p>
+</li>
+<li><p class="first">python/CMakeLists.txtを編集: ここのunit testsの最後にGR_ADD_TEST行を追加</p>
+</li>
+<li><p class="first">lib/neug_impl.ccを編集: テンプレートとしての.ccのあちこちを埋めます. 結果はこんな感じ:</p>
+</li>
+</ul>
+</blockquote>
+<pre class="code c++ literal-block">
+<span class="k">namespace</span> <span class="n">gr</span> <span class="p">{</span>
+  <span class="k">namespace</span> <span class="n">neug</span> <span class="p">{</span>
+
+    <span class="k">static</span> <span class="kt">int</span> <span class="n">neug_fd</span><span class="p">;</span>
+
+    <span class="n">neug</span><span class="o">::</span><span class="n">sptr</span>
+    <span class="n">neug</span><span class="o">::</span><span class="n">make</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="k">return</span> <span class="n">gnuradio</span><span class="o">::</span><span class="n">get_initial_sptr</span>
+        <span class="p">(</span><span class="k">new</span> <span class="n">neug_impl</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="cm">/*
+     * The private constructor
+     */</span>
+    <span class="n">neug_impl</span><span class="o">::</span><span class="n">neug_impl</span><span class="p">()</span>
+      <span class="o">:</span> <span class="n">gr</span><span class="o">::</span><span class="n">sync_block</span><span class="p">(</span><span class="s">&quot;neug&quot;</span><span class="p">,</span>
+              <span class="n">gr</span><span class="o">::</span><span class="n">io_signature</span><span class="o">::</span><span class="n">make</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)),</span>
+              <span class="n">gr</span><span class="o">::</span><span class="n">io_signature</span><span class="o">::</span><span class="n">make</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)))</span>
+    <span class="p">{</span>
+      <span class="n">neug_fd</span> <span class="o">=</span> <span class="n">open</span> <span class="p">(</span><span class="s">&quot;/dev/ttyACM1&quot;</span><span class="p">,</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">neug_fd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;can't open /dev/ttyACM1&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/*
+     * Our virtual destructor.
+     */</span>
+    <span class="n">neug_impl</span><span class="o">::~</span><span class="n">neug_impl</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="n">close</span> <span class="p">(</span><span class="n">neug_fd</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span>
+    <span class="n">neug_impl</span><span class="o">::</span><span class="n">work</span><span class="p">(</span><span class="kt">int</span> <span class="n">noutput_items</span><span class="p">,</span>
+                        <span class="n">gr_vector_const_void_star</span> <span class="o">&amp;</span><span class="n">input_items</span><span class="p">,</span>
+                        <span class="n">gr_vector_void_star</span> <span class="o">&amp;</span><span class="n">output_items</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">in</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">input_items</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">output_items</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+        <span class="c1">// Do &lt;+signal processing+&gt;
+</span>      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">noutput_items</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+          <span class="n">read</span> <span class="p">(</span><span class="n">neug_fd</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Tell runtime system how many output items we produced.
+</span>        <span class="k">return</span> <span class="n">noutput_items</span><span class="p">;</span>
+    <span class="p">}</span>
+
+  <span class="p">}</span> <span class="cm">/* namespace howto */</span>
+<span class="p">}</span> <span class="cm">/* namespace gr */</span>
+</pre>
+<p>.</p>
+<blockquote>
+<ul>
+<li><p class="first">ビルド:</p>
+<pre class="literal-block">
+mkdir build
+cd build/
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../
+make
+make test
+cd ..
+gr_modtool makexml neug       # grc/howto_neug.xmlができる
+
+# この.xmlファイルがgnuradio-companionのbuilding blockを表しています
+</pre>
+</li>
+<li><p class="first">インストール</p>
+<blockquote>
+<p>sudo make install</p>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<p>うまくいっていればgnuradio-compnionのカテゴリーにNEUGが追加されneugブロックが使えるようになっているはずです.</p>
+<p class="rubric">参考リンク</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://www.fsf.org/blogs/gnu-press/neug-trng">GNU press NeuG article</a></td></tr>
+</tbody>
+</table>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

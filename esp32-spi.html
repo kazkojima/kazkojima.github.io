@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>My Bug Has A Program!</title>
+        <title>ESP32 SPI master issue</title>
         <link rel="stylesheet" href="./theme/css/main.css" />
 
         <!--[if IE]>
@@ -14,13 +14,18 @@
         <header id="banner" class="body">
                 <h1><a href="./">My Bug Has A Program! </a></h1>
                 <nav><ul>
-                    <li><a href="./category/articles.html">articles</a></li>
+                    <li class="active"><a href="./category/articles.html">articles</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./esp32-spi.html" rel="bookmark"
+           title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="./esp32-spi.html">ESP32 SPI master issue</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-06-26T00:00:00+09:00">
                 Published: Mon 26 June 2017
@@ -31,7 +36,7 @@
         </address>
 <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info --><div class="figure align-left">
+</footer><!-- /.post-info -->      <div class="figure align-left">
 <img alt="esp-wroom-32 board" src="images/hb32.jpg" style="width: 800.0px; height: 500.0px;" />
 </div>
 <p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
@@ -51,51 +56,11 @@ With enabling command phase, the problem went away.</p>
 <span class="o">+</span>    <span class="n">trans</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">SPI_TRANS_USE_TXDATA</span><span class="p">;</span>
      <span class="p">...</span>
 </pre>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="./gr-neug.html" rel="bookmark"
-                           title="Permalink to GnuRadio companion で新しい機能ブロック">GnuRadio companion で新しい機能ブロック</a></h1>
-                </header>
+    </div><!-- /.entry-content -->
 
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-06-25T00:00:00+09:00">
-                Published: Sun 25 June 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="./category/articles.html">articles</a>.</p>
-<p>tags: <a href="./tag/gnuradio.html">gnuradio</a> </p>
-</footer><!-- /.post-info -->                <p><em>(元の文章は2015/05/13のものです)</em></p>
-<p><a class="reference external" href="https://wiki.gnuradio.org/index.php/Main_Page">GnuRadio</a> companion でGUIベースで用意された信号処理ブロックを結線してラジオをはじめいろいろなものが作れます. 新しいブロックの作成は意外に簡単です.</p>
-<p><a class="reference external" href="https://wiki.gnuradio.org/index.php/OutOfTreeModules">Extending GNU Radio with own functionality and blocks</a></p>
-<p>に従ってg新部さんの <a class="reference external" href="http://www.gniibe.org/memo/development/gnuk/rng/neug.html">NeuG</a> を信号ソースにしてみました.</p>
-<p>neugはg新部さんの <a class="reference external" href="http://www.gniibe.org/category/fst-01.html">FST-01</a> を使った乱数発生器です. FSFでも紹介されています <a class="footnote-reference" href="#id2" id="id1">[1]</a></p>
-<p>作業はDebien jessieでやったのですがパッケージとして gnuradio-dev, cmake, boost, libcppunit-dev, liblog4cpp5-devなどをインストールしておくことが必要でした.</p>
-<blockquote>
-<ul>
-<li><p class="first">ツリーを作製:</p>
-<pre class="literal-block">
-gr_modtool newmod neug         # これで gr-neugができるので
-cd gr-neug
-gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolator...
-</pre>
-</li>
-<li><p class="first">python/qa_neug.pyを編集: unit ...</p></li></ul></blockquote>
-                <a class="readmore" href="./gr-neug.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>
