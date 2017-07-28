@@ -20,7 +20,52 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../esp32-spi.html">ESP32 SPI master issue</a></h1>
+                    <h1 class="entry-title"><a href="../esp32-deep-sleep.html">ESP32 GPIO output in deep sleep mode</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-07-28T00:00:00+09:00">
+                Published: Fri 28 July 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
+<p>最初はdeep sleep modeに入る前に消しておいたらと思ったのですがdeep sleepするとGPIOがlowレベルになって全点灯していましました.  いろいろやるうちに逃げ道を見つけることができました.
+いつまでこれでうまくいくかはわからないのですが.</p>
+<p>話は簡単で</p>
+<blockquote>
+<ul class="simple">
+<li>GPIOのコンフィグでのpull-up/downはdeep sleep時でも有効</li>
+</ul>
+</blockquote>
+<p>なことを利用します. 問題のシステムでpull-upを立てておくとdeep sleep時にそれが効いてレベルがhighにできて全消灯できました. こんな感じです (このシステムではRGBLED_OFF=1)</p>
+<pre class="code c literal-block">
+<span class="n">gpio_config_t</span> <span class="n">io_conf</span><span class="p">;</span>
+<span class="n">io_conf</span><span class="p">.</span><span class="n">intr_type</span> <span class="o">=</span> <span class="n">GPIO_PIN_INTR_DISABLE</span><span class="p">;</span>
+<span class="n">io_conf</span><span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">GPIO_MODE_OUTPUT</span><span class="p">;</span>
+<span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
+                        <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
+<span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="c1">// This ensures that all leds are off in deep sleep mode.
+</span><span class="n">io_conf</span><span class="p">.</span><span class="n">pull_up_en</span> <span class="o">=</span> <span class="n">RGBLED_OFF</span><span class="p">;</span>
+<span class="n">gpio_config</span><span class="p">(</span><span class="o">&amp;</span><span class="n">io_conf</span><span class="p">);</span>
+</pre>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-spi.html" rel="bookmark"
+                           title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-06-26T00:00:00+09:00">
                 Published: Mon 26 June 2017
@@ -31,32 +76,16 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info --><div class="figure align-left">
+</footer><!-- /.post-info -->                <div class="figure align-left">
 <img alt="esp-wroom-32 board" src="images/hb32.jpg" style="width: 800.0px; height: 500.0px;" />
 </div>
 <p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
 With enabling command phase, the problem went away.</p>
 <pre class="code c literal-block">
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="err">&#64;&#64;</span> <span class="k">static</span> <span class="n">esp_err_t</span> <span class="n">baro_write</span><span class="p">(</span><span class="kt">uint8_t</span> <span class="n">reg</span><span class="p">,</span> <span class="kt">uint8_t</span> <span class="n">val</span><span class="p">)</span>
-     <span class="n">esp_err_t</span> <span class="n">ret</span><span class="p">;</span>
-     <span class="k">static</span> <span class="n">spi_transaction_t</span> <span class="n">trans</span><span class="p">;</span>
-     <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">trans</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">spi_transaction_t</span><span class="p">));</span>
-<span class="o">-</span>    <span class="n">trans</span><span class="p">.</span><span class="n">length</span><span class="o">=</span><span class="mi">16</span><span class="p">;</span>
-<span class="o">-</span>    <span class="n">trans</span><span class="p">.</span><span class="n">tx_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">reg</span> <span class="o">&amp;</span> <span class="mh">0x7f</span><span class="p">;</span>
-<span class="o">-</span>    <span class="n">trans</span><span class="p">.</span><span class="n">tx_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
-<span class="o">-</span>    <span class="n">trans</span><span class="p">.</span><span class="n">flags</span><span class="o">=</span><span class="n">SPI_TRANS_USE_TXDATA</span><span class="p">;</span>
-<span class="o">+</span>    <span class="n">trans</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-<span class="o">+</span>    <span class="n">trans</span><span class="p">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">reg</span> <span class="o">&amp;</span> <span class="mh">0x7f</span><span class="p">;</span>
-<span class="o">+</span>    <span class="n">trans</span><span class="p">.</span><span class="n">tx_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
-<span class="o">+</span>    <span class="n">trans</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">SPI_TRANS_USE_TXDATA</span><span class="p">;</span>
-     <span class="p">...</span>
-</pre>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105 ...</span></pre>
+                <a class="readmore" href="../esp32-spi.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>

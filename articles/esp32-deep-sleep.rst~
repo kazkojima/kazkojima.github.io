@@ -1,0 +1,29 @@
+====================================================
+ESP32 GPIO output in deep sleep mode
+====================================================
+:date: 2017-07-28
+:save_as: esp32-deep-sleep.html
+:slug: esp32-deep-sleep
+:tags: esp32
+
+ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.
+
+最初はdeep sleep modeに入る前に消しておいたらと思ったのですがdeep sleepするとGPIOがlowレベルになって全点灯していましました.  いろいろやるうちに逃げ道を見つけることができました.
+いつまでうまくいくかはわからないのですが.
+
+話は簡単でGPIOのconfigurationでpull-up/downを立てておくとdeep sleep時それでレベルがコントロールできるのです. 問題のシステムでpull-upを立てておくとdeep sleep時にそれが効いてレベルがhighにできて全消灯できました. (このシステムではRGBLED_OFF=1)
+
+.. code:: c
+
+    gpio_config_t io_conf;
+    io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pin_bit_mask = ((1<<GPIO_LED_RED)|(1<<GPIO_LED_GREEN)
+                            |(1<<GPIO_LED_BLUE));
+    io_conf.pull_down_en = 0;
+    // This ensures that all leds are off in deep sleep mode.
+    io_conf.pull_up_en = RGBLED_OFF;
+    gpio_config(&io_conf);
+
+
+

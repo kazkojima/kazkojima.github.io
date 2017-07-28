@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>My Bug Has A Program! - esp32</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
+        <title>ESP32 GPIO output in deep sleep mode</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
 
         <!--[if IE]>
             <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -12,26 +12,31 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
+                <h1><a href="./">My Bug Has A Program! </a></h1>
                 <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
+                    <li class="active"><a href="./category/articles.html">articles</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./esp32-deep-sleep.html" rel="bookmark"
+           title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../esp32-deep-sleep.html">ESP32 GPIO output in deep sleep mode</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-07-28T00:00:00+09:00">
                 Published: Fri 28 July 2017
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
         </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info --><p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info -->      <p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
 <p>最初はdeep sleep modeに入る前に消しておいたらと思ったのですがdeep sleepするとGPIOがlowレベルになって全点灯していましました.  いろいろやるうちに逃げ道を見つけることができました.
 いつまでこれでうまくいくかはわからないのですが.</p>
 <p>話は簡単で</p>
@@ -52,42 +57,11 @@
 </span><span class="n">io_conf</span><span class="p">.</span><span class="n">pull_up_en</span> <span class="o">=</span> <span class="n">RGBLED_OFF</span><span class="p">;</span>
 <span class="n">gpio_config</span><span class="p">(</span><span class="o">&amp;</span><span class="n">io_conf</span><span class="p">);</span>
 </pre>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-spi.html" rel="bookmark"
-                           title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
-                </header>
+    </div><!-- /.entry-content -->
 
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-06-26T00:00:00+09:00">
-                Published: Mon 26 June 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <div class="figure align-left">
-<img alt="esp-wroom-32 board" src="images/hb32.jpg" style="width: 800.0px; height: 500.0px;" />
-</div>
-<p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
-With enabling command phase, the problem went away.</p>
-<pre class="code c literal-block">
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105 ...</span></pre>
-                <a class="readmore" href="../esp32-spi.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>
