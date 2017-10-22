@@ -20,7 +20,73 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="./esp32-phy.html">ESP32 PHY board</a></h1>
+                    <h1 class="entry-title"><a href="./esp32-2khz.html">ESP32 0.5ms tick</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-10-22T00:00:00+09:00">
+                Published: 日 22 10月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/freertos.html">freertos</a> </p>
+</footer><!-- /.post-info --><p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
+<img alt="esp-idf menuconfig 1000Hz" src="./images/config-1000Hz.png" style="width: 640px; height: 400px;" />
+<p>This is ok for almost applications and if you require sub-milli time precision, the extra timer or interrupt would be your friend.
+But why can't be 2000Hz tick rate set on 240Mz CPU?
+Here is a famous LED blinker example with 500Hz blinks:</p>
+<pre class="code c++ literal-block">
+<span class="kt">void</span> <span class="nf">app_main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">gpio_set_direction</span><span class="p">(</span><span class="n">GPIO_NUM_2</span><span class="p">,</span> <span class="n">GPIO_MODE_OUTPUT</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">gpio_set_level</span><span class="p">(</span><span class="n">GPIO_NUM_2</span><span class="p">,</span> <span class="n">level</span><span class="p">);</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="o">!</span><span class="n">level</span><span class="p">;</span>
+    <span class="n">vTaskDelay</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">portTICK_PERIOD_MS</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<p>.</p>
+<p>If you like 1kHz blinks, you need 0.5ms delay instead of 1ms delay.
+Here is a hack for this.</p>
+<pre class="code c literal-block">
+<span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span> <span class="n">b</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span>
+<span class="n">index</span> <span class="mi">9</span><span class="n">bb8648</span><span class="p">.</span><span class="mf">.5</span><span class="n">c810a3</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span>
+<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">147</span><span class="p">,</span><span class="mi">7</span> <span class="o">+</span><span class="mi">147</span><span class="p">,</span><span class="mi">7</span> <span class="err">&#64;&#64;</span> <span class="n">editing</span> <span class="n">this</span> <span class="n">here</span> <span class="n">or</span> <span class="n">in</span> <span class="n">xtensa_rtos</span><span class="p">.</span><span class="n">h</span><span class="p">,</span> <span class="n">or</span> <span class="n">compiling</span> <span class="n">with</span> <span class="n">xt</span><span class="o">-</span><span class="n">xcc</span> <span class="n">option</span>
+<span class="n">Derivation</span> <span class="n">of</span> <span class="n">clock</span> <span class="n">divisor</span> <span class="k">for</span> <span class="n">timer</span> <span class="n">tick</span> <span class="n">and</span> <span class="n">interrupt</span> <span class="p">(</span><span class="n">one</span> <span class="n">per</span> <span class="n">tick</span><span class="p">).</span>
+<span class="err">*/</span>
+<span class="cp">#ifdef XT_CLOCK_FREQ
+</span><span class="o">-</span><span class="err">#</span><span class="n">define</span> <span class="n">XT_TICK_DIVISOR</span>     <span class="p">(</span><span class="n">XT_CLOCK_FREQ</span> <span class="o">/</span> <span class="n">XT_TICK_PER_SEC</span><span class="p">)</span>
+<span class="o">+</span><span class="err">#</span><span class="n">define</span> <span class="n">XT_TICK_DIVISOR</span>     <span class="p">(</span><span class="n">XT_CLOCK_FREQ</span> <span class="o">/</span> <span class="n">XT_TICK_PER_SEC</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="cp">#endif
+</span>
+<span class="cp">#ifndef __ASSEMBLER__</span>
+</pre>
+<p>.</p>
+<p>i.e. fakes 480MHz CPU for freertos :-)</p>
+<p>It gives 1000Hz square wave on GPIO2 for the above blinker code snippet:</p>
+<img alt="esp32 1000Hz square wave" src="./images/wave-1000Hz.png" style="width: 640px; height: 400px;" />
+<p>All my more complex applications have worked without problem on this hack. Looks ESP-IDF system itself doesn't depend on port tick constraints. It's expected and fine.
+I don't think this hack is a right thing to do. Last resort, though.</p>
+<p>Happy Hacking!</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="./esp32-phy.html" rel="bookmark"
+                           title="Permalink to ESP32 PHY board">ESP32 PHY board</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-10-18T00:00:00+09:00">
                 Published: 水 18 10月 2017
@@ -31,23 +97,16 @@
         </address>
 <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/kicad.html">kicad</a> </p>
-</footer><!-- /.post-info --><p>I'm making a simple esp32 board with ethernet. ESP32 has MAC and esp-idf supports PHYs like LAN87x0 and TLK110 already. Here is the schematic with KiCAD:</p>
+</footer><!-- /.post-info -->                <p>I'm making a simple esp32 board with ethernet. ESP32 has MAC and esp-idf supports PHYs like LAN87x0 and TLK110 already. Here is the schematic with KiCAD:</p>
 <img alt="esp32-tlk110 schematic" src="./images/esp32-tlk110.png" style="width: 640px; height: 400px;" />
 <p>I'll create a git repository for that hardware if it works.</p>
 <p><em>Update 2017-10-21</em></p>
 <p>Now it works!</p>
 <img alt="esp32-tlk110 works" src="./images/esp32-tlk110-jumpers.jpg" style="width: 640px; height: 400px;" />
-<p>Revised KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware/esp32-tlk110.</p>
-<p>Also, I'm trying Waveshare LAN8720 module following
-<a class="reference external" href="https://sautter.com/blog/ethernet-on-esp32-using-lan8720/">https://sautter.com/blog/ethernet-on-esp32-using-lan8720/</a></p>
-<img alt="esp32 lan8720 bread board" src="./images/esp32-lan8720-bb.jpg" style="width: 640px; height: 400px;" />
-<p>It works well too, though this requires another few external parts and jumpers on the DOIT ESP32 board because IO0 is connected the boot switch directly on that board.</p>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>Revised KiCAD files for this board ...</p>
+                <a class="readmore" href="./esp32-phy.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
