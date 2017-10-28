@@ -20,7 +20,47 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../esp32-2khz.html">ESP32 0.5ms tick</a></h1>
+                    <h1 class="entry-title"><a href="../testing-espnow.html">Testing ESPNOW</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-10-28T00:00:00+09:00">
+                Published: 土 28 10月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><p>ESP32の <a class="reference external" href="../esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="../images/hb32.jpg">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
+<img alt="esp32 ether-espnow brigde" src="../images/ether-now-bridge.png" style="width: 640px; height: 400px;" />
+<p>でPCの上ではarducopterとテスト用のUDPサーバの両方を動かして試してみました.</p>
+<p><em>結果</em></p>
+<p>現在のESP32のespnowは次のような挙動をするようです.</p>
+<blockquote>
+<ul class="simple">
+<li>近接で通信した場合latencyは2ms位で安定している</li>
+<li>送信と送信の間で間隔を空けることが必要で送信のみ繰り返す場合で~2msが必要に見える</li>
+<li>受信を行うとこの間隔が影響される</li>
+</ul>
+</blockquote>
+<p>実際のテストではセンサボードからespnowでパケットを投げ送信終了のコールバックが終わるまで待つようにしました. 送信のみの場合~500Hzぐらいのレートで~70byteぐらいのデータが送信できていました.</p>
+<p>100Hzのレートで~30byteほどを受信するようにすると送信側のレートは10%以上低下しました. 送受の切り替え時にデッドタイムがあることを想像させるような挙動ですが、espnowのライブラリはソースがないので確かなことはわかりません.</p>
+<p>このセンサボードからはIMUなどのパケットが1msに40byte程度でてくるのですが受信も行いながらだとパケットがlatencyに制限内では送り切れない状態が発生します.
+生のlatencyや処理コスト的にespnowは魅力的なのですが、リモートセンサ/アクチュエータ方式でコプターを飛ばすのは今の所少し厳しい感じです.</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-2khz.html" rel="bookmark"
+                           title="Permalink to ESP32 0.5ms tick">ESP32 0.5ms tick</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-10-22T00:00:00+09:00">
                 Published: 日 22 10月 2017
@@ -31,54 +71,14 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/freertos.html">freertos</a> </p>
-</footer><!-- /.post-info --><p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
+</footer><!-- /.post-info -->                <p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
 <img alt="esp-idf menuconfig 1000Hz" src="../images/config-1000Hz.png" style="width: 640px; height: 400px;" />
 <p>This is ok for almost applications and if you require sub-milli time precision, the extra timer or interrupt would be your friend.
 But why can't be 2000Hz tick rate set on 240Mz CPU?
-Here is a famous LED blinker example with 500Hz blinks:</p>
-<pre class="code c++ literal-block">
-<span class="kt">void</span> <span class="nf">app_main</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="n">gpio_set_direction</span><span class="p">(</span><span class="n">GPIO_NUM_2</span><span class="p">,</span> <span class="n">GPIO_MODE_OUTPUT</span><span class="p">);</span>
-  <span class="kt">int</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">gpio_set_level</span><span class="p">(</span><span class="n">GPIO_NUM_2</span><span class="p">,</span> <span class="n">level</span><span class="p">);</span>
-    <span class="n">level</span> <span class="o">=</span> <span class="o">!</span><span class="n">level</span><span class="p">;</span>
-    <span class="n">vTaskDelay</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">portTICK_PERIOD_MS</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-<p>.</p>
-<p>If you like 1kHz blinks, you need 0.5ms delay instead of 1ms delay.
-Here is a hack for this.</p>
-<pre class="code c literal-block">
-<span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span> <span class="n">b</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span>
-<span class="n">index</span> <span class="mi">9</span><span class="n">bb8648</span><span class="p">.</span><span class="mf">.5</span><span class="n">c810a3</span> <span class="mi">100644</span>
-<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span>
-<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">freertos</span><span class="o">/</span><span class="n">xtensa_timer</span><span class="p">.</span><span class="n">h</span>
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">147</span><span class="p">,</span><span class="mi">7</span> <span class="o">+</span><span class="mi">147</span><span class="p">,</span><span class="mi">7</span> <span class="err">&#64;&#64;</span> <span class="n">editing</span> <span class="n">this</span> <span class="n">here</span> <span class="n">or</span> <span class="n">in</span> <span class="n">xtensa_rtos</span><span class="p">.</span><span class="n">h</span><span class="p">,</span> <span class="n">or</span> <span class="n">compiling</span> <span class="n">with</span> <span class="n">xt</span><span class="o">-</span><span class="n">xcc</span> <span class="n">option</span>
-<span class="n">Derivation</span> <span class="n">of</span> <span class="n">clock</span> <span class="n">divisor</span> <span class="k">for</span> <span class="n">timer</span> <span class="n">tick</span> <span class="n">and</span> <span class="n">interrupt</span> <span class="p">(</span><span class="n">one</span> <span class="n">per</span> <span class="n">tick</span><span class="p">).</span>
-<span class="err">*/</span>
-<span class="cp">#ifdef XT_CLOCK_FREQ
-</span><span class="o">-</span><span class="err">#</span><span class="n">define</span> <span class="n">XT_TICK_DIVISOR</span>     <span class="p">(</span><span class="n">XT_CLOCK_FREQ</span> <span class="o">/</span> <span class="n">XT_TICK_PER_SEC</span><span class="p">)</span>
-<span class="o">+</span><span class="err">#</span><span class="n">define</span> <span class="n">XT_TICK_DIVISOR</span>     <span class="p">(</span><span class="n">XT_CLOCK_FREQ</span> <span class="o">/</span> <span class="n">XT_TICK_PER_SEC</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-<span class="cp">#endif
-</span>
-<span class="cp">#ifndef __ASSEMBLER__</span>
-</pre>
-<p>.</p>
-<p>i.e. fakes 120MHz CPU for freertos :-)</p>
-<p>It gives 1000Hz square wave on GPIO2 for the above blinker code snippet:</p>
-<img alt="esp32 1000Hz square wave" src="../images/wave-1000Hz.png" style="width: 640px; height: 400px;" />
-<p>All my more complex applications have worked without problem on this hack. Looks ESP-IDF system itself doesn't depend on port tick constraints. It's expected and fine.
-I don't think this hack is the right thing to do. Last resort, though.</p>
-<p>Happy Hacking!</p>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+Here is a famous LED ...</p>
+                <a class="readmore" href="../esp32-2khz.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
