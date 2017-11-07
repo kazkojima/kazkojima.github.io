@@ -36,7 +36,7 @@
         </address>
 <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/kicad.html">kicad</a> </p>
-</footer><!-- /.post-info -->      <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY modules with a few extra parts. It can also mount ESP-WROOM-32 chip directly.</p>
+</footer><!-- /.post-info -->      <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
 <img alt="esp32-wslan8720 test" src="./images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
 <img alt="esp32-wslan8720 board" src="./images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
 <p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware/esp32-wslan8720. Notice that there are choices for this board.</p>
@@ -57,7 +57,7 @@
 <img alt="esp32-devkit-c cut gpio0 line" src="./images/devkit-gpio0.jpg" style="width: 640px; height: 400px;" />
 <p>For the first case, we need a jumper which</p>
 <p><a class="reference external" href="https://sautter.com/blog/ethernet-on-esp32-using-lan8720/">https://sautter.com/blog/ethernet-on-esp32-using-lan8720/</a></p>
-<p>gives so as to connect enable pin of 50MHz X'tal OSC to NC pin of LAN8720 module connecter. In this case, the 50MHz osc output connected directly the boot circuit. R1 limits current when boot circuit try to pull the line to GND. 75ohm works in my tests.</p>
+<p>gives so as to connect enable pin of 50MHz X'tal OSC to NC pin of LAN8720 module connector. In this case, the 50MHz osc output connected directly the boot circuit. R1 limits the current when the boot circuit try to pull the line to GND. 75ohm works in my tests.</p>
 
     </div><!-- /.entry-content -->
 
