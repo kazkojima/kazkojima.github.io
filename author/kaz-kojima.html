@@ -20,7 +20,79 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../esp32-phy2.html">ESP32 PHY board 2</a></h1>
+                    <h1 class="entry-title"><a href="../nrf24-shockburst.html">nRF24L01+ and ESP32</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-11-15T00:00:00+09:00">
+                Published: 水 15 11月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
+<img alt="nrf24 spiclock to cs hold" src="../images/nrf24-test.jpg" style="width: 640px; height: 400px;" />
+<p>対抗しているのはRaspiとnRF24L01+の組でそちらは</p>
+<p><a class="reference external" href="http://tmrh20.github.io/RF24/">http://tmrh20.github.io/RF24/</a></p>
+<p>にあるライブラリやプログラムを使いました.</p>
+<p>このトランシーバーはBTやWiFiではなくShockburstという形式で通信します. コンフィグでACKを必要としないたれ流しができそうなのでレイテンシが減らせるか試そうと思っています.
+リアルタイムのIMUデータとかなんども再送されてもあまりうれしくないしというのがもともとの動機です.</p>
+<p>SPIでつなぐこと自体は簡単でGPIOの番号を</p>
+<pre class="code c literal-block">
+<span class="cp">#define PIN_NUM_MISO 19
+#define PIN_NUM_MOSI 23
+#define PIN_NUM_CLK  18
+#define PIN_NUM_CS    5</span>
+</pre>
+<p>としています. SPI以外にnRF24L01+のRFトランシーバーをイネーブルするCEと割り込みの/INTを</p>
+<pre class="code c literal-block">
+<span class="cp">#define GPIO_NRF24_INT  GPIO_NUM_22
+#define GPIO_NRF24_CE   GPIO_NUM_21</span>
+</pre>
+<p>につなぎました. SPIのコンフィグは</p>
+<pre class="code c literal-block">
+<span class="n">spi_bus_config_t</span> <span class="n">buscfg</span><span class="o">=</span><span class="p">{</span>
+    <span class="p">.</span><span class="n">miso_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MISO</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">quadhd_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">max_transfer_sz</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">};</span>
+<span class="n">spi_device_interface_config_t</span> <span class="n">devcfg</span><span class="o">=</span><span class="p">{</span>
+    <span class="p">.</span><span class="n">command_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">address_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">dummy_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">clock_speed_hz</span><span class="o">=</span><span class="mi">8000000</span><span class="p">,</span>                <span class="c1">//Clock out at 8MHz
+</span>    <span class="p">.</span><span class="n">duty_cycle_pos</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                                <span class="c1">//SPI mode 0
+</span>    <span class="p">.</span><span class="n">cs_ena_posttrans</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">spics_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CS</span><span class="p">,</span>               <span class="c1">//CS pin
+</span>    <span class="p">.</span><span class="n">queue_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                          <span class="c1">//queue size
+</span>    <span class="p">.</span><span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">};</span>
+</pre>
+<p>を使って簡単なSPIアクセスを試しました. 最初.cs_ena_posttrans=1を指定していなかったのですがこれがないとペイロードの読み書きのような多バイトのtransactionがうまくいかずパケットが飛びませんでした. ところが/csに指が触れたときにパケットが飛んだことからこれに気がつきました. nRF24L01+のドキュメントだとclockの立ち下がりと/csの立ち上がり間には2ns以上のhold timeが必要なのですが指定なしだとギリギリだめなんだと思われます. 指定すると</p>
+<img alt="nrf24 spiclock to cs hold" src="../images/nrf24-spi-cs-hold.png" style="width: 640px; height: 400px;" />
+<p>と/csがnegateされるのが少し遅れてhold timeの制約を満たしているのがわかります.</p>
+<p>nRF24L01+のSPIの仕様で最初のバイトがコマンドを示すんですがそのバイト受信時にSPIのシフトレジスタからstatusレジスタの内容が出てくるようになっています</p>
+<img alt="nrf24 payload write" src="../images/nrf24-spi.png" style="width: 640px; height: 400px;" />
+<p>MISOの最初に見えている0Eがstatusレジスタの内容です. 上のESP32のSPIの設定だと.command_bits=8になっているのですがその間の受信データは無視されるようです.</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-phy2.html" rel="bookmark"
+                           title="Permalink to ESP32 PHY board 2">ESP32 PHY board 2</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-11-07T00:00:00+09:00">
                 Published: 火 07 11月 2017
@@ -31,34 +103,13 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
-</footer><!-- /.post-info --><p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
+</footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
 <img alt="esp32-wslan8720 test" src="../images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
 <img alt="esp32-wslan8720 board" src="../images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
-<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware/esp32-wslan8720. Notice that there are choices for this board.</p>
-<blockquote>
-<ol class="arabic simple">
-<li>One jumper for LAN8720 board which connects X'tal osc enable and NC pin and implement R1 only.</li>
-<li>Two pattern-cuts and one jumper for DevKit-C and implement parts except R1. This uses TI TS5A3157 analog switch to select GPIO0 connection.</li>
-<li>Solder ESP-WROOM-32 directly and<ol class="upperalpha">
-<li>Use one jumper for LAN8720 and R1 only,  or</li>
-<li>Use parts except R1.</li>
-</ol>
-</li>
-</ol>
-</blockquote>
-<p>For the case 2, cut CLK line:</p>
-<img alt="esp32-devkit-c cut clk line" src="../images/devkit-clk.jpg" style="width: 640px; height: 400px;" />
-<p>and cut boot switch line from GPIO0 and connect it to CLK pin:</p>
-<img alt="esp32-devkit-c cut gpio0 line" src="../images/devkit-gpio0.jpg" style="width: 640px; height: 400px;" />
-<p>For the first case, we need a jumper which</p>
-<p><a class="reference external" href="https://sautter.com/blog/ethernet-on-esp32-using-lan8720/">https://sautter.com/blog/ethernet-on-esp32-using-lan8720/</a></p>
-<p>gives so as to connect enable pin of 50MHz X'tal OSC to NC pin of LAN8720 module connector. In this case, the 50MHz osc output is connected directly to the boot circuit. R1 limits the current when the boot circuit try to pull the line to GND. 75ohm works in my tests.</p>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware ...</p>
+                <a class="readmore" href="../esp32-phy2.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
