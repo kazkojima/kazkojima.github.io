@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>My Bug Has A Program! - KiCad</title>
+        <title>My Bug Has A Program! - UAV</title>
         <link rel="stylesheet" href="../theme/css/main.css" />
 
         <!--[if IE]>
@@ -15,7 +15,7 @@
                 <h1><a href="../">My Bug Has A Program! </a></h1>
                 <nav><ul>
                     <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
+                    <li class="active"><a href="../category/uav.html">UAV</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
@@ -30,19 +30,19 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
         </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">KiCad</a> </p>
-</footer><!-- /.post-info --><p><img src="../images/bee3-flight.jpg" alt="hachidori" width="640"></p>
-<p>hachidori はPC上で走らせたArduPilotで制御する実験的なリモートセンサ/アクチュエータで, ArduPilotプロジェクトへの寄与を目的に始まった<a href="https://github.com/DCoJA">DCoJA</a>による小さなプロジェクトです.</p>
-<p>私はDCoJAのメンバーであるドローンワークス社のコントラクターとしてArduPilotを同社が開発していたFCにポーティングする作業を行っていたのですがhachidoriはその中で派生したプロジェクトでした. 私とドローンワークス社とのコントラクトはすでに終了していますがオープンなプロジェクトとしてhachidoriの開発を続けています. プロジェクトの成果はDCoJAを通じてソフトウェアやプロトタイプの回路図などが<a href="https://github.com/DCoJA">オープンソースとして公開</a>されています.</p>
-<p><img src="../images/hachidori-01.png" alt="scheme" width="640"></p>
+<p>In <a href="../category/uav.html">UAV</a>.</p>
+<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><p><img src="../images/bee3-flight.jpg" alt="hachidori" width="720"></p>
+<p>hachidori はPC上で走らせたArduPilotで制御する実験的なリモートセンサ/アクチュエータで, ArduPilotプロジェクトへの寄与を目的に始まった<a href="https://github.com/DCoJA">DCoJA</a>によるオープンなプロジェクトです.</p>
+<p>私はDCoJAのメンバーであるドローンワークス社のコントラクターとしてArduPilotのポーティング作業を行っていたのですがhachidoriはその中で派生したプロジェクトでした. 私とドローンワークス社とのコントラクトはすでに終了していますがオープンなプロジェクトとしてhachidoriの開発を続けています. プロジェクトの成果はDCoJAを通じてソフトウェアやプロトタイプの回路図などが<a href="https://github.com/DCoJA">オープンソースとして公開</a>されています.</p>
+<p><img src="../images/hachidori-01.png" alt="scheme" width="720"></p>
 <p>hachidoriからみるとArduPilotはセンサーデータを受け取りアクチュエータへの指示としてPWMの値を返すUDPサーバーです. このようなリモートセンサ/アクチュエータは実に古典的なアイデアですが,このスキームには大小様々な問題があります.</p>
 <p>とりあえずトイドローンタイプのhachidoriの飛行はこんな感じです:</p>
 <p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="../images/test-flight-toy.png" /></a></p>
-<p>これはstabilizeモードです. APM(ArduPilot)はうまく姿勢を制御できているように見えます. arducopterはlaptop PCのUbuntu 4.4.0-lowlatencyカーネル上で動かしています.</p>
+<p>これはstabilizeモードです. APM(ArduPilot)はうまく姿勢を制御できているように見えます.</p>
 <p>250mmフレームにのせた別のhachidoriとAPMが動いているホストPCです:</p>
-<p><img src="../images/hachidori-250-liftup.jpg" alt="250frame" width=320>
-<img src="../images/hachidori-core-and-pc.jpg" alt="250 and PC" width=320></p>
+<p><img src="../images/hachidori-250-liftup.jpg" alt="250frame" width=640></p>
+<p><img src="../images/hachidori-core-and-pc.jpg" alt="250 and PC" width=640></p>
 <p>実験的なhachidori用ドライバを含んだArduPilotのソースツリー等は<a href="https://github.com/DCoJA">DCoJAのgithubリポジトリ</a>中のardupilotのhachidoriブランチにあります.</p>
 <p>hachidoriのファームウェアは<a href="https://github.com/espressif/esp-idf">esp-idf</a>上の<a href="https://github.com/DCoJA/esp32-app/hachidori">application</a>になっています.
 テストやコンフィグレーションのためのPC上の小さなUDPサーバーが<a href="https://github.com/DCoJA/junkyard">junkyard</a>の中にあります. b3testはセンサーデータの表示やモーターのテストのためのサーバー, b3confは設定や定数などをhachidoriに書きこむためのサーバーです.</p>
@@ -53,7 +53,7 @@
 <h2>コネクションを失った場合のフェイルセーフ</h2>
 <p>レイテンシを緩和することができたとしても別の大きな問題として無線のコネクションが失われるか, ほとんどのパケットが失われるような状況でどうするかということがあります. この問題にはいくつか対処が考えられるのですが, 現在のところhachidoriはボード側でもセンサーのデータを使いMadgwickフィルターの計算によってごく簡単な姿勢の推測を行い, コネクションが失われたときにはそれを使って姿勢の制御をしながら着陸を試みています.</p>
 <h2>プロトタイプのハードウェア</h2>
-<p>テストのためにいくつかのプロトタイプのボードやフレームを作りました. 素人が作ったものなのでトイドローンの域にすら達していません.</p>
+<p>テストのためにいくつかのプロトタイプのボードやフレームを作りました. 代表的なものは:</p>
 <p><img src="../images/hachidori-coreless.jpg" alt="coreless" width=640></p>
 <p>プロトタイプボードの構成は基本的には同じで主なパーツは</p>
 <ul>
@@ -63,78 +63,17 @@
 <li>INA226</li>
 </ul>
 <p>です. コアレスモーターの機体用のボード</p>
-<p><img src="../images/bee3-board.png" alt="bee3 board" width=480></p>
-<p>はソフトウェアのテストを目的に私がKiCADで作った簡単なものでそのファームウェアも他とは少し違っています. 対応するファームウェアのソースはDCoJAから私のgithubにforkしたところに作ったbee3-prototypeという<a href="https://github.com/kazkojima/esp32-app/hachidori">esp32-app/hachidori</a>のブランチです. また対応するardupilotのドライバも少しだけ違いその他にも不安定な実装をいろいろ試しているので同様に私のgithubにforkした<a href="https://github.com/kazkojima/ardupilot">ardupilot</a>のhachidoriブランチに置いています. 回路図は</p>
-<p><img src="../images/bee3-schematics.png" alt="bee3 schematic" width=640></p>
-<p>でdigi-key等で購入できるパーツで作られています. コアレスモーターの機体ではこのボードと小さな電源および分電用ボード</p>
-<p><img src="../images/pow-dist.jpg" alt="power board" width=640></p>
-<p>に加えSTのVL53L0Xモジュールを接続して実験していました。 ファームウェアのmasterブランチは別のプロトタイプボードに対応していてそちらはハードウェアの方もプロの手によるものだったのですがこれは実際に飛ぶ機体の形には至りませんでした.</p>
+<p><img src="../images/bee3-board.png" alt="bee3 board" width=640></p>
+<p>は私がKiCADで作ったテスト目的の簡単なものでそのファームウェアも他とは少し違っています. 対応するファームウェアのソースはDCoJAから私のgithubにforkしたところに作ったbee3-prototypeという<a href="https://github.com/kazkojima/esp32-app/hachidori">esp32-app/hachidori</a>のブランチです. また対応するardupilotのドライバも少しだけ違いその他にも不安定な実装をいろいろ試しているので同様に私のgithubにforkした<a href="https://github.com/kazkojima/ardupilot">ardupilot</a>のhachidoriブランチに置いています. 回路図は</p>
+<p><img src="../images/bee3-schematics.png" alt="bee3 schematic" width=720></p>
+<p>でdigi-key等で購入できるパーツで作られています. ファームウェアのmasterブランチは別のプロトタイプボードに対応していてそちらはハードウェアの方もプロの手によるものだったのですがこれは実際に飛ぶ機体の形には至りませんでした.</p>
 <p>PWMはESP32で生成していますがブラシレスモーターのESC用にはMCPWM(Motor Control PWM)モジュールを,コアレスモーターでは周波数が高いためLEDコントロールモジュールを使っています.</p>
 <p>hachidoriは小さなドローンやローバーをインドアで動作させ、開発や教育の目的で使われることを目標にしていました. APMがPC上にあるのでPCでソースを修正してwafやmakeでビルドすれば直ちに新しいAPMをテストできます. その使い方だとある意味でSITLのようなシミュレーターと似たものと考えることもできますが, hachidoriは実体のある機体や車輌でそれとは違った楽しみを与えてくれるのではないかと思うのです. 私はこの作業を始めるまでUAVについてほぼ素人でしたがhachidoriのおかげで実に様々なこと: 痛んだモーターやプロペラ, 機体の振動がIMUに与える影響, 地面効果, 機体の重心やバランス, 磁気の擾乱などなどを実際の物理的な機体で経験し学ぶはめになりました. 凄く楽しいと思いませんか? :-)</p>
-<p>たくさんの問題の一方でいろいろ面白い可能性もありそうに思えます. APMをパワーのあるサーバー側で動かすことで今のところ小さなUAVのFCでは難しい重い計算や処理も試せるかもしれません. もしこのちょっとクラシックでクレージーな思いつきに興味を持っていただけるとうれしいです.</p>
-<p>このプロジェクトに関わったドローンワークス社を始めDCoJAのメンバーの皆さん,　特に開発のきっかけとなった議論とhachidoriという名前に加え問題にぶつかる度毎に新しい方向への示唆を与えて下さった大同大学の橋口宏衛先生に, そしてこのわくわくした体験を可能にしてくれたArduPilotとそのコミュニティに感謝します.</p>
+<p>たくさんの問題の一方でいろいろ面白い可能性もありそうです. APMをパワーのあるサーバー側で動かすことで今のところ小さなUAVのFCでは難しい重い計算や処理も試せるかもしれません. もしこのちょっとクラシックでクレージーな思いつきに興味を持っていただけるとうれしいです.</p>
+<p>このプロジェクトに関わったDroneWorks社を始めDCoJAのメンバーの皆さん,特に開発のきっかけとなる議論とhachidoriという名前,そして問題にぶつかる度毎に正しい方向への示唆を与えて下さった大同大学の橋口宏衛先生に感謝します.</p>
 <p>Happy Hacking,</p>
 <p>kaz</p>                </article>
             </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-phy2.html" rel="bookmark"
-                           title="Permalink to ESP32 PHY board 2">ESP32 PHY board 2</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-11-07T00:00:00+09:00">
-                Published: 火 07 11月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
-</footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
-<img alt="esp32-wslan8720 test" src="../images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
-<img alt="esp32-wslan8720 board" src="../images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
-<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware ...</p>
-                <a class="readmore" href="../esp32-phy2.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-phy.html" rel="bookmark"
-                           title="Permalink to ESP32 PHY board">ESP32 PHY board</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-10-18T00:00:00+09:00">
-                Published: 水 18 10月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
-</footer><!-- /.post-info -->                <p>I'm making a simple esp32 board with ethernet. ESP32 has MAC and esp-idf supports PHYs like LAN87x0 and TLK110 already. Here is the schematic with KiCAD:</p>
-<img alt="esp32-tlk110 schematic" src="../images/esp32-tlk110.png" style="width: 640px; height: 400px;" />
-<p>I'll create a git repository for that hardware if it works.</p>
-<p><em>Update 2017-10-21</em></p>
-<p>Now it works!</p>
-<img alt="esp32-tlk110 works" src="../images/esp32-tlk110-jumpers.jpg" style="width: 640px; height: 400px;" />
-<p>Revised KiCAD files for this board ...</p>
-                <a class="readmore" href="../esp32-phy.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>

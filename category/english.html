@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>My Bug Has A Program! - English</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">My Bug Has A Program! </a></h1>
+                <nav><ul>
+                    <li><a href="../category/articles.html">articles</a></li>
+                    <li class="active"><a href="../category/english.html">English</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../bee3-en.html">hachidori - APM on PC with remote sensor/actuators</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-12-01T00:00:00+09:00">
+                Published: 金 01 12月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><p><img src="../images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
+<p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting APM to their FC with the mezzanine board of 96boards. Hachidori was a project derived from that work. Although my contract with them ended already, I'm continuing to work with this tiny project individually. The related programs and schematics of hachidori are available as the open sources <a href="https://github.com/DCoJA">here</a>.</p>
+<p><img src="../images/hachidori-01.png" alt="scheme" width="640"></p>
+<p>From hachidori point of view, ArduPilot looks like a UDP server which receives sensor data and sends PWM values back.  It's a classical idea, but, yes, there are many issues with this scheme.  Anyways, here is a flight test of hachidori with a toy drone frame:</p>
+<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="../images/test-flight-toy.png" /></a></p>
+<p>This is a flight in stabilize mode. APM runs on a laptop PC with Ubuntu 4.4.0-lowlatency kernel. Looks APM can control the attitude well.</p>
+<p>Another hachidori with a 250 frame and its host PC on which APM runs:</p>
+<p><img src="../images/hachidori-250-liftup.jpg" alt="250frame" width=320>
+<img src="../images/hachidori-core-and-pc.jpg" alt="250 and PC" width=320></p>
+<p>ArduPilot with the experimental hachidori drivers and the other information for hardware/software were maintained at <a href="https://github.com/DCoJA">DCoJA's github</a>.  See the hachidori branch of ardupilot there if you are interested.</p>
+<p>The firmware of the remote side runs on ESP32 and uses <a href="https://github.com/espressif/esp-idf">esp-idf</a> and can be seen as an <a href="https://github.com/DCoJA/esp32-app/hachidori">application on esp-idf</a>.
+Other tools like small servers for tests and configurations can be found at
+<a href="https://github.com/DCoJA/junkyard">junkyard directory of DCoJA</a> as b3test and b3conf.</p>
+<h2>latency</h2>
+<p>One big problem of this scheme is latency.  As you know, almost usual RF protocols including Wi-Fi don't take care of latency so much.  Except Wi-Fi, they are always low power centric and Wi-Fi is throughput centric.  It looks that one of the major cause of the latency is re-sending which is not so worth for the real-time sensor data of the physical values.</p>
+<p>In the current implementation, the IMU packets are sent every 1ms from hachidori and the PWM values are sent back every 5ms from PC at maximum.  The host PC becomes a Wi-Fi AP with hostapd and APM is running on the same linux PC.  This reduces latency a little bit.  The typical ping value in our tests is 2-3ms, though this easily increases to 5-50ms with a bit tough RF environments.</p>
+<h2>failsafe on lost connection</h2>
+<p>Even if the latency can be reduced somehow, another severe issue happens when the connection is lost or almost packets are lost. Currently, hachidori always computes its rough attitude by Madgwick filter. The frame tries to land with a simple attitude control when the connection is lost.</p>
+<h2>prototype hardware</h2>
+<p>Although I'm not a hardware expert, I've made some hardwares for proof of concept.</p>
+<p><img src="../images/hachidori-coreless.jpg" alt="coreless" width=480></p>
+<p>The prototypes have almost same simple hardwares:</p>
+<ul>
+<li>ESP-WROOM-32</li>
+<li>MPU-9250</li>
+<li>MS5611 or 2SMPB02(OMRON's new Baro)</li>
+<li>INA226</li>
+</ul>
+<p>The board seen in the frame with coreless motors</p>
+<p><img src="../images/bee3-board.png" alt="bee3 board" width=320></p>
+<p>is a prototype and its firmware differs slightly from others.  The corresponding source of that firmware is the bee3-prototype branch of <a href="https://github.com/kazkojima/esp32-app/hachidori">esp32-app/hachidori</a> and here is its rough schematic</p>
+<p><img src="../images/bee3-schematics.png" alt="bee3 schematic" width=480></p>
+<p>I've tested that frame with ST's VL53L0X module as the range finder.  The master branch of that firmware source was planed for another board which wasn't completed.</p>
+<p>I'm using MCPWM(Motor Control PWM) module of ESP32 for ESC and LEDC module for coreless motors. ESC is default on the master branch and isn't on bee3-prototype.</p>
+<p>The primary purpose of hachidori is to be a tool in the development and education, with tiny indoor copters and rovers.  One can run waf/make easily on PC and test the new APM immediately.  It's similar with SITL in a sense, though I hope hachidori would give a fun with the real vehicles. I was almost new to the UAV world when starting this work. So I've experienced with many issues like damaged motors/propellers, vibration, ground effect, frame balance, battery problems, magnetic disturbance and so on with the real frame. Sounds great, doesn't it? :-)</p>
+<p>Besides many problems, I think it has interesting possibilities. One might be possible to run APM with state of the art processors and try very heavy computational methods which won't work with the usual FC on the frames, ATM. I'm happy if you have some interests in this crazy and classical idea.</p>
+<p>Happy Hacking,</p>
+<p>kaz</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-phy2.html" rel="bookmark"
+                           title="Permalink to ESP32 PHY board 2">ESP32 PHY board 2</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-11-07T00:00:00+09:00">
+                Published: 火 07 11月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
+</footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
+<img alt="esp32-wslan8720 test" src="../images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
+<img alt="esp32-wslan8720 board" src="../images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
+<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware ...</p>
+                <a class="readmore" href="../esp32-phy2.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-2khz.html" rel="bookmark"
+                           title="Permalink to ESP32 0.5ms tick">ESP32 0.5ms tick</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-10-22T00:00:00+09:00">
+                Published: 日 22 10月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/freertos.html">freertos</a> </p>
+</footer><!-- /.post-info -->                <p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
+<img alt="esp-idf menuconfig 1000Hz" src="../images/config-1000Hz.png" style="width: 640px; height: 400px;" />
+<p>This is ok for almost applications and if you require sub-milli time precision, the extra timer or interrupt would be your friend.
+But why can't be 2000Hz tick rate set on 240Mz CPU?
+Here is a famous LED ...</p>
+                <a class="readmore" href="../esp32-2khz.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-phy.html" rel="bookmark"
+                           title="Permalink to ESP32 PHY board">ESP32 PHY board</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-10-18T00:00:00+09:00">
+                Published: 水 18 10月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
+</footer><!-- /.post-info -->                <p>I'm making a simple esp32 board with ethernet. ESP32 has MAC and esp-idf supports PHYs like LAN87x0 and TLK110 already. Here is the schematic with KiCAD:</p>
+<img alt="esp32-tlk110 schematic" src="../images/esp32-tlk110.png" style="width: 640px; height: 400px;" />
+<p>I'll create a git repository for that hardware if it works.</p>
+<p><em>Update 2017-10-21</em></p>
+<p>Now it works!</p>
+<img alt="esp32-tlk110 works" src="../images/esp32-tlk110-jumpers.jpg" style="width: 640px; height: 400px;" />
+<p>Revised KiCAD files for this board ...</p>
+                <a class="readmore" href="../esp32-phy.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -15,12 +15,111 @@
                 <h1><a href="./">My Bug Has A Program! </a></h1>
                 <nav><ul>
                     <li><a href="./category/articles.html">articles</a></li>
+                    <li><a href="./category/english.html">English</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="./nrf24-shockburst.html">nRF24L01+ and ESP32</a></h1>
+                    <h1 class="entry-title"><a href="./bee3-en.html">hachidori - APM on PC with remote sensor/actuators</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-12-01T00:00:00+09:00">
+                Published: 金 01 12月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/english.html">English</a>.</p>
+<p>tags: <a href="./tag/ardupilot.html">ardupilot</a> <a href="./tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><p><img src="./images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
+<p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting APM to their FC with the mezzanine board of 96boards. Hachidori was a project derived from that work. Although my contract with them ended already, I'm continuing to work with this tiny project individually. The related programs and schematics of hachidori are available as the open sources <a href="https://github.com/DCoJA">here</a>.</p>
+<p><img src="./images/hachidori-01.png" alt="scheme" width="640"></p>
+<p>From hachidori point of view, ArduPilot looks like a UDP server which receives sensor data and sends PWM values back.  It's a classical idea, but, yes, there are many issues with this scheme.  Anyways, here is a flight test of hachidori with a toy drone frame:</p>
+<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="./images/test-flight-toy.png" /></a></p>
+<p>This is a flight in stabilize mode. APM runs on a laptop PC with Ubuntu 4.4.0-lowlatency kernel. Looks APM can control the attitude well.</p>
+<p>Another hachidori with a 250 frame and its host PC on which APM runs:</p>
+<p><img src="./images/hachidori-250-liftup.jpg" alt="250frame" width=320>
+<img src="./images/hachidori-core-and-pc.jpg" alt="250 and PC" width=320></p>
+<p>ArduPilot with the experimental hachidori drivers and the other information for hardware/software were maintained at <a href="https://github.com/DCoJA">DCoJA's github</a>.  See the hachidori branch of ardupilot there if you are interested.</p>
+<p>The firmware of the remote side runs on ESP32 and uses <a href="https://github.com/espressif/esp-idf">esp-idf</a> and can be seen as an <a href="https://github.com/DCoJA/esp32-app/hachidori">application on esp-idf</a>.
+Other tools like small servers for tests and configurations can be found at
+<a href="https://github.com/DCoJA/junkyard">junkyard directory of DCoJA</a> as b3test and b3conf.</p>
+<h2>latency</h2>
+<p>One big problem of this scheme is latency.  As you know, almost usual RF protocols including Wi-Fi don't take care of latency so much.  Except Wi-Fi, they are always low power centric and Wi-Fi is throughput centric.  It looks that one of the major cause of the latency is re-sending which is not so worth for the real-time sensor data of the physical values.</p>
+<p>In the current implementation, the IMU packets are sent every 1ms from hachidori and the PWM values are sent back every 5ms from PC at maximum.  The host PC becomes a Wi-Fi AP with hostapd and APM is running on the same linux PC.  This reduces latency a little bit.  The typical ping value in our tests is 2-3ms, though this easily increases to 5-50ms with a bit tough RF environments.</p>
+<h2>failsafe on lost connection</h2>
+<p>Even if the latency can be reduced somehow, another severe issue happens when the connection is lost or almost packets are lost. Currently, hachidori always computes its rough attitude by Madgwick filter. The frame tries to land with a simple attitude control when the connection is lost.</p>
+<h2>prototype hardware</h2>
+<p>Although I'm not a hardware expert, I've made some hardwares for proof of concept.</p>
+<p><img src="./images/hachidori-coreless.jpg" alt="coreless" width=480></p>
+<p>The prototypes have almost same simple hardwares:</p>
+<ul>
+<li>ESP-WROOM-32</li>
+<li>MPU-9250</li>
+<li>MS5611 or 2SMPB02(OMRON's new Baro)</li>
+<li>INA226</li>
+</ul>
+<p>The board seen in the frame with coreless motors</p>
+<p><img src="./images/bee3-board.png" alt="bee3 board" width=320></p>
+<p>is a prototype and its firmware differs slightly from others.  The corresponding source of that firmware is the bee3-prototype branch of <a href="https://github.com/kazkojima/esp32-app/hachidori">esp32-app/hachidori</a> and here is its rough schematic</p>
+<p><img src="./images/bee3-schematics.png" alt="bee3 schematic" width=480></p>
+<p>I've tested that frame with ST's VL53L0X module as the range finder.  The master branch of that firmware source was planed for another board which wasn't completed.</p>
+<p>I'm using MCPWM(Motor Control PWM) module of ESP32 for ESC and LEDC module for coreless motors. ESC is default on the master branch and isn't on bee3-prototype.</p>
+<p>The primary purpose of hachidori is to be a tool in the development and education, with tiny indoor copters and rovers.  One can run waf/make easily on PC and test the new APM immediately.  It's similar with SITL in a sense, though I hope hachidori would give a fun with the real vehicles. I was almost new to the UAV world when starting this work. So I've experienced with many issues like damaged motors/propellers, vibration, ground effect, frame balance, battery problems, magnetic disturbance and so on with the real frame. Sounds great, doesn't it? :-)</p>
+<p>Besides many problems, I think it has interesting possibilities. One might be possible to run APM with state of the art processors and try very heavy computational methods which won't work with the usual FC on the frames, ATM. I'm happy if you have some interests in this crazy and classical idea.</p>
+<p>Happy Hacking,</p>
+<p>kaz</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="./jbee3.html" rel="bookmark"
+                           title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-12-01T00:00:00+09:00">
+                Published: 金 01 12月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/ardupilot.html">ardupilot</a> <a href="./tag/esp32.html">esp32</a> <a href="./tag/kicad.html">KiCad</a> </p>
+</footer><!-- /.post-info -->                <p><img src="./images/bee3-flight.jpg" alt="hachidori" width="640"></p>
+<p>hachidori はPC上で走らせたArduPilotで制御する実験的なリモートセンサ/アクチュエータで, ArduPilotプロジェクトへの寄与を目的に始まった<a href="https://github.com/DCoJA">DCoJA</a>による小さなプロジェクトです.</p>
+<p>私はDCoJAのメンバーであるドローンワークス社のコントラクターとしてArduPilotを同社が開発していたFCにポーティングする作業を行っていたのですがhachidoriはその中で派生したプロジェクトでした. 私とドローンワークス社とのコントラクトはすでに終了していますがオープンなプロジェクトとしてhachidoriの開発を続けています. プロジェクトの成果はDCoJAを通じてソフトウェアやプロトタイプの回路図などが<a href="https://github.com/DCoJA">オープンソースとして公開</a>されています.</p>
+<p><img src="./images/hachidori-01.png" alt="scheme" width="640"></p>
+<p>hachidoriからみるとArduPilotはセンサーデータを受け取りアクチュエータへの指示としてPWMの値を返すUDPサーバーです. このようなリモートセンサ/アクチュエータは実に古典的なアイデアですが,このスキームには大小様々な問題があります.</p>
+<p>とりあえずトイドローンタイプのhachidoriの飛行はこんな感じです:</p>
+<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="./images/test-flight-toy.png" /></a></p>
+<p>これはstabilizeモードです. APM(ArduPilot)はうまく姿勢を制御できているように見えます. arducopterはlaptop PCのUbuntu 4.4.0-lowlatencyカーネル上で動かしています.</p>
+<p>250mmフレームにのせた別のhachidoriとAPMが動いているホストPCです:</p>
+<p><img src="./images/hachidori-250-liftup.jpg" alt="250frame" width=320>
+<img src="./images/hachidori-core-and-pc.jpg" alt="250 and PC" width=320></p>
+<p>実験的なhachidori用ドライバを含んだArduPilotのソースツリー等は<a href="https://github.com/DCoJA">DCoJAのgithubリポジトリ</a>中のardupilotのhachidoriブランチにあります.</p>
+<p>hachidoriのファームウェアは<a href="https://github.com/espressif/esp-idf">esp-idf</a>上の<a href="https://github.com/DCoJA/esp32-app/hachidori">application</a>になっています.
+テストやコンフィグレーションのためのPC上の小さなUDPサーバーが<a href="https://github.com/DCoJA/junkyard">junkyard</a>の中にあります. b3testはセンサーデータの表示やモーターのテストのためのサーバー, b3confは設定や定数などをhachidoriに書きこむためのサーバーです.</p>
+<h2>レイテンシ latency</h2>
+<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません ...</p>
+                <a class="readmore" href="./jbee3.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="./nrf24-shockburst.html" rel="bookmark"
+                           title="Permalink to nRF24L01+ and ESP32">nRF24L01+ and ESP32</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-11-15T00:00:00+09:00">
                 Published: 水 15 11月 2017
@@ -31,7 +130,7 @@
         </address>
 <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info --><p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
+</footer><!-- /.post-info -->                <p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
 <img alt="nrf24 spiclock to cs hold" src="./images/nrf24-test.jpg" style="width: 640px; height: 400px;" />
 <p>対抗しているのはRaspiとnRF24L01+の組でそちらは</p>
 <p><a class="reference external" href="http://tmrh20.github.io/RF24/">http://tmrh20.github.io/RF24/</a></p>
@@ -57,34 +156,10 @@
     <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
     <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
     <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadhd_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">max_transfer_sz</span><span class="o">=</span><span class="mi">0</span>
-<span class="p">};</span>
-<span class="n">spi_device_interface_config_t</span> <span class="n">devcfg</span><span class="o">=</span><span class="p">{</span>
-    <span class="p">.</span><span class="n">command_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">address_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">dummy_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">clock_speed_hz</span><span class="o">=</span><span class="mi">8000000</span><span class="p">,</span>                <span class="c1">//Clock out at 8MHz
-</span>    <span class="p">.</span><span class="n">duty_cycle_pos</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                                <span class="c1">//SPI mode 0
-</span>    <span class="p">.</span><span class="n">cs_ena_posttrans</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">spics_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CS</span><span class="p">,</span>               <span class="c1">//CS pin
-</span>    <span class="p">.</span><span class="n">queue_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                          <span class="c1">//queue size
-</span>    <span class="p">.</span><span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<span class="p">};</span>
-</pre>
-<p>を使って簡単なSPIアクセスを試しました. 最初.cs_ena_posttrans=1を指定していなかったのですがこれがないとペイロードの読み書きのような多バイトのtransactionがうまくいかずパケットが飛びませんでした. ところが/csに指が触れたときにパケットが飛んだことからこれに気がつきました. nRF24L01+のドキュメントだとclockの立ち下がりと/csの立ち上がり間には2ns以上のhold timeが必要なのですが指定なしだとギリギリだめなんだと思われます. 指定すると</p>
-<img alt="nrf24 spiclock to cs hold" src="./images/nrf24-spi-cs-hold.png" style="width: 640px; height: 400px;" />
-<p>と/csがnegateされるのが少し遅れてhold timeの制約を満たしているのがわかります.</p>
-<p>nRF24L01+のSPIの仕様で最初のバイトがコマンドを示すんですがそのバイト受信時にSPIのシフトレジスタからstatusレジスタの内容が出てくるようになっています</p>
-<img alt="nrf24 payload write" src="./images/nrf24-spi.png" style="width: 640px; height: 400px;" />
-<p>MISOの最初に見えている0Eがstatusレジスタの内容です. 上のESP32のSPIの設定だと.command_bits=8になっているのですがその間の受信データは無視されるようです.</p>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+    <span class="p">.</span><span class="n">quadhd_io_num ...</span></pre>
+                <a class="readmore" href="./nrf24-shockburst.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -101,7 +176,7 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
         </address>
-<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>In <a href="./category/english.html">English</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/kicad.html">kicad</a> </p>
 </footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
 <img alt="esp32-wslan8720 test" src="./images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
@@ -164,7 +239,7 @@
         </address>
 <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>ESP32の <a class="reference external" href="./esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="./images/hb32.jpg">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
+</footer><!-- /.post-info -->                <p>ESP32の <a class="reference external" href="./esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="./images/bee3-board.png">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
 <img alt="esp32 ether-espnow brigde" src="./images/ether-now-bridge.png" style="width: 640px; height: 400px;" />
 <p>でPCの上ではarducopterとテスト用のUDPサーバの両方を動かして試してみました.</p>
 <p><em>結果</em></p>
@@ -200,7 +275,7 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
         </address>
-<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>In <a href="./category/english.html">English</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/freertos.html">freertos</a> </p>
 </footer><!-- /.post-info -->                <p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
 <img alt="esp-idf menuconfig 1000Hz" src="./images/config-1000Hz.png" style="width: 640px; height: 400px;" />
@@ -226,7 +301,7 @@ Here is a famous LED ...</p>
         <address class="vcard author">
                 By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
         </address>
-<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>In <a href="./category/english.html">English</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/kicad.html">kicad</a> </p>
 </footer><!-- /.post-info -->                <p>I'm making a simple esp32 board with ethernet. ESP32 has MAC and esp-idf supports PHYs like LAN87x0 and TLK110 already. Here is the schematic with KiCAD:</p>
 <img alt="esp32-tlk110 schematic" src="./images/esp32-tlk110.png" style="width: 640px; height: 400px;" />
@@ -296,7 +371,7 @@ Here is a famous LED ...</p>
 <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/esp32.html">esp32</a> </p>
 </footer><!-- /.post-info -->                <div class="figure align-left">
-<img alt="esp-wroom-32 board" src="images/hb32.jpg" style="width: 800.0px; height: 500.0px;" />
+<img alt="esp-wroom-32 board" src="./images/bee3-board.png" style="width: 600.0px; height: 337.5px;" />
 </div>
 <p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
 With enabling command phase, the problem went away.</p>
@@ -305,44 +380,11 @@ With enabling command phase, the problem went away.</p>
                 <a class="readmore" href="./esp32-spi.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="./gr-neug.html" rel="bookmark"
-                           title="Permalink to GnuRadio companion で新しい機能ブロック">GnuRadio companion で新しい機能ブロック</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-06-25T00:00:00+09:00">
-                Published: 日 25 6月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="./category/articles.html">articles</a>.</p>
-<p>tags: <a href="./tag/gnuradio.html">gnuradio</a> </p>
-</footer><!-- /.post-info -->                <p><em>(元の文章は2015/05/13のものです)</em></p>
-<p><a class="reference external" href="https://wiki.gnuradio.org/index.php/Main_Page">GnuRadio</a> companion でGUIベースで用意された信号処理ブロックを結線してラジオをはじめいろいろなものが作れます. 新しいブロックの作成は意外に簡単です.</p>
-<p><a class="reference external" href="https://wiki.gnuradio.org/index.php/OutOfTreeModules">Extending GNU Radio with own functionality and blocks</a></p>
-<p>に従ってg新部さんの <a class="reference external" href="http://www.gniibe.org/memo/development/gnuk/rng/neug.html">NeuG</a> を信号ソースにしてみました.</p>
-<p>neugはg新部さんの <a class="reference external" href="http://www.gniibe.org/category/fst-01.html">FST-01</a> を使った乱数発生器です. FSFでも紹介されています <a class="footnote-reference" href="#id2" id="id1">[1]</a></p>
-<p>作業はDebien jessieでやったのですがパッケージとして gnuradio-dev, cmake, boost, libcppunit-dev, liblog4cpp5-devなどをインストールしておくことが必要でした.</p>
-<blockquote>
-<ul>
-<li><p class="first">ツリーを作製:</p>
-<pre class="literal-block">
-gr_modtool newmod neug         # これで gr-neugができるので
-cd gr-neug
-gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolator...
-</pre>
-</li>
-<li><p class="first">python/qa_neug.pyを編集: unit ...</p></li></ul></blockquote>
-                <a class="readmore" href="./gr-neug.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
                 </ol><!-- /#posts-list -->
+<p class="paginator">
+    Page 1 / 2
+        <a href="./index2.html">&raquo;</a>
+</p>
                 </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="blogroll">
