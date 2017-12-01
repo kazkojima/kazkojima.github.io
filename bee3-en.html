@@ -37,7 +37,13 @@
         </address>
 <p>In <a href="./category/english.html">English</a>.</p>
 <p>tags: <a href="./tag/ardupilot.html">ardupilot</a> <a href="./tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->      <p><img src="./images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
+</footer><!-- /.post-info -->      <p><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="" />
+<meta property="og:title" content="hachidori - APM on PC with remote sensor/actuators" />
+<meta property="og:description" content="Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC." />
+<meta property="og:image" content="{filename}/images/bee3-flight.jpg" /></p>
+<p><img src="./images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
 <p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting APM to their FC with the mezzanine board of 96boards. Hachidori was a project derived from that work. Although my contract with them ended already, I'm continuing to work with this tiny project individually. The related programs and schematics of hachidori are available as the open sources <a href="https://github.com/DCoJA">here</a>.</p>
 <p><img src="./images/hachidori-01.png" alt="scheme" width="640"></p>
 <p>From hachidori point of view, ArduPilot looks like a UDP server which receives sensor data and sends PWM values back.  It's a classical idea, but, yes, there are many issues with this scheme.  Anyways, here is a flight test of hachidori with a toy drone frame:</p>
