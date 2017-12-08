@@ -42,8 +42,8 @@
 <p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting APM to their FC with the mezzanine board of 96boards. Hachidori was a project derived from that work. Although my contract with them ended already, I'm continuing to work with this tiny project individually. The related programs and schematics of hachidori are available as the open sources <a href="https://github.com/DCoJA">here</a>.</p>
 <p><img src="./images/hachidori-01.png" alt="scheme" width="640"></p>
 <p>From hachidori point of view, ArduPilot looks like a UDP server which receives sensor data and sends PWM values back.  It's a classical idea, but, yes, there are many issues with this scheme.  Anyways, here is a flight test of hachidori with a toy drone frame:</p>
-<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="./images/test-flight-toy.png" /></a></p>
-<p>This is a flight in stabilize mode. APM runs on a laptop PC with Ubuntu 4.4.0-lowlatency kernel. Looks APM can control the attitude well.</p>
+<p><a href="https://www.youtube.com/watch?v=OgF4HEsxCz0"><img alt="A test flight" src="./images/test-flight-toy-1207.png" /></a></p>
+<p>This is a flight in althold. APM runs on a laptop PC with Ubuntu 4.4.0-lowlatency kernel. Looks APM can control the attitude well, though some tune is needed for althold. Also this short test might show the need for some indoor holizontal positioning system.</p>
 <p>Another hachidori with a 250 frame and its host PC on which APM runs:</p>
 <p><img src="./images/hachidori-250-liftup.jpg" alt="250frame" width=320>
 <img src="./images/hachidori-core-and-pc.jpg" alt="250 and PC" width=320></p>
@@ -73,9 +73,8 @@ Other tools like small servers for tests and configurations can be found at
 <p>I've tested that frame with ST's VL53L0X module as the range finder.  The master branch of that firmware source was planed for another board which wasn't completed.</p>
 <p>I'm using MCPWM(Motor Control PWM) module of ESP32 for ESC and LEDC module for coreless motors. ESC is default on the master branch and isn't on bee3-prototype.</p>
 <p>The primary purpose of hachidori is to be a tool in the development and education, with tiny indoor copters and rovers.  One can run waf/make easily on PC and test the new APM immediately.  It's similar with SITL in a sense, though I hope hachidori would give a fun with the real vehicles. I was almost new to the UAV world when starting this work. So I've experienced with many issues like damaged motors/propellers, vibration, ground effect, frame balance, battery problems, magnetic disturbance and so on with the real frame. Sounds great, doesn't it? :-)</p>
-<p>Besides many problems, I think it has interesting possibilities. One might be possible to run APM with state of the art processors and try very heavy computational methods which won't work with the usual FC on the frames, ATM. I'm happy if you have some interests in this crazy and classical idea.</p>
-<p>Happy Hacking,</p>
-<p>kaz</p>                </article>
+<p>Besides many problems, I think it has interesting possibilities. One might be possible to run APM with state of the art processors and try very heavy computational methods which won't work with the usual FC on the frames, ATM.</p>
+<p>Happy Hacking,</p>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
