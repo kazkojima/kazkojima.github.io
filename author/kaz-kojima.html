@@ -21,7 +21,119 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../bee3-en.html">hachidori - APM on PC with remote sensor/actuators</a></h1>
+                    <h1 class="entry-title"><a href="../mavlink-howto.html">A tiny c/c++ example of MAVLINK library howto</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-12-13T00:00:00+09:00">
+                Published: 水 13 12月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/mavlink.html">mavlink</a> </p>
+</footer><!-- /.post-info --><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/mavlink-howto.html" />
+<meta property="og:title" content="A tiny c/c++ example of MAVLINK library howto" />
+<meta property="og:description" content="MAVLinkをc/c++プログラムから使う簡単な例です." /><p><a class="reference external" href="http://qgroundcontrol.org/mavlink/start">MAVLink</a> をc/c++プログラムから使う簡単な例です. MAVLinkの基本的なインストールや使い方については <a class="reference external" href="https://github.com/mavlink/mavlink">mavlink github</a> のREADME.mdにある通りですなのですがc/c++プログラムから使う場合にはheaderだけでできている <a class="reference external" href="https://github.com/mavlink/c_library_v2">c_library_v2</a> を使うのがお手軽です.</p>
+<blockquote>
+<ul class="simple">
+<li>STEP.1
+git clone <a class="reference external" href="https://github.com/mavlink/c_library_v2.git">https://github.com/mavlink/c_library_v2.git</a></li>
+<li>STEP.2
+cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのincludeパスに入るようにします. これで準備はokです.</li>
+</ul>
+</blockquote>
+<p>基本的には</p>
+<pre class="code c literal-block">
+<span class="cp">#include</span> <span class="cpf">&lt;common/mavlink.h&gt;</span>
+</pre>
+<p>でいろいろなMAVLinkのライブラリ関数が使えるのですが場合によってはそれだけではダメな時があります. 例えばtcpなどでMAVLimkのパケットをやり取りしたいときは上のREADME.mdに書いてあるようにMAVLINK_USE_CONVENIENCE_FUNCTIONSを定義するのですがこの場合には補助的な宣言が少しだけ必要です.</p>
+<p>arduinoのWiFiClientというtcp clientのライブラリクラスといっしょに使った時の例です.</p>
+<pre class="code c++ literal-block">
+<span class="cp">#undef F
+#include</span> <span class="cpf">&lt;mavlink_types.h&gt;</span><span class="cp">
+#define MAVLINK_USE_CONVENIENCE_FUNCTIONS 1
+#define MAVLINK_SEND_UART_BYTES send_tcp_bytes
+</span><span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">);</span>
+<span class="k">extern</span> <span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span><span class="p">;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;common/mavlink.h&gt;</span><span class="cp">
+</span><span class="c1">// ...
+// ...
+</span><span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span>
+                 <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">//...
+//...
+</span><span class="kt">void</span> <span class="nf">check_telemetry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">telemetry_connected</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">uint8_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+            <span class="n">mavlink_message_t</span> <span class="n">msg</span><span class="p">;</span>
+            <span class="n">mavlink_status_t</span> <span class="n">status</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">mavlink_parse_char</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">switch</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">msgid</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_HEARTBEAT</span><span class="p">:</span>
+                        <span class="n">target_sysid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">sysid</span><span class="p">;</span>
+                        <span class="n">target_compid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">compid</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">request_sent</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">stream_id</span> <span class="o">=</span> <span class="n">MAV_DATA_STREAM_EXTRA1</span><span class="p">;</span>
+                            <span class="n">mavlink_msg_request_data_stream_send</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span>
+                                                       <span class="n">target_sysid</span><span class="p">,</span>
+                                                       <span class="n">target_compid</span><span class="p">,</span>
+                                                       <span class="n">stream_id</span><span class="p">,</span>
+                                                       <span class="mi">10</span><span class="p">,</span>
+                                                       <span class="mi">1</span><span class="p">);</span>
+                            <span class="n">request_sent</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_ATTITUDE</span><span class="p">:</span>
+                        <span class="c1">//Serial.println(&quot;ATTITUDE&quot;);
+</span>                        <span class="n">mavlink_attitude_t</span> <span class="n">attitude</span><span class="p">;</span>
+                        <span class="n">mavlink_msg_attitude_decode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attitude</span><span class="p">);</span>
+                        <span class="n">telemetry_yaw</span> <span class="o">=</span> <span class="n">attitude</span><span class="p">.</span><span class="n">yaw</span><span class="p">;</span>
+                        <span class="n">telemetry_yaw_ok</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                        <span class="c1">//Serial.println(telemetry_yaw);
+</span>                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">default</span><span class="o">:</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<pre class="code c++ literal-block">
+<span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
+</pre>
+<p>で自分のIDを20,種別を99としています. 種別の100番以降にはCAMMERA,GIMBAL,GPSなどいろいろなコンポーネントの番号が定義されています.</p>
+<p>プログラムは簡単で1byte読んではmavlink_parse_charに食わせ、mavlinkパケット読み込み成功の場合に.msgidをみてそれぞれの処理をしています.</p>
+<p>最初はHEARTBEATしか来ないのですがそれで相手のID(.sysid)と種別(.compid)がわかるのでその相手にMAV_DATA_STREAM_EXTRA1というデータストリームを10Hzのレートで送ってくれるようにmavlink_msg_request_data_stream_sendで頼んでいます.
+この例で実際の相手はArduCopterのtelemetryでMAV_DATA_STREAM_EXTRA1で指定されるデータストリームではATTITUDEやAHRS2のパケットが流れてくるのでATTITUDEのパケットを拾ってyawの値を得ています.</p>
+<p>同じような方法でいろいろな情報を得たり、制御を行うことが可能です.</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../bee3-en.html" rel="bookmark"
+                           title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-01T00:00:00+09:00">
                 Published: 金 01 12月 2017
@@ -32,54 +144,17 @@
         </address>
 <p>In <a href="../category/english.html">English</a>.</p>
 <p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/bee3-en.html" />
 <meta property="og:title" content="hachidori - APM on PC with remote sensor/actuators" />
 <meta property="og:description" content="Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC." />
 <meta property="og:image" content="https://kazkojima.github.io/images/bee3-flight.jpg" /></p>
 <p><img src="../images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
-<p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting APM to their FC with the mezzanine board of 96boards. Hachidori was a project derived from that work. Although my contract with them ended already, I'm continuing to work with this tiny project individually. The related programs and schematics of hachidori are available as the open sources <a href="https://github.com/DCoJA">here</a>.</p>
-<p><img src="../images/hachidori-01.png" alt="scheme" width="640"></p>
-<p>From hachidori point of view, ArduPilot looks like a UDP server which receives sensor data and sends PWM values back.  It's a classical idea, but, yes, there are many issues with this scheme.  Anyways, here is a flight test of hachidori with a toy drone frame:</p>
-<p><a href="https://www.youtube.com/watch?v=OgF4HEsxCz0"><img alt="A test flight" src="../images/test-flight-toy-1207.png" /></a></p>
-<p>This is a flight in althold. APM runs on a laptop PC with Ubuntu 4.4.0-lowlatency kernel. Looks APM can control the attitude well, though some tune is needed for althold. Also this short test might show the need for some indoor horizontal positioning system.</p>
-<p>Another hachidori with a 250 frame and its host PC on which APM runs:</p>
-<p><img src="../images/hachidori-250-liftup.jpg" alt="250frame" width=320>
-<img src="../images/hachidori-core-and-pc.jpg" alt="250 and PC" width=320></p>
-<p>ArduPilot with the experimental hachidori drivers and the other information for hardware/software were maintained at <a href="https://github.com/DCoJA">DCoJA's github</a>.  See the hachidori branch of ardupilot there if you are interested.</p>
-<p>The firmware of the remote side runs on ESP32 and uses <a href="https://github.com/espressif/esp-idf">esp-idf</a> and can be seen as an <a href="https://github.com/DCoJA/esp32-app/hachidori">application on esp-idf</a>.
-Other tools like small servers for tests and configurations can be found at
-<a href="https://github.com/DCoJA/junkyard">junkyard directory of DCoJA</a> as b3test and b3conf.</p>
-<h2>latency</h2>
-<p>One big problem of this scheme is latency.  As you know, almost usual RF protocols including Wi-Fi don't take care of latency so much.  Except Wi-Fi, they are always low power centric and Wi-Fi is throughput centric.  It looks that one of the major cause of the latency is re-sending which is not so worth for the real-time sensor data of the physical values.</p>
-<p>In the current implementation, the IMU packets are sent every 1ms from hachidori and the PWM values are sent back every 5ms from PC at maximum.  The host PC becomes a Wi-Fi AP with hostapd and APM is running on the same linux PC.  This reduces latency a little bit.  The typical ping value in our tests is 2-3ms, though this easily increases to 5-50ms with a bit tough RF environments.</p>
-<h2>failsafe on lost connection</h2>
-<p>Even if the latency can be reduced somehow, another severe issue happens when the connection is lost or almost packets are lost. Currently, hachidori always computes its rough attitude by Madgwick filter. The frame tries to land with a simple attitude control when the connection is lost.</p>
-<h2>prototype hardware</h2>
-<p>Although I'm not a hardware expert, I've made some hardwares for proof of concept.</p>
-<p><img src="../images/hachidori-coreless.jpg" alt="coreless" width=480></p>
-<p>The prototypes have almost same simple hardwares:</p>
-<ul>
-<li>ESP-WROOM-32</li>
-<li>MPU-9250</li>
-<li>MS5611 or 2SMPB02(OMRON's new Baro)</li>
-<li>INA226</li>
-</ul>
-<p>The board seen in the frame with coreless motors</p>
-<p><img src="../images/bee3-board.png" alt="bee3 board" width=320></p>
-<p>is a prototype and its firmware differs slightly from others.  The corresponding source of that firmware is the bee3-prototype branch of <a href="https://github.com/kazkojima/esp32-app/hachidori">esp32-app/hachidori</a> and here is its rough schematic</p>
-<p><img src="../images/bee3-schematics.png" alt="bee3 schematic" width=480></p>
-<p>I've tested that frame with ST's VL53L0X module as the range finder.  The master branch of that firmware source was planed for another board which wasn't completed.</p>
-<p>I'm using MCPWM(Motor Control PWM) module of ESP32 for ESC and LEDC module for coreless motors. ESC is default on the master branch and isn't on bee3-prototype.</p>
-<p>The primary purpose of hachidori is to be a tool in the development and education, with tiny indoor copters and rovers.  One can run waf/make easily on PC and test the new APM immediately.  It's similar with SITL in a sense, though I hope hachidori would give a fun with the real vehicles. I was almost new to the UAV world when starting this work. So I've experienced with many issues like damaged motors/propellers, vibration, ground effect, frame balance, battery problems, magnetic disturbance and so on with the real frame. Sounds great, doesn't it? :-)</p>
-<p>Besides many problems, I think it has interesting possibilities. One might be possible to run APM with state of the art processors and try very heavy computational methods which won't work with the usual FC on the frames, ATM.</p>
-<p>Happy Hacking,</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks ...</p>
+                <a class="readmore" href="../bee3-en.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -361,34 +436,6 @@ Here is a famous LED ...</p>
 <span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="c1">// This ensures that all leds are off in deep sleep ...</span></pre>
                 <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-spi.html" rel="bookmark"
-                           title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-06-26T00:00:00+09:00">
-                Published: 月 26 6月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <div class="figure align-left">
-<img alt="esp-wroom-32 board" src="../images/bee3-board.png" style="width: 600.0px; height: 337.5px;" />
-</div>
-<p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
-With enabling command phase, the problem went away.</p>
-<pre class="code c literal-block">
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105 ...</span></pre>
-                <a class="readmore" href="../esp32-spi.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->

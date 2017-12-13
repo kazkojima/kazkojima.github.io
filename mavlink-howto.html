@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>A tiny c/c++ example of MAVLINK library howto</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">My Bug Has A Program! </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="./category/articles.html">articles</a></li>
+                    <li><a href="./category/english.html">English</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./mavlink-howto.html" rel="bookmark"
+           title="Permalink to A tiny c/c++ example of MAVLINK library howto">A tiny c/c++ example of MAVLINK library howto</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-12-13T00:00:00+09:00">
+                Published: 水 13 12月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/mavlink.html">mavlink</a> </p>
+</footer><!-- /.post-info -->      <meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/mavlink-howto.html" />
+<meta property="og:title" content="A tiny c/c++ example of MAVLINK library howto" />
+<meta property="og:description" content="MAVLinkをc/c++プログラムから使う簡単な例です." /><p><a class="reference external" href="http://qgroundcontrol.org/mavlink/start">MAVLink</a> をc/c++プログラムから使う簡単な例です. MAVLinkの基本的なインストールや使い方については <a class="reference external" href="https://github.com/mavlink/mavlink">mavlink github</a> のREADME.mdにある通りですなのですがc/c++プログラムから使う場合にはheaderだけでできている <a class="reference external" href="https://github.com/mavlink/c_library_v2">c_library_v2</a> を使うのがお手軽です.</p>
+<blockquote>
+<ul class="simple">
+<li>STEP.1
+git clone <a class="reference external" href="https://github.com/mavlink/c_library_v2.git">https://github.com/mavlink/c_library_v2.git</a></li>
+<li>STEP.2
+cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのincludeパスに入るようにします. これで準備はokです.</li>
+</ul>
+</blockquote>
+<p>基本的には</p>
+<pre class="code c literal-block">
+<span class="cp">#include</span> <span class="cpf">&lt;common/mavlink.h&gt;</span>
+</pre>
+<p>でいろいろなMAVLinkのライブラリ関数が使えるのですが場合によってはそれだけではダメな時があります. 例えばtcpなどでMAVLimkのパケットをやり取りしたいときは上のREADME.mdに書いてあるようにMAVLINK_USE_CONVENIENCE_FUNCTIONSを定義するのですがこの場合には補助的な宣言が少しだけ必要です.</p>
+<p>arduinoのWiFiClientというtcp clientのライブラリクラスといっしょに使った時の例です.</p>
+<pre class="code c++ literal-block">
+<span class="cp">#undef F
+#include</span> <span class="cpf">&lt;mavlink_types.h&gt;</span><span class="cp">
+#define MAVLINK_USE_CONVENIENCE_FUNCTIONS 1
+#define MAVLINK_SEND_UART_BYTES send_tcp_bytes
+</span><span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">);</span>
+<span class="k">extern</span> <span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span><span class="p">;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;common/mavlink.h&gt;</span><span class="cp">
+</span><span class="c1">// ...
+// ...
+</span><span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span>
+                 <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">//...
+//...
+</span><span class="kt">void</span> <span class="nf">check_telemetry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">telemetry_connected</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">uint8_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+            <span class="n">mavlink_message_t</span> <span class="n">msg</span><span class="p">;</span>
+            <span class="n">mavlink_status_t</span> <span class="n">status</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">mavlink_parse_char</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">switch</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">msgid</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_HEARTBEAT</span><span class="p">:</span>
+                        <span class="n">target_sysid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">sysid</span><span class="p">;</span>
+                        <span class="n">target_compid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">compid</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">request_sent</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">stream_id</span> <span class="o">=</span> <span class="n">MAV_DATA_STREAM_EXTRA1</span><span class="p">;</span>
+                            <span class="n">mavlink_msg_request_data_stream_send</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span>
+                                                       <span class="n">target_sysid</span><span class="p">,</span>
+                                                       <span class="n">target_compid</span><span class="p">,</span>
+                                                       <span class="n">stream_id</span><span class="p">,</span>
+                                                       <span class="mi">10</span><span class="p">,</span>
+                                                       <span class="mi">1</span><span class="p">);</span>
+                            <span class="n">request_sent</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_ATTITUDE</span><span class="p">:</span>
+                        <span class="c1">//Serial.println(&quot;ATTITUDE&quot;);
+</span>                        <span class="n">mavlink_attitude_t</span> <span class="n">attitude</span><span class="p">;</span>
+                        <span class="n">mavlink_msg_attitude_decode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attitude</span><span class="p">);</span>
+                        <span class="n">telemetry_yaw</span> <span class="o">=</span> <span class="n">attitude</span><span class="p">.</span><span class="n">yaw</span><span class="p">;</span>
+                        <span class="n">telemetry_yaw_ok</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                        <span class="c1">//Serial.println(telemetry_yaw);
+</span>                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">default</span><span class="o">:</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<pre class="code c++ literal-block">
+<span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
+</pre>
+<p>で自分のIDを20,種別を99としています. 種別の100番以降にはCAMMERA,GIMBAL,GPSなどいろいろなコンポーネントの番号が定義されています.</p>
+<p>プログラムは簡単で1byte読んではmavlink_parse_charに食わせ、mavlinkパケット読み込み成功の場合に.msgidをみてそれぞれの処理をしています.</p>
+<p>最初はHEARTBEATしか来ないのですがそれで相手のID(.sysid)と種別(.compid)がわかるのでその相手にMAV_DATA_STREAM_EXTRA1というデータストリームを10Hzのレートで送ってくれるようにmavlink_msg_request_data_stream_sendで頼んでいます.
+この例で実際の相手はArduCopterのtelemetryでMAV_DATA_STREAM_EXTRA1で指定されるデータストリームではATTITUDEやAHRS2のパケットが流れてくるのでATTITUDEのパケットを拾ってyawの値を得ています.</p>
+<p>同じような方法でいろいろな情報を得たり、制御を行うことが可能です.</p>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

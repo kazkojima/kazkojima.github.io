@@ -21,7 +21,119 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../jbee3.html">hachidori - APM on PC with remote sensor/actuators</a></h1>
+                    <h1 class="entry-title"><a href="../mavlink-howto.html">A tiny c/c++ example of MAVLINK library howto</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-12-13T00:00:00+09:00">
+                Published: 水 13 12月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/mavlink.html">mavlink</a> </p>
+</footer><!-- /.post-info --><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/mavlink-howto.html" />
+<meta property="og:title" content="A tiny c/c++ example of MAVLINK library howto" />
+<meta property="og:description" content="MAVLinkをc/c++プログラムから使う簡単な例です." /><p><a class="reference external" href="http://qgroundcontrol.org/mavlink/start">MAVLink</a> をc/c++プログラムから使う簡単な例です. MAVLinkの基本的なインストールや使い方については <a class="reference external" href="https://github.com/mavlink/mavlink">mavlink github</a> のREADME.mdにある通りですなのですがc/c++プログラムから使う場合にはheaderだけでできている <a class="reference external" href="https://github.com/mavlink/c_library_v2">c_library_v2</a> を使うのがお手軽です.</p>
+<blockquote>
+<ul class="simple">
+<li>STEP.1
+git clone <a class="reference external" href="https://github.com/mavlink/c_library_v2.git">https://github.com/mavlink/c_library_v2.git</a></li>
+<li>STEP.2
+cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのincludeパスに入るようにします. これで準備はokです.</li>
+</ul>
+</blockquote>
+<p>基本的には</p>
+<pre class="code c literal-block">
+<span class="cp">#include</span> <span class="cpf">&lt;common/mavlink.h&gt;</span>
+</pre>
+<p>でいろいろなMAVLinkのライブラリ関数が使えるのですが場合によってはそれだけではダメな時があります. 例えばtcpなどでMAVLimkのパケットをやり取りしたいときは上のREADME.mdに書いてあるようにMAVLINK_USE_CONVENIENCE_FUNCTIONSを定義するのですがこの場合には補助的な宣言が少しだけ必要です.</p>
+<p>arduinoのWiFiClientというtcp clientのライブラリクラスといっしょに使った時の例です.</p>
+<pre class="code c++ literal-block">
+<span class="cp">#undef F
+#include</span> <span class="cpf">&lt;mavlink_types.h&gt;</span><span class="cp">
+#define MAVLINK_USE_CONVENIENCE_FUNCTIONS 1
+#define MAVLINK_SEND_UART_BYTES send_tcp_bytes
+</span><span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">);</span>
+<span class="k">extern</span> <span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span><span class="p">;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;common/mavlink.h&gt;</span><span class="cp">
+</span><span class="c1">// ...
+// ...
+</span><span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span>
+                 <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">//...
+//...
+</span><span class="kt">void</span> <span class="nf">check_telemetry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">telemetry_connected</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">uint8_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+            <span class="n">mavlink_message_t</span> <span class="n">msg</span><span class="p">;</span>
+            <span class="n">mavlink_status_t</span> <span class="n">status</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">mavlink_parse_char</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">switch</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">msgid</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_HEARTBEAT</span><span class="p">:</span>
+                        <span class="n">target_sysid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">sysid</span><span class="p">;</span>
+                        <span class="n">target_compid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">compid</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">request_sent</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">stream_id</span> <span class="o">=</span> <span class="n">MAV_DATA_STREAM_EXTRA1</span><span class="p">;</span>
+                            <span class="n">mavlink_msg_request_data_stream_send</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span>
+                                                       <span class="n">target_sysid</span><span class="p">,</span>
+                                                       <span class="n">target_compid</span><span class="p">,</span>
+                                                       <span class="n">stream_id</span><span class="p">,</span>
+                                                       <span class="mi">10</span><span class="p">,</span>
+                                                       <span class="mi">1</span><span class="p">);</span>
+                            <span class="n">request_sent</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_ATTITUDE</span><span class="p">:</span>
+                        <span class="c1">//Serial.println(&quot;ATTITUDE&quot;);
+</span>                        <span class="n">mavlink_attitude_t</span> <span class="n">attitude</span><span class="p">;</span>
+                        <span class="n">mavlink_msg_attitude_decode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attitude</span><span class="p">);</span>
+                        <span class="n">telemetry_yaw</span> <span class="o">=</span> <span class="n">attitude</span><span class="p">.</span><span class="n">yaw</span><span class="p">;</span>
+                        <span class="n">telemetry_yaw_ok</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                        <span class="c1">//Serial.println(telemetry_yaw);
+</span>                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">default</span><span class="o">:</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<pre class="code c++ literal-block">
+<span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
+</pre>
+<p>で自分のIDを20,種別を99としています. 種別の100番以降にはCAMMERA,GIMBAL,GPSなどいろいろなコンポーネントの番号が定義されています.</p>
+<p>プログラムは簡単で1byte読んではmavlink_parse_charに食わせ、mavlinkパケット読み込み成功の場合に.msgidをみてそれぞれの処理をしています.</p>
+<p>最初はHEARTBEATしか来ないのですがそれで相手のID(.sysid)と種別(.compid)がわかるのでその相手にMAV_DATA_STREAM_EXTRA1というデータストリームを10Hzのレートで送ってくれるようにmavlink_msg_request_data_stream_sendで頼んでいます.
+この例で実際の相手はArduCopterのtelemetryでMAV_DATA_STREAM_EXTRA1で指定されるデータストリームではATTITUDEやAHRS2のパケットが流れてくるのでATTITUDEのパケットを拾ってyawの値を得ています.</p>
+<p>同じような方法でいろいろな情報を得たり、制御を行うことが可能です.</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../jbee3.html" rel="bookmark"
+                           title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-01T00:00:00+09:00">
                 Published: 金 01 12月 2017
@@ -32,7 +144,7 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">KiCad</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/jbee3.html" />
 <meta property="og:title" content="hachidori - APM on PC with remote sensor/actuators" />
@@ -53,39 +165,10 @@
 <p>hachidoriのファームウェアは<a href="https://github.com/espressif/esp-idf">esp-idf</a>上の<a href="https://github.com/DCoJA/esp32-app/hachidori">application</a>になっています.
 テストやコンフィグレーションのためのPC上の小さなUDPサーバーが<a href="https://github.com/DCoJA/junkyard">junkyard</a>の中にあります. b3testはセンサーデータの表示やモーターのテストのためのサーバー, b3confは設定や定数などをhachidoriに書きこむためのサーバーです.</p>
 <h2>レイテンシ latency</h2>
-<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません.</p>
-<p>現在の実装では, IMUのデータを含むUDPパケットは1ms間隔でhachidoriから送られPWM値は最大5ms間隔でPCから送り返されます. レイテンシを下げることを目的にAPMの走るホストPCをhostapdで同時にWi-Fiのアクセスポイントとしています. このような構成で平均的なping値は2-3msですが,これは無線の環境によって簡単に5-50msを超える値になってしまいます.</p>
-<p>IMUのデータ送信とPWMのデータ受信が最もクリティカルなのでその部分をWi-Fi以外のパスを使って通信することも考えられます. 例えばnRF系の一部チップがサポートするShockburstのような通信方式が候補になるかもしれません.　そこにはまた別の問題があるのですが.</p>
-<h2>コネクションを失った場合のフェイルセーフ</h2>
-<p>レイテンシを緩和することができたとしても別の大きな問題として無線のコネクションが失われるか, ほとんどのパケットが失われるような状況でどうするかということがあります. この問題にはいくつか対処が考えられるのですが, 現在のところhachidoriはボード側でもセンサーのデータを使いMadgwickフィルターの計算によってごく簡単な姿勢の推測を行い, コネクションが失われたときにはそれを使って姿勢の制御をしながら着陸を試みています.</p>
-<h2>プロトタイプのハードウェア</h2>
-<p>テストのためにいくつかのプロトタイプのボードやフレームを作りました. 素人が作ったものなのでトイドローンの域にすら達していません.</p>
-<p><img src="../images/hachidori-coreless.jpg" alt="coreless" width=640></p>
-<p>プロトタイプボードの構成は基本的には同じで主なパーツは</p>
-<ul>
-<li>ESP-WROOM-32</li>
-<li>MPU-9250</li>
-<li>MS5611 または 2SMPB02(OMRONの精密気圧センサー)</li>
-<li>INA226</li>
-</ul>
-<p>です. コアレスモーターの機体用のボード</p>
-<p><img src="../images/bee3-board.png" alt="bee3 board" width=480></p>
-<p>はソフトウェアのテストを目的に私がKiCADで作った簡単なものでそのファームウェアも他とは少し違っています. 対応するファームウェアのソースはDCoJAから私のgithubにforkしたところに作ったbee3-prototypeという<a href="https://github.com/kazkojima/esp32-app/hachidori">esp32-app/hachidori</a>のブランチです. また対応するardupilotのドライバも少しだけ違いその他にも不安定な実装をいろいろ試しているので同様に私のgithubにforkした<a href="https://github.com/kazkojima/ardupilot">ardupilot</a>のhachidoriブランチに置いています. 回路図は</p>
-<p><img src="../images/bee3-schematics.png" alt="bee3 schematic" width=640></p>
-<p>でdigi-key等で購入できるパーツで作られています. コアレスモーターの機体ではこのボードと小さな電源および分電用ボード</p>
-<p><img src="../images/pow-dist.jpg" alt="power board" width=640></p>
-<p>に加えSTのVL53L0Xモジュールを接続して実験していました。 ファームウェアのmasterブランチは別のプロトタイプボードに対応していてそちらはハードウェアの方もプロの手によるものだったのですがこれは実際に飛ぶ機体の形には至りませんでした.</p>
-<p>PWMはESP32で生成していますがブラシレスモーターのESC用にはMCPWM(Motor Control PWM)モジュールを,コアレスモーターでは周波数が高いためLEDコントロールモジュールを使っています.</p>
-<p>hachidoriは小さなドローンやローバーをインドアで動作させ、開発や教育の目的で使われることを目標にしていました. APMがPC上にあるのでPCでソースを修正してwafやmakeでビルドすれば直ちに新しいAPMをテストできます. その使い方だとある意味でSITLのようなシミュレーターと似たものと考えることもできますが, hachidoriは実体のある機体や車輌でそれとは違った楽しみを与えてくれるのではないかと思うのです. 私はこの作業を始めるまでUAVについてほぼ素人でしたがhachidoriのおかげで実に様々なこと: 痛んだモーターやプロペラ, 機体の振動がIMUに与える影響, 地面効果, 機体の重心やバランス, 磁気の擾乱などなどを実際の物理的な機体で経験し学ぶはめになりました. 凄く楽しいと思いませんか? :-)</p>
-<p>たくさんの問題の一方でいろいろ面白い可能性もありそうに思えます. APMをパワーのあるサーバー側で動かすことで今のところ小さなUAVのFCでは難しい重い計算や処理も試せるかもしれません. もしこのちょっとクラシックでクレージーな思いつきに興味を持っていただけるとうれしいです.</p>
-<p>このプロジェクトに関わったドローンワークス社を始めDCoJAのメンバーの皆さん,　特に開発のきっかけとなった議論とhachidoriという名前に加え問題にぶつかる度毎に新しい方向への示唆を与えて下さった大同大学の橋口宏衛先生に, そしてこのわくわくした体験を可能にしてくれたArduPilotとそのコミュニティに感謝します.</p>
-<p>Happy Hacking,</p>
-<p>kaz</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません ...</p>
+                <a class="readmore" href="../jbee3.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
