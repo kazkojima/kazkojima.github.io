@@ -120,7 +120,26 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <pre class="code c++ literal-block">
 <span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
 </pre>
-<p>で自分のIDを20,種別を99としています. 種別の100番以降にはCAMMERA,GIMBAL,GPSなどいろいろなコンポーネントの番号が定義されています.</p>
+<p>で自分のIDを20,種別を99としています. 種別の100番以降にはCAMERA,GIMBAL,GPSなどいろいろなコンポーネントの番号が定義されています.</p>
+<pre class="code c++ literal-block">
+<span class="c1">// common/common.h
+// ...
+</span><span class="k">typedef</span> <span class="k">enum</span> <span class="n">MAV_COMPONENT</span>
+<span class="p">{</span>
+ <span class="n">MAV_COMP_ID_ALL</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_AUTOPILOT1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_CAMERA</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_CAMERA2</span><span class="o">=</span><span class="mi">101</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_CAMERA3</span><span class="o">=</span><span class="mi">102</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_CAMERA4</span><span class="o">=</span><span class="mi">103</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_CAMERA5</span><span class="o">=</span><span class="mi">104</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_CAMERA6</span><span class="o">=</span><span class="mi">105</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_SERVO1</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_SERVO2</span><span class="o">=</span><span class="mi">141</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_SERVO3</span><span class="o">=</span><span class="mi">142</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_SERVO4</span><span class="o">=</span><span class="mi">143</span><span class="p">,</span> <span class="cm">/*  | */</span>
+ <span class="n">MAV_COMP_ID_SERVO5</span><span class="o">=</span><span class="mi">144</span><span class="p">,</span> <span class="cm">/*  | */</span>
+</pre>
 <p>プログラムは簡単で1byte読んではmavlink_parse_charに食わせ、mavlinkパケット読み込み成功の場合に.msgidをみてそれぞれの処理をしています.</p>
 <p>最初はHEARTBEATしか来ないのですがそれで相手のID(.sysid)と種別(.compid)がわかるのでその相手にMAV_DATA_STREAM_EXTRA1というデータストリームを10Hzのレートで送ってくれるようにmavlink_msg_request_data_stream_sendで頼んでいます.
 この例で実際の相手はArduCopterのtelemetryでMAV_DATA_STREAM_EXTRA1で指定されるデータストリームではATTITUDEやAHRS2のパケットが流れてくるのでATTITUDEのパケットを拾ってyawの値を得ています.</p>
