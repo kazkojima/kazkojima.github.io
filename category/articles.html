@@ -21,7 +21,55 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../mavlink-howto.html">A tiny c/c++ example of MAVLINK library howto</a></h1>
+                    <h1 class="entry-title"><a href="../versor-app.html">貧者的局所測位系 The versorer's apprentice</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-01-28T00:00:00+09:00">
+                Published: 日 28 1月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> </p>
+</footer><!-- /.post-info --><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenVM cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計するというのを作っています.</p>
+<img alt="OpenMV cam M7 + fish-eye + esp32" src="../images/pmlps.jpg" style="width: 640px; height: 400px;" />
+<img alt="OpenMV ide" src="../images/ledtrack.png" style="width: 640px; height: 400px;" />
+<p>魚眼レンズで得られるイメージセンサー上のマーカーの位置からcamからの方向を計算してマーカーの高さの情報をヒントにマーカーのcamを基準にした水平位置をだしてます. このセンサ上のマーカーの位置から3Dの方向を計算するところはいわゆるステレオグラフィックプロジェクション(立体射影)になっていて、三角関数や線形代数を使って計算できます.</p>
+<p>前置きが長くなりましたがフレームの水平位置を求めるところまでをgeometric algebraを使ったらどうなるか試してみました.</p>
+<pre class="code c++ literal-block">
+<span class="k">auto</span> <span class="n">pointO</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">pointP</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">h</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">line</span> <span class="o">=</span> <span class="n">pointO</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">dlp</span> <span class="o">&lt;=</span> <span class="n">line</span><span class="p">);</span>
+</pre>
+<p>の６行です. 使ったgeometric algebraのc++ライブラリは <a class="reference external" href="http://versor.mat.ucsb.edu/">Versor (libvsr)</a> というものです.</p>
+<p>絵を書くとこうなってます. この絵はGAviewerで書きました.</p>
+<img alt="figure" src="../images/stereo.png" style="width: 640px; height: 400px;" />
+<p>(x,y)がスケールされたイメージセンサー上の位置で最初の一行目でそれを立体射影し得られる単位球面上の点へのベクトルvをもとめています。　みかけはちょっとアレですがこれも絵を書いて説明できます
+あとは原点とその点を結ぶlineを作ってそれと高さの-hの水平面dlpとの交点(meet)を計算してposとしています。　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です
+記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です</p>
+<p>プログラムを動かして得られたデータをプロットしたものが</p>
+<img alt="Spur of marker" src="../images/marker-spur.png" style="width: 640px; height: 400px;" />
+<p>です. データが飛んでいるのはうまくフレームと認識できなかったところでマーカーの位置やプログラム
+等まだまだ手を加える必要があります.</p>
+<p>この水平位置の推計を元にvisual odmetryのデータを作ってMAVLinkでAPMに投げてやろうと思っています.</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../mavlink-howto.html" rel="bookmark"
+                           title="Permalink to A tiny c/c++ example of MAVLINK library howto">A tiny c/c++ example of MAVLINK library howto</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-13T00:00:00+09:00">
                 Published: 水 13 12月 2017
@@ -32,7 +80,7 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/mavlink.html">mavlink</a> </p>
-</footer><!-- /.post-info --><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/mavlink-howto.html" />
 <meta property="og:title" content="A tiny c/c++ example of MAVLINK library howto" />
@@ -55,96 +103,10 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <span class="cp">#undef F
 #include</span> <span class="cpf">&lt;mavlink_types.h&gt;</span><span class="cp">
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS 1
-#define MAVLINK_SEND_UART_BYTES send_tcp_bytes
-</span><span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">);</span>
-<span class="k">extern</span> <span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span><span class="p">;</span>
-<span class="cp">#include</span> <span class="cpf">&lt;common/mavlink.h&gt;</span><span class="cp">
-</span><span class="c1">// ...
-// ...
-</span><span class="n">mavlink_system_t</span> <span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
-
-<span class="k">static</span> <span class="kt">void</span> <span class="nf">send_tcp_bytes</span><span class="p">(</span><span class="n">mavlink_channel_t</span> <span class="n">chan</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span>
-                 <span class="kt">uint16_t</span> <span class="n">len</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">client</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="c1">//...
-//...
-</span><span class="kt">void</span> <span class="nf">check_telemetry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">telemetry_connected</span><span class="p">)</span>
-        <span class="k">return</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kt">uint8_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-            <span class="n">mavlink_message_t</span> <span class="n">msg</span><span class="p">;</span>
-            <span class="n">mavlink_status_t</span> <span class="n">status</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">mavlink_parse_char</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">))</span> <span class="p">{</span>
-                <span class="k">switch</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">msgid</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_HEARTBEAT</span><span class="p">:</span>
-                        <span class="n">target_sysid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">sysid</span><span class="p">;</span>
-                        <span class="n">target_compid</span> <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="n">compid</span><span class="p">;</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">request_sent</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">stream_id</span> <span class="o">=</span> <span class="n">MAV_DATA_STREAM_EXTRA1</span><span class="p">;</span>
-                            <span class="n">mavlink_msg_request_data_stream_send</span><span class="p">(</span><span class="n">MAVLINK_COMM_0</span><span class="p">,</span>
-                                                       <span class="n">target_sysid</span><span class="p">,</span>
-                                                       <span class="n">target_compid</span><span class="p">,</span>
-                                                       <span class="n">stream_id</span><span class="p">,</span>
-                                                       <span class="mi">10</span><span class="p">,</span>
-                                                       <span class="mi">1</span><span class="p">);</span>
-                            <span class="n">request_sent</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-                        <span class="p">}</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nl">MAVLINK_MSG_ID_ATTITUDE</span><span class="p">:</span>
-                        <span class="c1">//Serial.println(&quot;ATTITUDE&quot;);
-</span>                        <span class="n">mavlink_attitude_t</span> <span class="n">attitude</span><span class="p">;</span>
-                        <span class="n">mavlink_msg_attitude_decode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attitude</span><span class="p">);</span>
-                        <span class="n">telemetry_yaw</span> <span class="o">=</span> <span class="n">attitude</span><span class="p">.</span><span class="n">yaw</span><span class="p">;</span>
-                        <span class="n">telemetry_yaw_ok</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-                        <span class="c1">//Serial.println(telemetry_yaw);
-</span>                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">default</span><span class="o">:</span>
-                        <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span> <span class="k">else</span>
-            <span class="k">break</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-<pre class="code c++ literal-block">
-<span class="n">mavlink_system</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">99</span> <span class="p">};</span>
-</pre>
-<p>で自分のIDを20,種別を99としています. 種別の100番以降にはCAMERA,GIMBAL,GPSなどいろいろなコンポーネントの番号が定義されています.</p>
-<pre class="code c++ literal-block">
-<span class="c1">// common/common.h
-// ...
-</span><span class="k">typedef</span> <span class="k">enum</span> <span class="n">MAV_COMPONENT</span>
-<span class="p">{</span>
- <span class="n">MAV_COMP_ID_ALL</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_AUTOPILOT1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_CAMERA</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_CAMERA2</span><span class="o">=</span><span class="mi">101</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_CAMERA3</span><span class="o">=</span><span class="mi">102</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_CAMERA4</span><span class="o">=</span><span class="mi">103</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_CAMERA5</span><span class="o">=</span><span class="mi">104</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_CAMERA6</span><span class="o">=</span><span class="mi">105</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_SERVO1</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_SERVO2</span><span class="o">=</span><span class="mi">141</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_SERVO3</span><span class="o">=</span><span class="mi">142</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_SERVO4</span><span class="o">=</span><span class="mi">143</span><span class="p">,</span> <span class="cm">/*  | */</span>
- <span class="n">MAV_COMP_ID_SERVO5</span><span class="o">=</span><span class="mi">144</span><span class="p">,</span> <span class="cm">/*  | */</span>
-</pre>
-<p>プログラムは簡単で1byte読んではmavlink_parse_charに食わせ、mavlinkパケット読み込み成功の場合に.msgidをみてそれぞれの処理をしています.</p>
-<p>最初はHEARTBEATしか来ないのですがそれで相手のID(.sysid)と種別(.compid)がわかるのでその相手にMAV_DATA_STREAM_EXTRA1というデータストリームを10Hzのレートで送ってくれるようにmavlink_msg_request_data_stream_sendで頼んでいます.
-この例で実際の相手はArduCopterのtelemetryでMAV_DATA_STREAM_EXTRA1で指定されるデータストリームではATTITUDEやAHRS2のパケットが流れてくるのでATTITUDEのパケットを拾ってyawの値を得ています.</p>
-<p>同じような方法でいろいろな情報を得たり、制御を行うことが可能です.</p>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+#define MAVLINK_SEND_UART_BYTES send_tcp_bytes …</span></pre>
+                <a class="readmore" href="../mavlink-howto.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -175,7 +137,7 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <p><img src="../images/hachidori-01.png" alt="scheme" width="640"></p>
 <p>hachidoriからみるとArduPilotはセンサーデータを受け取りアクチュエータへの指示としてPWMの値を返すUDPサーバーです. このようなリモートセンサ/アクチュエータは実に古典的なアイデアですが,このスキームには大小様々な問題があります.</p>
 <p>とりあえずトイドローンタイプのhachidoriの飛行はこんな感じです:</p>
-<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="../images/test-flight-toy.png" /></a></p>
+<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="../images/test-flight-toy.png"></a></p>
 <p>これはstabilizeモードです. APM(ArduPilot)はうまく姿勢を制御できているように見えます. arducopterはlaptop PCのUbuntu 4.4.0-lowlatencyカーネル上で動かしています.</p>
 <p>250mmフレームにのせた別のhachidoriとAPMが動いているホストPCです:</p>
 <p><img src="../images/hachidori-250-liftup.jpg" alt="250frame" width=320>
@@ -184,7 +146,7 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <p>hachidoriのファームウェアは<a href="https://github.com/espressif/esp-idf">esp-idf</a>上の<a href="https://github.com/DCoJA/esp32-app/hachidori">application</a>になっています.
 テストやコンフィグレーションのためのPC上の小さなUDPサーバーが<a href="https://github.com/DCoJA/junkyard">junkyard</a>の中にあります. b3testはセンサーデータの表示やモーターのテストのためのサーバー, b3confは設定や定数などをhachidoriに書きこむためのサーバーです.</p>
 <h2>レイテンシ latency</h2>
-<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません ...</p>
+<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません …</p>
                 <a class="readmore" href="../jbee3.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -232,7 +194,7 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
     <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
     <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
     <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadhd_io_num ...</span></pre>
+    <span class="p">.</span><span class="n">quadhd_io_num …</span></pre>
                 <a class="readmore" href="../nrf24-shockburst.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -268,7 +230,8 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <li>ジャイロで角速度がわかるので微小時間をかけると微小角変位つまり微小回転がわかる</li>
 <li>それを現在までの回転に続けると微小時間後の回転q'が推定できる</li>
 <li>一方初期の方向から回転で得られた方向と加速度計やコンパスでわかる現在の方向の差が最小になるような回転qを勾配降下法で探す</li>
-<li>これらの回転の推計（あまり変わらないに違いない)をQuaternionで表しておいてそれらを結ぶ（短い ...</li></ul></blockquote>
+<li>これらの回転の推計（あまり変わらないに違いない)をQuaternionで表しておいてそれらを結ぶ（短い）測地線上に最良の答えがあるはずだと考える</li>
+<li>t q …</li></ul></blockquote>
                 <a class="readmore" href="../madgwick-filter-memo.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -345,7 +308,7 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
                         <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
 <span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="c1">// This ensures that all leds are off in deep sleep ...</span></pre>
+<span class="c1">// This ensures that all leds are off in deep sleep …</span></pre>
                 <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -373,7 +336,7 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
 With enabling command phase, the problem went away.</p>
 <pre class="code c literal-block">
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105 ...</span></pre>
+<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105</span><span class="p">,</span><span class="mi">12 …</span></pre>
                 <a class="readmore" href="../esp32-spi.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -410,7 +373,7 @@ cd gr-neug
 gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolator...
 </pre>
 </li>
-<li><p class="first">python/qa_neug.pyを編集: unit ...</p></li></ul></blockquote>
+<li><p class="first">python/qa_neug.pyを編集: unit …</p></li></ul></blockquote>
                 <a class="readmore" href="../gr-neug.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -418,7 +381,7 @@ gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolat
                 </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="blogroll">
-                        <h2>blogroll</h2>
+                        <h2>links</h2>
                         <ul>
                             <li><a href="http://getpelican.com/">Pelican</a></li>
                             <li><a href="http://python.org/">Python.org</a></li>

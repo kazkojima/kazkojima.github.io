@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>My Bug Has A Program! - openmv</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">My Bug Has A Program! </a></h1>
+                <nav><ul>
+                    <li><a href="../category/articles.html">articles</a></li>
+                    <li><a href="../category/english.html">English</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../versor-app.html">貧者的局所測位系 The versorer's apprentice</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-01-28T00:00:00+09:00">
+                Published: 日 28 1月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> </p>
+</footer><!-- /.post-info --><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenVM cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計するというのを作っています.</p>
+<img alt="OpenMV cam M7 + fish-eye + esp32" src="../images/pmlps.jpg" style="width: 640px; height: 400px;" />
+<img alt="OpenMV ide" src="../images/ledtrack.png" style="width: 640px; height: 400px;" />
+<p>魚眼レンズで得られるイメージセンサー上のマーカーの位置からcamからの方向を計算してマーカーの高さの情報をヒントにマーカーのcamを基準にした水平位置をだしてます. このセンサ上のマーカーの位置から3Dの方向を計算するところはいわゆるステレオグラフィックプロジェクション(立体射影)になっていて、三角関数や線形代数を使って計算できます.</p>
+<p>前置きが長くなりましたがフレームの水平位置を求めるところまでをgeometric algebraを使ったらどうなるか試してみました.</p>
+<pre class="code c++ literal-block">
+<span class="k">auto</span> <span class="n">pointO</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">pointP</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">h</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">line</span> <span class="o">=</span> <span class="n">pointO</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">dlp</span> <span class="o">&lt;=</span> <span class="n">line</span><span class="p">);</span>
+</pre>
+<p>の６行です. 使ったgeometric algebraのc++ライブラリは <a class="reference external" href="http://versor.mat.ucsb.edu/">Versor (libvsr)</a> というものです.</p>
+<p>絵を書くとこうなってます. この絵はGAviewerで書きました.</p>
+<img alt="figure" src="../images/stereo.png" style="width: 640px; height: 400px;" />
+<p>(x,y)がスケールされたイメージセンサー上の位置で最初の一行目でそれを立体射影し得られる単位球面上の点へのベクトルvをもとめています。　みかけはちょっとアレですがこれも絵を書いて説明できます
+あとは原点とその点を結ぶlineを作ってそれと高さの-hの水平面dlpとの交点(meet)を計算してposとしています。　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です
+記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です</p>
+<p>プログラムを動かして得られたデータをプロットしたものが</p>
+<img alt="Spur of marker" src="../images/marker-spur.png" style="width: 640px; height: 400px;" />
+<p>です. データが飛んでいるのはうまくフレームと認識できなかったところでマーカーの位置やプログラム
+等まだまだ手を加える必要があります.</p>
+<p>この水平位置の推計を元にvisual odmetryのデータを作ってMAVLinkでAPMに投げてやろうと思っています.</p>
+                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -23,6 +23,34 @@
                     <ol id="posts-list" class="hfeed" start="9">
             <li><article class="hentry">
                 <header>
+                    <h1><a href="../esp32-phy.html" rel="bookmark"
+                           title="Permalink to ESP32 PHY board">ESP32 PHY board</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-10-18T00:00:00+09:00">
+                Published: 水 18 10月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
+</footer><!-- /.post-info -->                <p>I'm making a simple esp32 board with ethernet. ESP32 has MAC and esp-idf supports PHYs like LAN87x0 and TLK110 already. Here is the schematic with KiCAD:</p>
+<img alt="esp32-tlk110 schematic" src="../images/esp32-tlk110.png" style="width: 640px; height: 400px;" />
+<p>I'll create a git repository for that hardware if it works.</p>
+<p><em>Update 2017-10-21</em></p>
+<p>Now it works!</p>
+<img alt="esp32-tlk110 works" src="../images/esp32-tlk110-jumpers.jpg" style="width: 640px; height: 400px;" />
+<p>Revised KiCAD files for this board can be …</p>
+                <a class="readmore" href="../esp32-phy.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
                     <h1><a href="../esp32-deep-sleep.html" rel="bookmark"
                            title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
                 </header>
@@ -55,7 +83,7 @@
 <span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
                         <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
 <span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="c1">// This ensures that all leds are off in deep sleep ...</span></pre>
+<span class="c1">// This ensures that all leds are off in deep sleep …</span></pre>
                 <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -83,7 +111,7 @@
 <p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
 With enabling command phase, the problem went away.</p>
 <pre class="code c literal-block">
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105 ...</span></pre>
+<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105</span><span class="p">,</span><span class="mi">12 …</span></pre>
                 <a class="readmore" href="../esp32-spi.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -120,7 +148,7 @@ cd gr-neug
 gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolator...
 </pre>
 </li>
-<li><p class="first">python/qa_neug.pyを編集: unit ...</p></li></ul></blockquote>
+<li><p class="first">python/qa_neug.pyを編集: unit …</p></li></ul></blockquote>
                 <a class="readmore" href="../gr-neug.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -132,7 +160,7 @@ gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolat
                 </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="blogroll">
-                        <h2>blogroll</h2>
+                        <h2>links</h2>
                         <ul>
                             <li><a href="http://getpelican.com/">Pelican</a></li>
                             <li><a href="http://python.org/">Python.org</a></li>

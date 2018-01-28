@@ -21,7 +21,55 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../m5propo-en.html">M5 propo - A tiny transmitter</a></h1>
+                    <h1 class="entry-title"><a href="../versor-app.html">貧者的局所測位系 The versorer's apprentice</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-01-28T00:00:00+09:00">
+                Published: 日 28 1月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> </p>
+</footer><!-- /.post-info --><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenVM cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計するというのを作っています.</p>
+<img alt="OpenMV cam M7 + fish-eye + esp32" src="../images/pmlps.jpg" style="width: 640px; height: 400px;" />
+<img alt="OpenMV ide" src="../images/ledtrack.png" style="width: 640px; height: 400px;" />
+<p>魚眼レンズで得られるイメージセンサー上のマーカーの位置からcamからの方向を計算してマーカーの高さの情報をヒントにマーカーのcamを基準にした水平位置をだしてます. このセンサ上のマーカーの位置から3Dの方向を計算するところはいわゆるステレオグラフィックプロジェクション(立体射影)になっていて、三角関数や線形代数を使って計算できます.</p>
+<p>前置きが長くなりましたがフレームの水平位置を求めるところまでをgeometric algebraを使ったらどうなるか試してみました.</p>
+<pre class="code c++ literal-block">
+<span class="k">auto</span> <span class="n">pointO</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">pointP</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">h</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">line</span> <span class="o">=</span> <span class="n">pointO</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">dlp</span> <span class="o">&lt;=</span> <span class="n">line</span><span class="p">);</span>
+</pre>
+<p>の６行です. 使ったgeometric algebraのc++ライブラリは <a class="reference external" href="http://versor.mat.ucsb.edu/">Versor (libvsr)</a> というものです.</p>
+<p>絵を書くとこうなってます. この絵はGAviewerで書きました.</p>
+<img alt="figure" src="../images/stereo.png" style="width: 640px; height: 400px;" />
+<p>(x,y)がスケールされたイメージセンサー上の位置で最初の一行目でそれを立体射影し得られる単位球面上の点へのベクトルvをもとめています。　みかけはちょっとアレですがこれも絵を書いて説明できます
+あとは原点とその点を結ぶlineを作ってそれと高さの-hの水平面dlpとの交点(meet)を計算してposとしています。　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です
+記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です</p>
+<p>プログラムを動かして得られたデータをプロットしたものが</p>
+<img alt="Spur of marker" src="../images/marker-spur.png" style="width: 640px; height: 400px;" />
+<p>です. データが飛んでいるのはうまくフレームと認識できなかったところでマーカーの位置やプログラム
+等まだまだ手を加える必要があります.</p>
+<p>この水平位置の推計を元にvisual odmetryのデータを作ってMAVLinkでAPMに投げてやろうと思っています.</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../m5propo-en.html" rel="bookmark"
+                           title="Permalink to M5 propo - A tiny transmitter">M5 propo - A tiny transmitter</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-23T00:00:00+09:00">
                 Published: 土 23 12月 2017
@@ -32,7 +80,7 @@
         </address>
 <p>In <a href="../category/english.html">English</a>.</p>
 <p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/m5stack.html">M5Stack</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/m5propo-en.html" />
 <meta property="og:title" content="M5 propo - A tiny transmitter" />
@@ -40,18 +88,10 @@
 <meta property="og:image" content="https://kazkojima.github.io/images/m5propo.jpg" /></p>
 <p><img src="../images/m5propo.jpg" alt="m5propo" width="640"></p>
 <p>M5 propo is a tiny RC transmitter with <a href="http://www.m5stack.com/">M5Stack</a> which has MPU-9250 9-axis sensor. It sends control PWM values with the format which Parrot Bebop uses.</p>
-<p>There are 4 bars on the LCD. The cyan bar is the roll gage and the green one is the pitch gage. The bottom yellow bar is for yaw. The throttle value is shown with the right-most gage which is colored with orange when the throttle is active.</p>
-<p>The values for roll and pitch are generated by the attitude of M5Stack itself. The raw IMU data and the compass data of MPU-9250 are processed with Madgwick AHRS filter and the resulting quaternion makes the values for roll and pitch. The rough scheme of this propo is here:</p>
-<p><img src="../images/m5propo-system-fig.png" alt="m5propo schema" width="640"></p>
-<p>The value for yaw is a bit involved. M5 propo gets the yaw of the frame from the telemetry port of FC via MAVLink. That value is compared with the yaw of M5Stack itself and the difference is used to generate control PWM value for yaw so as to aligne the headings of the frame and the propo. It doesn't work well yet, though.</p>
-<p><a href="https://www.youtube.com/watch?v=J1q0igPpOdk"><img alt="A test flight" src="../images/test-flight-toy-1217.png" /></a></p>
-<p>At the first trial, I've used a flat volume and ADC input of ESP32 for the throttle. It worked, though it was hard to control smoothly. Looks some good volume is deadly needed for smooth control. Currently the three buttons of M5Stack are used instead. The center button is the "mid" button which will go to the mid throttle very quickly. The other buttons are the "up/down" buttons. The left button will make throttle down and the right one will make throttle up. These buttons would match the throttle work for the ALTHOLD mode.</p>
-<p>See <a href="https://github.com/kazkojima/m5stack-app">m5stack-app directory</a> for the source code of m5-propo.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>There are 4 bars on the LCD. The cyan bar is the roll gage and the green one is the pitch gage. The bottom …</p>
+                <a class="readmore" href="../m5propo-en.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -77,7 +117,7 @@
 <meta property="og:description" content="Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC." />
 <meta property="og:image" content="https://kazkojima.github.io/images/bee3-flight.jpg" /></p>
 <p><img src="../images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
-<p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks ...</p>
+<p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting …</p>
                 <a class="readmore" href="../bee3-en.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -111,7 +151,7 @@
 <p><img src="../images/hachidori-01.png" alt="scheme" width="640"></p>
 <p>hachidoriからみるとArduPilotはセンサーデータを受け取りアクチュエータへの指示としてPWMの値を返すUDPサーバーです. このようなリモートセンサ/アクチュエータは実に古典的なアイデアですが,このスキームには大小様々な問題があります.</p>
 <p>とりあえずトイドローンタイプのhachidoriの飛行はこんな感じです:</p>
-<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="../images/test-flight-toy.png" /></a></p>
+<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="../images/test-flight-toy.png"></a></p>
 <p>これはstabilizeモードです. APM(ArduPilot)はうまく姿勢を制御できているように見えます. arducopterはlaptop PCのUbuntu 4.4.0-lowlatencyカーネル上で動かしています.</p>
 <p>250mmフレームにのせた別のhachidoriとAPMが動いているホストPCです:</p>
 <p><img src="../images/hachidori-250-liftup.jpg" alt="250frame" width=320>
@@ -120,7 +160,7 @@
 <p>hachidoriのファームウェアは<a href="https://github.com/espressif/esp-idf">esp-idf</a>上の<a href="https://github.com/DCoJA/esp32-app/hachidori">application</a>になっています.
 テストやコンフィグレーションのためのPC上の小さなUDPサーバーが<a href="https://github.com/DCoJA/junkyard">junkyard</a>の中にあります. b3testはセンサーデータの表示やモーターのテストのためのサーバー, b3confは設定や定数などをhachidoriに書きこむためのサーバーです.</p>
 <h2>レイテンシ latency</h2>
-<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません ...</p>
+<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません …</p>
                 <a class="readmore" href="../jbee3.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -168,7 +208,7 @@
     <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
     <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
     <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadhd_io_num ...</span></pre>
+    <span class="p">.</span><span class="n">quadhd_io_num …</span></pre>
                 <a class="readmore" href="../nrf24-shockburst.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -193,7 +233,7 @@
 </footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
 <img alt="esp32-wslan8720 test" src="../images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
 <img alt="esp32-wslan8720 board" src="../images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
-<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware ...</p>
+<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware/esp32-wslan8720 …</p>
                 <a class="readmore" href="../esp32-phy2.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -257,7 +297,7 @@
 <img alt="esp-idf menuconfig 1000Hz" src="../images/config-1000Hz.png" style="width: 640px; height: 400px;" />
 <p>This is ok for almost applications and if you require sub-milli time precision, the extra timer or interrupt would be your friend.
 But why can't be 2000Hz tick rate set on 240Mz CPU?
-Here is a famous LED ...</p>
+Here is a famous LED blinker …</p>
                 <a class="readmore" href="../esp32-2khz.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -285,7 +325,7 @@ Here is a famous LED ...</p>
 <p><em>Update 2017-10-21</em></p>
 <p>Now it works!</p>
 <img alt="esp32-tlk110 works" src="../images/esp32-tlk110-jumpers.jpg" style="width: 640px; height: 400px;" />
-<p>Revised KiCAD files for this board ...</p>
+<p>Revised KiCAD files for this board can be …</p>
                 <a class="readmore" href="../esp32-phy.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -324,43 +364,19 @@ Here is a famous LED ...</p>
 <span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
                         <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
 <span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="c1">// This ensures that all leds are off in deep sleep ...</span></pre>
+<span class="c1">// This ensures that all leds are off in deep sleep …</span></pre>
                 <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-spi.html" rel="bookmark"
-                           title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-06-26T00:00:00+09:00">
-                Published: 月 26 6月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <div class="figure align-left">
-<img alt="esp-wroom-32 board" src="../images/bee3-board.png" style="width: 600.0px; height: 337.5px;" />
-</div>
-<p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
-With enabling command phase, the problem went away.</p>
-<pre class="code c literal-block">
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105 ...</span></pre>
-                <a class="readmore" href="../esp32-spi.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
                 </ol><!-- /#posts-list -->
+<p class="paginator">
+    Page 1 / 2
+        <a href="../tag/esp322.html">&raquo;</a>
+</p>
                 </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="blogroll">
-                        <h2>blogroll</h2>
+                        <h2>links</h2>
                         <ul>
                             <li><a href="http://getpelican.com/">Pelican</a></li>
                             <li><a href="http://python.org/">Python.org</a></li>
