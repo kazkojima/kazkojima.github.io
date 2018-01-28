@@ -52,14 +52,20 @@
 <p>の６行です. 使ったgeometric algebraのc++ライブラリは <a class="reference external" href="http://versor.mat.ucsb.edu/">Versor (libvsr)</a> というものです.</p>
 <p>絵を書くとこうなってます. この絵はGAviewerで書きました.</p>
 <img alt="figure" src="../images/stereo.png" style="width: 640px; height: 400px;" />
-<p>(x,y)がスケールされたイメージセンサー上の位置で最初の一行目でそれを立体射影し得られる単位球面上の点へのベクトルvをもとめています。　みかけはちょっとアレですがこれも絵を書いて説明できます
-あとは原点とその点を結ぶlineを作ってそれと高さの-hの水平面dlpとの交点(meet)を計算してposとしています。　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です
-記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です</p>
+<p>(x,y)がスケールされたイメージセンサー上の位置で最初の一行目でそれを立体射影し得られる単位球面上の点へのベクトルvをもとめています.　みかけはちょっとアレですがこれも絵を書いて説明できます <a class="footnote-reference" href="#id2" id="id1">[*]</a>.</p>
+<p>最後の３行で原点とその点を結ぶlineを作ってそれと高さの-hの水平面dlpとの交点(meet)を計算しposとしています.　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です.
+記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です.</p>
 <p>プログラムを動かして得られたデータをプロットしたものが</p>
 <img alt="Spur of marker" src="../images/marker-spur.png" style="width: 640px; height: 400px;" />
 <p>です. データが飛んでいるのはうまくフレームと認識できなかったところでマーカーの位置やプログラム
 等まだまだ手を加える必要があります.</p>
 <p>この水平位置の推計を元にvisual odmetryのデータを作ってMAVLinkでAPMに投げてやろうと思っています.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[*]</a></td><td>Vec(x,y,-1)は絵で言えばblueの点を結ぶベクトルですがこれを原点を通ってこのベクトルに直行する平面の相対表現としてみることができます. 式の右辺は点e3のこの平面に関するreflectionを与えています. 絵から青い点同士はこの平面に関して対称な位置にあることがわかるので立体射影の結果がvになります.</td></tr>
+</tbody>
+</table>
                 </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
