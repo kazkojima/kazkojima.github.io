@@ -42,7 +42,7 @@
 <meta property="og:url" content="https://kazkojima.github.io/versor-app.html" />
 <meta property="og:title" content="貧者的局所測位系" />
 <meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenVM cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計するというのを作っています.</p>
-<img alt="OpenMV cam M7 + fish-eye + esp32" src="./images/pmlps.jpg" style="width: 640px; height: 400px;" />
+<img alt="OpenMV cam M7 + fish-eye + esp32" src="./images/pmlps-1.jpg" style="width: 640px; height: 400px;" />
 <img alt="OpenMV ide" src="./images/ledtrack.png" style="width: 640px; height: 400px;" />
 <p>魚眼レンズで得られるイメージセンサー上のマーカーの位置からcamからの方向を計算してマーカーの高さの情報をヒントにマーカーのcamを基準にした水平位置をだしてます. このセンサ上のマーカーの位置から3Dの方向を計算するところはいわゆるステレオグラフィックプロジェクション(立体射影)になっていて、三角関数や線形代数を使って計算できます.</p>
 <p>前置きが長くなりましたがフレームの水平位置を求めるところまでをgeometric algebraを使ったらどうなるか試してみました.</p>
