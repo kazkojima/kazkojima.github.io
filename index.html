@@ -60,6 +60,12 @@
 <p>です. データが飛んでいるのはうまくフレームと認識できなかったところでマーカーの位置やプログラム
 等まだまだ手を加える必要があります.</p>
 <p>この水平位置の推計を元にvisual odmetryのデータを作ってMAVLinkでAPMに投げてやろうと思っています.</p>
+<p><em>[Update Feb. 5 2018]</em></p>
+<p>マーカーのLEDを高輝度なもの2つにしてその距離から高さの推定も行ってみました.</p>
+<img alt="3D Spur of marker" src="./images/marker-spur-3d.png" style="width: 640px; height: 400px;" />
+<p>推定で簡単なKalman filterを使っています. 一応結果をMAVLinkでAPMに投げるようにしてみたところ, mavproxyのstatus commandの結果中に</p>
+<p>9201: VISION_POSITION_DELTA {time_usec : 1517818213897626, time_delta_usec : 21691, angle_delta : [0.0, 0.0, 0.0], position_delta : [0.012343823909759521, 0.010005341842770576, 0.00880509614944458], confidence : 90.0}</p>
+<p>のように反映されるようになりました. 条件によりますが40-50fpsくらいのレートでOpenMV camからのデータを処理してVISION_POSITION_DELTAメッセージが送られているようです.</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
