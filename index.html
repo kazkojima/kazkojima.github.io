@@ -31,7 +31,7 @@
                 By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
         </address>
 <p>In <a href="./category/articles.html">articles</a>.</p>
-<p>tags: <a href="./tag/geometricalgebra.html">GeometricAlgebra</a> <a href="./tag/esp32.html">esp32</a> <a href="./tag/openmv.html">openmv</a> </p>
+<p>tags: <a href="./tag/geometricalgebra.html">GeometricAlgebra</a> <a href="./tag/esp32.html">esp32</a> <a href="./tag/openmv.html">openmv</a> <a href="./tag/ardupilot.html">ardupilot</a> </p>
 </footer><!-- /.post-info --><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/versor-app.html" />
@@ -51,10 +51,10 @@
 </pre>
 <p>の６行です. 使ったgeometric algebraのc++ライブラリは <a class="reference external" href="http://versor.mat.ucsb.edu/">Versor (libvsr)</a> というものです.</p>
 <p>絵を書くとこうなってます. この絵はGAviewerで書きました.</p>
-<img alt="figure" src="./images/stereo-1.png" style="width: 640px; height: 400px;" />
+<img alt="figure" src="./images/stereo-2.png" style="width: 640px; height: 400px;" />
 <p>(x,y)がスケールされたイメージセンサー上の位置で最初の一行目でそれを立体射影し得られる単位球面上の点へのベクトルvをもとめています.　みかけはちょっとアレですがこれも絵を書いて説明できます <a class="footnote-reference" href="#id2" id="id1">[*]</a>.</p>
-<p>最後の３行で原点とその点を結ぶlineを作ってそれと高さの-hの水平面dlpとの交点(meet)を計算しposとしています.　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です.
-記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です.</p>
+<p>最後の３行で原点とその点を結ぶlineを作ってそれとワイヤーフレームで表示されている高さの-hの水平面dlpとの交点(meet)を計算しposとしています.　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です.</p>
+<p>フレームの姿勢情報から作った点posを通るようなフレームの水平面を表しているのが少し傾いているframe supportとなっている平面です. camで見えるにフレーム上の点は原点を通る直線とこの平面の交点として上に書いたgeometric algebraの計算と同じようmeetとして簡単に位置が求められます. このように記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です.</p>
 <p>プログラムを動かして得られたデータをプロットしたものが</p>
 <img alt="Spur of marker" src="./images/marker-spur.png" style="width: 640px; height: 400px;" />
 <p>です. データが飛んでいるのはうまくフレームと認識できなかったところでマーカーの位置やプログラム
@@ -63,9 +63,12 @@
 <p><em>[Update Feb. 5 2018]</em></p>
 <p>マーカーのLEDを高輝度なもの2つにしてその距離から高さの推定も行ってみました.</p>
 <img alt="3D Spur of marker" src="./images/marker-spur-3d.png" style="width: 640px; height: 400px;" />
-<p>推定で簡単なKalman filterを使っています. 一応結果をMAVLinkでAPMに投げるようにしてみたところ, mavproxyのstatus commandの結果中に</p>
+<p>推定でKalman filterを使っています. 一応結果をMAVLinkでAPMに投げるようにしてみたところ, mavproxyのstatus commandの結果中に</p>
 <p>9201: VISION_POSITION_DELTA {time_usec : 1517818213897626, time_delta_usec : 21691, angle_delta : [0.0, 0.0, 0.0], position_delta : [0.012343823909759521, 0.010005341842770576, 0.00880509614944458], confidence : 90.0}</p>
 <p>のように反映されるようになりました. 条件によりますが40-50fpsくらいのレートでOpenMV camからのデータを処理してVISION_POSITION_DELTAメッセージが送られているようです.</p>
+<p><em>[Update Feb. 11 2018]</em></p>
+<p>実際にPOSHOLDモードで飛ばしてみた結果はこんな感じ <a class="reference external" href="https://www.youtube.com/watch?v=eJjv9GJqoHU">https://www.youtube.com/watch?v=eJjv9GJqoHU</a> です.</p>
+<p>どうもFC(ArduPilot)でVISION_POSITION_DELTAメッセージを使って推定した位置が少しづつずれているようです. 位置そのものを送るようするといいのかもしれませんがArduPilotでは位置そのものを送るVISION_POSITION_ESTIMATEは現在作業中らしく今はまだサポートされていません.</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
