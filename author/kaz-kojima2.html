@@ -23,6 +23,32 @@
                     <ol id="posts-list" class="hfeed" start="9">
             <li><article class="hentry">
                 <header>
+                    <h1><a href="../esp32-2khz.html" rel="bookmark"
+                           title="Permalink to ESP32 0.5ms tick">ESP32 0.5ms tick</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-10-22T00:00:00+09:00">
+                Published: 日 22 10月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/freertos.html">freertos</a> </p>
+</footer><!-- /.post-info -->                <p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
+<img alt="esp-idf menuconfig 1000Hz" src="../images/config-1000Hz.png" style="width: 640px; height: 400px;" />
+<p>This is ok for almost applications and if you require sub-milli time precision, the extra timer or interrupt would be your friend.
+But why can't be 2000Hz tick rate set on 240Mz CPU?
+Here is a famous LED blinker …</p>
+                <a class="readmore" href="../esp32-2khz.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
                     <h1><a href="../esp32-phy.html" rel="bookmark"
                            title="Permalink to ESP32 PHY board">ESP32 PHY board</a></h1>
                 </header>
