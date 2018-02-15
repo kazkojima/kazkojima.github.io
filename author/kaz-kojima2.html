@@ -23,6 +23,44 @@
                     <ol id="posts-list" class="hfeed" start="9">
             <li><article class="hentry">
                 <header>
+                    <h1><a href="../testing-espnow.html" rel="bookmark"
+                           title="Permalink to Testing ESPNOW">Testing ESPNOW</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-10-28T00:00:00+09:00">
+                Published: 土 28 10月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info -->                <p>ESP32の <a class="reference external" href="../esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="../images/bee3-board.png">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
+<img alt="esp32 ether-espnow brigde" src="../images/ether-now-bridge.png" style="width: 640px; height: 400px;" />
+<p>でPCの上ではarducopterとテスト用のUDPサーバの両方を動かして試してみました.</p>
+<p><em>結果</em></p>
+<p>現在のESP32のespnowは次のような挙動をするようです.</p>
+<blockquote>
+<ul class="simple">
+<li>近接で通信した場合latencyは2ms位で安定している</li>
+<li>送信と送信の間で間隔を空けることが必要で送信のみ繰り返す場合で~2msが必要に見える</li>
+<li>受信を行うとこの間隔が影響される</li>
+</ul>
+</blockquote>
+<p>実際のテストではセンサボードからespnowでパケットを投げ送信終了のコールバックが終わるまで待つようにしました. 送信のみの場合~500Hzぐらいのレートで~70byteぐらいのデータが送信できていました.</p>
+<p>100Hzのレートで~30byteほどを受信するようにすると送信側のレートは10%以上低下しました. 送受の切り替え時にデッドタイムがあることを想像させるような挙動ですが、espnowのライブラリはソースがないので確かなことはわかりません.</p>
+<p>このセンサボードからはIMUなどのパケットが1msに40byte程度でてくるのですが受信も行いながらだとパケットが最初に期待していたようなlatencyでは送り切れない状態が発生しています.
+生のlatencyや処理コスト的にespnowは魅力的なのですが、リモートセンサ/アクチュエータ方式でコプターを飛ばすのは今の所少し厳しい感じです.</p>
+
+                <a class="readmore" href="../testing-espnow.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
                     <h1><a href="../esp32-2khz.html" rel="bookmark"
                            title="Permalink to ESP32 0.5ms tick">ESP32 0.5ms tick</a></h1>
                 </header>

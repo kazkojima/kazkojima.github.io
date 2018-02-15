@@ -21,7 +21,60 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../versor-app.html">貧者的局所測位系 The versorer's apprentice</a></h1>
+                    <h1 class="entry-title"><a href="../pmlps-en.html">Yet another indoor positioning with single cam</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-02-15T00:00:00+09:00">
+                Published: 木 15 2月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
+</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/pmlps-en.html" />
+<meta property="og:title" content="Indoor positioning with single cam" />
+<meta property="og:description" content="Poor Man's Local Positioning System eith single cam." />
+<meta property="og:image" content="https://kazkojima.github.io/images/pmlps-1.jpg" /></p>
+<p><img src="../images/pmlps-1.jpg" alt="openMV+ESP32" width="640"></p>
+<p>Screen shot of opemMV IDE</p>
+<p><img src="../images/ledtrack.png" alt="led tracker" width="320"></p>
+<p>I've tried to make a simple and budget local positioning system with openMV cam for the indoor fligh of tiny copter.
+Looks not so good precision but no so bad as a Poor Man's system. A LOITER and LAND flight test with my hachidori copter is here:</p>
+<p><a href="https://www.youtube.com/watch?v=S4lpKn7MHvo"><img alt="A test flight" src="../images/loiter-and-land-0215.jpg"></a></p>
+<p>where only throttle work is done.</p>
+<p>System is simple</p>
+<p><img src="../images/lps-figure.png" alt="figure" width="640"></p>
+<p>OpenMV cam with fish-eye lens has been set at the ceiling and it tracks LED markers mounted on the copter. The tracking data is sent to the host PC via ESP32 connected to openMV cam as a SPI slave device. The host PC also connects to the telemetry port of ArduCopter and is getting ATTITUDE packets and estimates the position and heading with the visual markers and ATTITUDE information.</p>
+<p>The result of estimations are sent back to the telemetry port with VISION_POSITION_DELTA packets.</p>
+<p>Currently, openMV data rate is 42-50fps, ATTITUDE rate 20Hz and VISION_POSITION_DELTA rate is same with cam.</p>
+<p>The coordinate of marker on image sensor is converted to the 3D direction from cam and the hight is estimated with the distance of markers and the attitude. I'm using geometric algebra in very primitive way to compute them. Kalman filter is applied for smoothing.
+Here is a test result of 3D positions got when moving the copter by hand.</p>
+<p><img src="../images/marker-spur-3d.png" alt="3D spur" width="640"></p>
+<h2>visual yaw estimation</h2>
+<p>Unfortunately since yaw angles based on the compass of the copter are too unreliable in my case. The copter uses coreless motors which easily break compass measuring and there are many other magnetic sources in my room. The visual yaw estimation is used instead.</p>
+<p>When the pitch angle isn't zero, the direction found from cam and the real holizontal direction differs. The figure below represents this situation:</p>
+<p><img src="../images/adjyaw-0.png" alt="headings" width="640"></p>
+<p>where w is the real heading vector and v is the vector can be seen as the holizontal direction from cam.  w = (v' rotated with pitch angle) and H is a plane including v, w and cam. A simple geometric algebra computation helps again.</p>
+<p><img src="../images/adjyaw-1.png" alt="headings" width="640"></p>
+<p>This figure shows that computation in geometric algebra. Essentially, vector w can be obtained as the one of the point pair which is the "meet" of the yellow circle K and the green plane H. The corresponding program is fairly straightforward. See <a href="https://github.com/kazkojima/pmlps/host">host program</a> for details. Of course, rotation matrices or spherical angles can be used for that computation.</p>
+<p>All programs for openMV, ESP32 and the host PC are in <a href="https://github.com/kazkojima/pmlps">my github</a>, though they are experimental.</p>
+<p>Happy Hacking,</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../versor-app.html" rel="bookmark"
+                           title="Permalink to 貧者的局所測位系 The versorer's apprentice">貧者的局所測位系 The versorer's apprentice</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-01-28T00:00:00+09:00">
                 Published: 日 28 1月 2018
@@ -32,7 +85,7 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
-</footer><!-- /.post-info --><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/versor-app.html" />
 <meta property="og:title" content="貧者的局所測位系" />
@@ -46,41 +99,10 @@
 <span class="k">auto</span> <span class="n">pointP</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">h</span><span class="p">);</span>
 <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
 <span class="k">auto</span> <span class="n">line</span> <span class="o">=</span> <span class="n">pointO</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
-<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">dlp</span> <span class="o">&lt;=</span> <span class="n">line</span><span class="p">);</span>
-</pre>
-<p>の６行です. 使ったgeometric algebraのc++ライブラリは <a class="reference external" href="http://versor.mat.ucsb.edu/">Versor (libvsr)</a> というものです.</p>
-<p>絵を書くとこうなってます. この絵はGAviewerで書きました.</p>
-<img alt="figure" src="../images/stereo-2.png" style="width: 640px; height: 400px;" />
-<p>(x,y)がスケールされたイメージセンサー上の位置で最初の一行目でそれを立体射影し得られる単位球面上の点へのベクトルvをもとめています.　みかけはちょっとアレですがこれも絵を書いて説明できます <a class="footnote-reference" href="#id2" id="id1">[*]</a>.</p>
-<p>最後の３行で原点とその点を結ぶlineを作ってそれとワイヤーフレームで表示されている高さの-hの水平面dlpとの交点(meet)を計算しposとしています.　&lt;= はlibvsrでコントラクション(内積の拡張)に割り当てられた演算子です.</p>
-<p>フレームの姿勢情報から作った点posを通るようなフレームの水平面を表しているのが少し傾いているframe supportとなっている平面です. camで見えるフレーム上の点は原点を通る直線とこの平面の交点なので上のgeometric algebraでの計算と同じくmeetとして簡単に位置が求められます. このように記号になれてさえしまえば単に図を表すように書くだけなので案外簡単にいろいろなことができる印象です.</p>
-<p>プログラムを動かして得られたデータをプロットしたものが</p>
-<img alt="Spur of marker" src="../images/marker-spur.png" style="width: 640px; height: 400px;" />
-<p>です. データが飛んでいるのはうまくフレームと認識できなかったところでマーカーの位置やプログラム
-等まだまだ手を加える必要があります.</p>
-<p>この水平位置の推計を元にvisual odmetryのデータを作ってMAVLinkでAPMに投げてやろうと思っています.</p>
-<p><em>[Update Feb. 5 2018]</em></p>
-<p>マーカーのLEDを高輝度なもの2つにしてその距離から高さの推定も行ってみました.</p>
-<img alt="3D Spur of marker" src="../images/marker-spur-3d.png" style="width: 640px; height: 400px;" />
-<p>推定でKalman filterを使っています. 一応結果をMAVLinkでAPMに投げるようにしてみたところ, mavproxyのstatus commandの結果中に</p>
-<p>9201: VISION_POSITION_DELTA {time_usec : 1517818213897626, time_delta_usec : 21691, angle_delta : [0.0, 0.0, 0.0], position_delta : [0.012343823909759521, 0.010005341842770576, 0.00880509614944458], confidence : 90.0}</p>
-<p>のように反映されるようになりました. 条件によりますが40-50fpsくらいのレートでOpenMV camからのデータを処理してVISION_POSITION_DELTAメッセージが送られているようです.</p>
-<p><em>[Update Feb. 11 2018]</em></p>
-<p>実際にPOSHOLDモードで飛ばしてみた結果はこんな感じ <a class="reference external" href="https://www.youtube.com/watch?v=eJjv9GJqoHU">https://www.youtube.com/watch?v=eJjv9GJqoHU</a> です.</p>
-<p>どうもFC(ArduPilot)でVISION_POSITION_DELTAメッセージを使って推定した位置が少しづつずれているようです. 位置そのものを送るようするといいのかもしれませんがArduPilotでは位置そのものを送るVISION_POSITION_ESTIMATEはまだ作業中らしくサポートされていません.</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[*]</a></td><td>Vec(x,y,-1)は絵で言えばblueの点を結ぶベクトルですがこれを原点を通ってこのベクトルに直交する平面の相対表現としてみることができます. 式の右辺は点e3のこの平面に関するreflectionを与えています. 絵から青い点同士はこの平面に関して対称な位置にあることがわかるので立体射影の結果がvになります.</td></tr>
-</tbody>
-</table>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0 …</span></pre>
+                <a class="readmore" href="../versor-app.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -346,45 +368,6 @@ Here is a famous LED blinker …</p>
 <img alt="esp32-tlk110 works" src="../images/esp32-tlk110-jumpers.jpg" style="width: 640px; height: 400px;" />
 <p>Revised KiCAD files for this board can be …</p>
                 <a class="readmore" href="../esp32-phy.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-deep-sleep.html" rel="bookmark"
-                           title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-07-28T00:00:00+09:00">
-                Published: 金 28 7月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
-<p>最初はdeep sleep modeに入る前に消しておいたらと思ったのですがdeep sleepするとGPIOがlowレベルになって全点灯してしまいました.  いろいろやるうちに逃げ道を見つけることができました.
-いつまでこれでうまくいくかはわからないのですが.</p>
-<p>話は簡単で</p>
-<blockquote>
-<ul class="simple">
-<li>GPIOのコンフィグでのpull-up/downはdeep sleep時でも有効</li>
-</ul>
-</blockquote>
-<p>なことを利用します. 問題のシステムでpull-upを立てておくとdeep sleep時にそれが効いてレベルがhighになって全消灯できました. こんな感じです (このシステムではRGBLED_OFF=1)</p>
-<pre class="code c literal-block">
-<span class="n">gpio_config_t</span> <span class="n">io_conf</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">intr_type</span> <span class="o">=</span> <span class="n">GPIO_PIN_INTR_DISABLE</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">GPIO_MODE_OUTPUT</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
-                        <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="c1">// This ensures that all leds are off in deep sleep …</span></pre>
-                <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->
