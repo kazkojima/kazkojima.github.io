@@ -66,7 +66,7 @@ vとpitchからwを求める</blockquote>
 <span class="n">yaw_meas</span> <span class="o">=</span> <span class="n">atan2f</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 </pre>
 <p>とすればokです. 回転行列や球面角を使うと中間計算で三角関数を多用することになりライブラリなどを使うとしてもいろいろとめんどうなのですが、geometric algebraでは描いた絵をほぼそのままプログラムにしてしまえることがわかると思います.</p>
-<p>得られたyaw角は当然カムでの測定時の誤差などいろいろなノイズがのっているのでそのままではなくカルマンフィルターを使ってその推定値を利用しています. そもそもそれ程の精度はないのですがそれでもコンパスで得られるyawの値よりだいぶまともなようです. この測位系での <a class="reference external" href="https://www.youtube.com/watch?v=S4lpKn7MHvo">&lt;ホバーリング</a> もだいぶ安定したものになりました.</p>
+<p>得られたyaw角は当然カムでの測定時の誤差などいろいろなノイズがのっているのでそのままではなくカルマンフィルターを使ってその推定値を利用しています. そもそもそれ程の精度はないのですがそれでもコンパスで得られるyawの値よりだいぶまともなようです. この測位系での <a class="reference external" href="https://www.youtube.com/watch?v=S4lpKn7MHvo">ホバーリング</a> もだいぶ安定したものになりました.</p>
 
     </div><!-- /.entry-content -->
 
