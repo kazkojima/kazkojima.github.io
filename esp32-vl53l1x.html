@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>My Bug Has A Program! - english</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
+        <title>VL53L1X on ESP-IDF</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
 
         <!--[if IE]>
             <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -12,27 +12,32 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
+                <h1><a href="./">My Bug Has A Program! </a></h1>
                 <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
+                    <li><a href="./category/articles.html">articles</a></li>
+                    <li class="active"><a href="./category/english.html">English</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./esp32-vl53l1x.html" rel="bookmark"
+           title="Permalink to VL53L1X on ESP-IDF">VL53L1X on ESP-IDF</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../esp32-vl53l1x.html">VL53L1X on ESP-IDF</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-03-23T00:00:00+09:00">
                 Published: 金 23 3月 2018
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
         </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+<p>In <a href="./category/english.html">English</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/vl53l1x.html">vl53l1x</a> <a href="./tag/english.html">english</a> </p>
+</footer><!-- /.post-info -->      <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/esp32-vl53l1x.html" />
 <meta property="og:title" content="VL53L1X on ESP-IDF" />
@@ -57,50 +62,15 @@ CFLAGS += -Wno-unused-variable -Wno-maybe-uninitialized -DI2C_HandleTypeDef=int
 
 <p>The file path is relative to main/ itself. The definition of COMPONENT_SRCDIRS can be read as '. ./symlink-STM32CubeExpansion_53L1A1_V1.0.0/Drivers/BSP/Components/vl53l1x'. The build system adds these directories as the directory which has sources to be compiled. If you symlink the root directory of ST's driver to symlink-STM32CubeExpansion_53L1A1_V1.0.0, the sources in Drivers/BSP/Components/vl53l1x of ST's source are compiled with.</p>
 <p>COMPONENT_ADD_INCLUDEDIRS is the list of directories which are added as the search paths for the include files. CFLAGS is the option flags during compiling. In this example, it adds a few -W flags to avoid failure with warnings and gives a missing type definition. Thus I could use ST's source tree without modifying. Easy enough, isn't it?</p>
-<p><img src="../images/vl53l1x.png" alt="bread board" width="720"></p>
+<p><img src="./images/vl53l1x.png" alt="bread board" width="720"></p>
 <p>The test circuit is using ESP32 I2C1(not I2C0), IO32(SDA), IO33(SCLK) and pretty simple except 3V3 - 2V8 level converter. I'm not sure if the level converter is deadly needed.</p>
-<p><img src="../images/alternative-ROI.png" alt="a test" width="640"></p>
+<p><img src="./images/alternative-ROI.png" alt="a test" width="640"></p>
 <p>The test itself is a simple use of ST's API. With switching ROIs(region of interest), the sensor can detect 'edge' or 'slope' somehow.</p>
-<p><a href="https://youtu.be/HekUzrfqgoY"><img alt="2nd test" src="../images/switching-ROI-2.png"></a></p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p><a href="https://youtu.be/HekUzrfqgoY"><img alt="2nd test" src="./images/switching-ROI-2.png"></a></p>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../pmlps-en.html" rel="bookmark"
-                           title="Permalink to Yet another indoor positioning with single cam">Yet another indoor positioning with single cam</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-02-15T00:00:00+09:00">
-                Published: 木 15 2月 2018
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/pmlps-en.html" />
-<meta property="og:title" content="Indoor positioning with single cam" />
-<meta property="og:description" content="Poor Man's Local Positioning System with single cam." />
-<meta property="og:image" content="https://kazkojima.github.io/images/pmlps-1.jpg" /></p>
-<p><img src="../images/pmlps-1.jpg" alt="openMV+ESP32" width="640"></p>
-<p>Screen shot of opemMV IDE</p>
-<p><img src="../images/ledtrack.png" alt="led tracker" width="320"></p>
-<p>I've tried to make a simple and budget local positioning system with openMV cam for the indoor flight of tiny copter.
-Looks not so good precision but not so bad as a Poor Man's system. A LOITER and LAND flight test with my hachidori copter …</p>
-                <a class="readmore" href="../pmlps-en.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
