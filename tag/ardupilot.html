@@ -55,7 +55,7 @@ Here is a test result of 3D positions got when moving the copter by hand.</p>
 <p><img src="../images/marker-spur-3d.png" alt="3D spur" width="640"></p>
 <h2>visual yaw estimation</h2>
 <p>Unfortunately yaw angles based on the compass of the copter are too unreliable in my case. The copter uses coreless motors which can easily break compass measuring and there are many other problematic magnetic sources in my room. The visual yaw estimation is used instead.</p>
-<p>When the pitch angle isn't zero, the direction seen from cam and the real horizontal direction differs. The figure below represents this situation:</p>
+<p>When the pitch angle isn't zero, the direction seen from cam and the real horizontal direction differ. The figure below represents this situation:</p>
 <p><img src="../images/adjyaw-0.png" alt="headings" width="640"></p>
 <p>where w is the real heading vector and v is the vector can be seen as the horizontal direction from cam.  w = (v' rotated with pitch angle) and H is a plane including v, w and cam. A simple geometric algebra computation helps again.</p>
 <p><img src="../images/adjyaw-1.png" alt="headings" width="640"></p>

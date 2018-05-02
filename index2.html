@@ -23,6 +23,79 @@
                     <ol id="posts-list" class="hfeed" start="9">
             <li><article class="hentry">
                 <header>
+                    <h1><a href="./nrf24-shockburst.html" rel="bookmark"
+                           title="Permalink to nRF24L01+ and ESP32">nRF24L01+ and ESP32</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-11-15T00:00:00+09:00">
+                Published: 水 15 11月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info -->                <p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
+<img alt="nrf24 spiclock to cs hold" src="./images/nrf24-test.jpg" style="width: 640px; height: 400px;" />
+<p>対抗しているのはRaspiとnRF24L01+の組でそちらは</p>
+<p><a class="reference external" href="http://tmrh20.github.io/RF24/">http://tmrh20.github.io/RF24/</a></p>
+<p>にあるライブラリやプログラムを使いました.</p>
+<p>このトランシーバーはBTやWiFiではなくShockburstという形式で通信します. コンフィグでACKを必要としないたれ流しができそうなのでレイテンシが減らせるか試そうと思っています.
+リアルタイムのIMUデータとかなんども再送されてもあまりうれしくないしというのがもともとの動機です.</p>
+<p>SPIでつなぐこと自体は簡単でGPIOの番号を</p>
+<pre class="code c literal-block">
+<span class="cp">#define PIN_NUM_MISO 19
+#define PIN_NUM_MOSI 23
+#define PIN_NUM_CLK  18
+#define PIN_NUM_CS    5</span>
+</pre>
+<p>としています. SPI以外にnRF24L01+のRFトランシーバーをイネーブルするCEと割り込みの/INTを</p>
+<pre class="code c literal-block">
+<span class="cp">#define GPIO_NRF24_INT  GPIO_NUM_22
+#define GPIO_NRF24_CE   GPIO_NUM_21</span>
+</pre>
+<p>につなぎました. SPIのコンフィグは</p>
+<pre class="code c literal-block">
+<span class="n">spi_bus_config_t</span> <span class="n">buscfg</span><span class="o">=</span><span class="p">{</span>
+    <span class="p">.</span><span class="n">miso_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MISO</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">quadhd_io_num …</span></pre>
+                <a class="readmore" href="./nrf24-shockburst.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="./esp32-phy2.html" rel="bookmark"
+                           title="Permalink to ESP32 PHY board 2">ESP32 PHY board 2</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-11-07T00:00:00+09:00">
+                Published: 火 07 11月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/english.html">English</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> <a href="./tag/kicad.html">kicad</a> </p>
+</footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
+<img alt="esp32-wslan8720 test" src="./images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
+<img alt="esp32-wslan8720 board" src="./images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
+<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware/esp32-wslan8720 …</p>
+                <a class="readmore" href="./esp32-phy2.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
                     <h1><a href="./madgwick-filter-memo.html" rel="bookmark"
                            title="Permalink to Madgwick filter 自分用メモ">Madgwick filter 自分用メモ</a></h1>
                 </header>

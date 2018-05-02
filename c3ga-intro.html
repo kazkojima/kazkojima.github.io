@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>The book "Geometric Algebra for Computer Science" (2)</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">My Bug Has A Program! </a></h1>
+                <nav><ul>
+                    <li><a href="./category/articles.html">articles</a></li>
+                    <li class="active"><a href="./category/english.html">English</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./c3ga-intro.html" rel="bookmark"
+           title="Permalink to The book "Geometric Algebra for Computer Science" (2)">The book "Geometric Algebra for Computer Science" (2)</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-05-02T00:00:00+09:00">
+                Published: 水 02 5月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/english.html">English</a>.</p>
+<p>tags: <a href="./tag/versor.html">versor</a> <a href="./tag/english.html">english</a> </p>
+</footer><!-- /.post-info -->      <p><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/c3ga-intro.html" />
+<meta property="og:title" content="Conformal model of 3D space" />
+<meta property="og:description" content="An introduction of conformal model 0f 3D space." />
+<meta property="og:image" content="https://kazkojima.github.io/images/dorst-1-1.png" /></p>
+<h2>Conformal model of 3D space</h2>
+<p><img src="./images/dorst-1-1.png" alt="figure 1.1 of book" width="640">
+(Fig.1.1 of the book)</p>
+<p>The conformal model is an ample model of the 3D space. Points, lines, planes, circles, spheres and many known geometrical constructions can be represented with algebraic ways in that model.</p>
+<p>There are 2 additional bases of this representation space. One is o which represents "origin" and the other one is ∞ which means "infinity". For readability, write "no" for o and "ni" for ∞. The 3D point (x, y, z) can be represented as the 5D point no + x e1 + y e2 + z e3 + 0.5 α ni where α = x x + y y + z z and e1-3 are "euclidean" bases.</p>
+<p>It looks very strange and somewhat artificial but turns out to be a surprisingly fine embedding. It's also a good extension of homogeneous model.
+In this world, we have the unit "psudoscalar" I = no^e1^e2^e3^ni which behaves like a "complete" element where ^ is the outer(wedge) product.  With it, a bit unpopular construction "dual" of A can be defined to be A/I and denoded by A*.</p>
+<p>When p,q,r,s are 4 3D points with a general position represented in this model space, S = p^q^r^s represents a sphere on which those 4 points are. It's known that S* = c - 0.5 rho rho ni where c is the center of S and rho is the radius of S. Looks things go well, don't they?</p>
+<p>Rotation, translation and another "conformal" transformation can be described with the uniform manner -- "versor" in this model. They give not only theoritical but also computational tools in the real applications. I hear that the Unreal Engin uses the conformal model and the geometric algebra in their lighting computations.</p>
+<h3>Plunge</h3>
+<p>There are intresting constructions which are a bit unpopular.
+"Plunge" is one of them. An example of plunge is here.</p>
+<p><img src="./images/plunge-1.png" alt="plunge" width="640"></p>
+<p>The circle labeled p ^ K* is the plunge of p, S and H. It crosses perpendicularly to the point p, the sphere S and the plane H.</p>
+<p>A circle of latitude can be considered as another example of plunge.</p>
+<p><img src="./images/latitude.png" alt="plunge" width="640"></p>
+<p>If you live in point p on this sphere surface not poles, then p ^ L* is the circle of latitude passes p where L is the earth's axis. Since L can be a meet of two planes H and H', p ^ L* = p ^ H* ^ H'* which is the plunge of p, H and H'.</p>
+<p><img src="./images/dorst-15-5.png" alt="plunge" width="640"></p>
+<p>This is Fig.15.5 of the book which shows many circles p ^ L* for various points p. Now L* looks like the field of possible circles, doesn't it?</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

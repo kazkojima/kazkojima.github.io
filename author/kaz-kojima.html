@@ -21,7 +21,86 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../esp32-vl53l1x.html">VL53L1X on ESP-IDF</a></h1>
+                    <h1 class="entry-title"><a href="../c3ga-intro.html">The book "Geometric Algebra for Computer Science" (2)</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-05-02T00:00:00+09:00">
+                Published: 水 02 5月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
+</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/c3ga-intro.html" />
+<meta property="og:title" content="Conformal model of 3D space" />
+<meta property="og:description" content="An introduction of conformal model 0f 3D space." />
+<meta property="og:image" content="https://kazkojima.github.io/images/dorst-1-1.png" /></p>
+<h2>Conformal model of 3D space</h2>
+<p><img src="../images/dorst-1-1.png" alt="figure 1.1 of book" width="640">
+(Fig.1.1 of the book)</p>
+<p>The conformal model is an ample model of the 3D space. Points, lines, planes, circles, spheres and many known geometrical constructions can be represented with algebraic ways in that model.</p>
+<p>There are 2 additional bases of this representation space. One is o which represents "origin" and the other one is ∞ which means "infinity". For readability, write "no" for o and "ni" for ∞. The 3D point (x, y, z) can be represented as the 5D point no + x e1 + y e2 + z e3 + 0.5 α ni where α = x x + y y + z z and e1-3 are "euclidean" bases.</p>
+<p>It looks very strange and somewhat artificial but turns out to be a surprisingly fine embedding. It's also a good extension of homogeneous model.
+In this world, we have the unit "psudoscalar" I = no^e1^e2^e3^ni which behaves like a "complete" element where ^ is the outer(wedge) product.  With it, a bit unpopular construction "dual" of A can be defined to be A/I and denoded by A*.</p>
+<p>When p,q,r,s are 4 3D points with a general position represented in this model space, S = p^q^r^s represents a sphere on which those 4 points are. It's known that S* = c - 0.5 rho rho ni where c is the center of S and rho is the radius of S. Looks things go well, don't they?</p>
+<p>Rotation, translation and another "conformal" transformation can be described with the uniform manner -- "versor" in this model. They give not only theoritical but also computational tools in the real applications. I hear that the Unreal Engin uses the conformal model and the geometric algebra in their lighting computations.</p>
+<h3>Plunge</h3>
+<p>There are intresting constructions which are a bit unpopular.
+"Plunge" is one of them. An example of plunge is here.</p>
+<p><img src="../images/plunge-1.png" alt="plunge" width="640"></p>
+<p>The circle labeled p ^ K* is the plunge of p, S and H. It crosses perpendicularly to the point p, the sphere S and the plane H.</p>
+<p>A circle of latitude can be considered as another example of plunge.</p>
+<p><img src="../images/latitude.png" alt="plunge" width="640"></p>
+<p>If you live in point p on this sphere surface not poles, then p ^ L* is the circle of latitude passes p where L is the earth's axis. Since L can be a meet of two planes H and H', p ^ L* = p ^ H* ^ H'* which is the plunge of p, H and H'.</p>
+<p><img src="../images/dorst-15-5.png" alt="plunge" width="640"></p>
+<p>This is Fig.15.5 of the book which shows many circles p ^ L* for various points p. Now L* looks like the field of possible circles, doesn't it?</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../ga-intro.html" rel="bookmark"
+                           title="Permalink to The book "Geometric Algebra for Computer Science" (1)">The book "Geometric Algebra for Computer Science" (1)</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-05-01T00:00:00+09:00">
+                Published: 火 01 5月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/ga-intro.html" />
+<meta property="og:title" content="The book Geometric Algebra for computer science" />
+<meta property="og:description" content="A pre-introduction of the book." />
+<meta property="og:image" content="https://kazkojima.github.io/images/GA-Dorst.jpg" /></p>
+<h2>Geometric Algebra</h2>
+<p>This is an article for the book</p>
+<p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
+<p>which is one of the greatest book I've read. This is NOT a review or somesuch. I'm happy if I can report a tiny bit of flavor of …</p>
+                <a class="readmore" href="../ga-intro.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-vl53l1x.html" rel="bookmark"
+                           title="Permalink to VL53L1X on ESP-IDF">VL53L1X on ESP-IDF</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-03-23T00:00:00+09:00">
                 Published: 金 23 3月 2018
@@ -32,41 +111,15 @@
         </address>
 <p>In <a href="../category/english.html">English</a>.</p>
 <p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/esp32-vl53l1x.html" />
 <meta property="og:title" content="VL53L1X on ESP-IDF" />
 <meta property="og:description" content="A simple example which uses ST's driver of VL53L1X with ESP-IDF." /></p>
-<p>VL53L1X is a ST's new TOF(time of flight) sensor. ST gives its driver and API library with the dual license. See <a href="http://www.st.com/en/ecosystems/x-cube-53l1a1.html">ST's page</a> for detail. Although that code is for the STM32 platforms primarily, they are written with the highly modular manner and possible to be used with other platforms.</p>
-<p><a href="https://github.com/espressif/esp-idf">ESP-IDF</a> build system has several ways to import such external libraries. This article is a simple example of one of them. The source code I've written is pushed on my github as <a href="https://github.com/kazkojima/esp32-vl53l1x-test">esp32-vl53l1x-test</a>.</p>
-<p>When something are built with ESP-IDF, it scans some directories and looks for component.mk files. It also read those files and determines what to do.</p>
-<p>Here is the <a href="https://github.com/kazkojima/esp32-vl53l1x-test/blob/master/main/component.mk">component.mk file</a> in my esp32-vl53l1x-test/main directory.</p>
-<div class="highlight"><pre><span></span>STM32CUBEEXPANSION_53L1A1 = symlink-STM32CubeExpansion_53L1A1_V1.0.0
-
-COMPONENT_SRCDIRS := . \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/Components/vl53l1x
-
-COMPONENT_ADD_INCLUDEDIRS = \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/X-NUCLEO-53L1A1 \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/Components/vl53l1x \
-    $(STM32CUBEEXPANSION_53L1A1)/Projects/Multi/Examples/VL53L1X/SimpleRangingExamples/Inc
-
-CFLAGS += -Wno-unused-variable -Wno-maybe-uninitialized -DI2C_HandleTypeDef=int
-</pre></div>
-
-
-<p>The file path is relative to main/ itself. The definition of COMPONENT_SRCDIRS can be read as '. ./symlink-STM32CubeExpansion_53L1A1_V1.0.0/Drivers/BSP/Components/vl53l1x'. The build system adds these directories as the directory which has sources to be compiled. If you symlink the root directory of ST's driver to symlink-STM32CubeExpansion_53L1A1_V1.0.0, the sources in Drivers/BSP/Components/vl53l1x of ST's source are compiled with.</p>
-<p>COMPONENT_ADD_INCLUDEDIRS is the list of directories which are added as the search paths for the include files. CFLAGS is the option flags during compiling. In this example, it adds a few -W flags to avoid failure with warnings and gives a missing type definition. Thus I could use ST's source tree without modifying. Easy enough, isn't it?</p>
-<p><img src="../images/vl53l1x.png" alt="bread board" width="720"></p>
-<p>The test circuit is using ESP32 I2C1(not I2C0), IO32(SDA), IO33(SCLK) and pretty simple except 3V3 - 2V8 level converter. I'm not sure if the level converter is deadly needed.</p>
-<p><img src="../images/alternative-ROI.png" alt="a test" width="640"></p>
-<p>The test itself is a simple use of ST's API. With switching ROIs(region of interest), the sensor can detect 'edge' or 'slope' somehow.</p>
-<p><a href="https://youtu.be/HekUzrfqgoY"><img alt="2nd test" src="../images/switching-ROI-2.png"></a></p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>VL53L1X is a ST's new TOF(time of flight) sensor. ST gives its driver and API library with the dual license. See <a href="http://www.st.com/en/ecosystems/x-cube-53l1a1.html">ST's page</a> for detail. Although that code is for the STM32 platforms primarily, they are written with the highly modular manner and possible to be used with other …</p>
+                <a class="readmore" href="../esp32-vl53l1x.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -320,79 +373,6 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <h2>レイテンシ latency</h2>
 <p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません …</p>
                 <a class="readmore" href="../jbee3.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../nrf24-shockburst.html" rel="bookmark"
-                           title="Permalink to nRF24L01+ and ESP32">nRF24L01+ and ESP32</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-11-15T00:00:00+09:00">
-                Published: 水 15 11月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
-<img alt="nrf24 spiclock to cs hold" src="../images/nrf24-test.jpg" style="width: 640px; height: 400px;" />
-<p>対抗しているのはRaspiとnRF24L01+の組でそちらは</p>
-<p><a class="reference external" href="http://tmrh20.github.io/RF24/">http://tmrh20.github.io/RF24/</a></p>
-<p>にあるライブラリやプログラムを使いました.</p>
-<p>このトランシーバーはBTやWiFiではなくShockburstという形式で通信します. コンフィグでACKを必要としないたれ流しができそうなのでレイテンシが減らせるか試そうと思っています.
-リアルタイムのIMUデータとかなんども再送されてもあまりうれしくないしというのがもともとの動機です.</p>
-<p>SPIでつなぐこと自体は簡単でGPIOの番号を</p>
-<pre class="code c literal-block">
-<span class="cp">#define PIN_NUM_MISO 19
-#define PIN_NUM_MOSI 23
-#define PIN_NUM_CLK  18
-#define PIN_NUM_CS    5</span>
-</pre>
-<p>としています. SPI以外にnRF24L01+のRFトランシーバーをイネーブルするCEと割り込みの/INTを</p>
-<pre class="code c literal-block">
-<span class="cp">#define GPIO_NRF24_INT  GPIO_NUM_22
-#define GPIO_NRF24_CE   GPIO_NUM_21</span>
-</pre>
-<p>につなぎました. SPIのコンフィグは</p>
-<pre class="code c literal-block">
-<span class="n">spi_bus_config_t</span> <span class="n">buscfg</span><span class="o">=</span><span class="p">{</span>
-    <span class="p">.</span><span class="n">miso_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MISO</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadhd_io_num …</span></pre>
-                <a class="readmore" href="../nrf24-shockburst.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-phy2.html" rel="bookmark"
-                           title="Permalink to ESP32 PHY board 2">ESP32 PHY board 2</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-11-07T00:00:00+09:00">
-                Published: 火 07 11月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
-</footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
-<img alt="esp32-wslan8720 test" src="../images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
-<img alt="esp32-wslan8720 board" src="../images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
-<p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware/esp32-wslan8720 …</p>
-                <a class="readmore" href="../esp32-phy2.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->

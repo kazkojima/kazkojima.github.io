@@ -21,7 +21,86 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../pmlps-en.html">Yet another indoor positioning with single cam</a></h1>
+                    <h1 class="entry-title"><a href="../c3ga-intro.html">The book "Geometric Algebra for Computer Science" (2)</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-05-02T00:00:00+09:00">
+                Published: 水 02 5月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
+</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/c3ga-intro.html" />
+<meta property="og:title" content="Conformal model of 3D space" />
+<meta property="og:description" content="An introduction of conformal model 0f 3D space." />
+<meta property="og:image" content="https://kazkojima.github.io/images/dorst-1-1.png" /></p>
+<h2>Conformal model of 3D space</h2>
+<p><img src="../images/dorst-1-1.png" alt="figure 1.1 of book" width="640">
+(Fig.1.1 of the book)</p>
+<p>The conformal model is an ample model of the 3D space. Points, lines, planes, circles, spheres and many known geometrical constructions can be represented with algebraic ways in that model.</p>
+<p>There are 2 additional bases of this representation space. One is o which represents "origin" and the other one is ∞ which means "infinity". For readability, write "no" for o and "ni" for ∞. The 3D point (x, y, z) can be represented as the 5D point no + x e1 + y e2 + z e3 + 0.5 α ni where α = x x + y y + z z and e1-3 are "euclidean" bases.</p>
+<p>It looks very strange and somewhat artificial but turns out to be a surprisingly fine embedding. It's also a good extension of homogeneous model.
+In this world, we have the unit "psudoscalar" I = no^e1^e2^e3^ni which behaves like a "complete" element where ^ is the outer(wedge) product.  With it, a bit unpopular construction "dual" of A can be defined to be A/I and denoded by A*.</p>
+<p>When p,q,r,s are 4 3D points with a general position represented in this model space, S = p^q^r^s represents a sphere on which those 4 points are. It's known that S* = c - 0.5 rho rho ni where c is the center of S and rho is the radius of S. Looks things go well, don't they?</p>
+<p>Rotation, translation and another "conformal" transformation can be described with the uniform manner -- "versor" in this model. They give not only theoritical but also computational tools in the real applications. I hear that the Unreal Engin uses the conformal model and the geometric algebra in their lighting computations.</p>
+<h3>Plunge</h3>
+<p>There are intresting constructions which are a bit unpopular.
+"Plunge" is one of them. An example of plunge is here.</p>
+<p><img src="../images/plunge-1.png" alt="plunge" width="640"></p>
+<p>The circle labeled p ^ K* is the plunge of p, S and H. It crosses perpendicularly to the point p, the sphere S and the plane H.</p>
+<p>A circle of latitude can be considered as another example of plunge.</p>
+<p><img src="../images/latitude.png" alt="plunge" width="640"></p>
+<p>If you live in point p on this sphere surface not poles, then p ^ L* is the circle of latitude passes p where L is the earth's axis. Since L can be a meet of two planes H and H', p ^ L* = p ^ H* ^ H'* which is the plunge of p, H and H'.</p>
+<p><img src="../images/dorst-15-5.png" alt="plunge" width="640"></p>
+<p>This is Fig.15.5 of the book which shows many circles p ^ L* for various points p. Now L* looks like the field of possible circles, doesn't it?</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../ga-intro.html" rel="bookmark"
+                           title="Permalink to The book "Geometric Algebra for Computer Science" (1)">The book "Geometric Algebra for Computer Science" (1)</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-05-01T00:00:00+09:00">
+                Published: 火 01 5月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@1gkojima" />
+<meta property="og:url" content="https://kazkojima.github.io/ga-intro.html" />
+<meta property="og:title" content="The book Geometric Algebra for computer science" />
+<meta property="og:description" content="A pre-introduction of the book." />
+<meta property="og:image" content="https://kazkojima.github.io/images/GA-Dorst.jpg" /></p>
+<h2>Geometric Algebra</h2>
+<p>This is an article for the book</p>
+<p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
+<p>which is one of the greatest book I've read. This is NOT a review or somesuch. I'm happy if I can report a tiny bit of flavor of …</p>
+                <a class="readmore" href="../ga-intro.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../pmlps-en.html" rel="bookmark"
+                           title="Permalink to Yet another indoor positioning with single cam">Yet another indoor positioning with single cam</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-02-15T00:00:00+09:00">
                 Published: 木 15 2月 2018
@@ -32,7 +111,7 @@
         </address>
 <p>In <a href="../category/english.html">English</a>.</p>
 <p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/pmlps-en.html" />
 <meta property="og:title" content="Indoor positioning with single cam" />
@@ -42,27 +121,12 @@
 <p>Screen shot of opemMV IDE</p>
 <p><img src="../images/ledtrack.png" alt="led tracker" width="320"></p>
 <p>I've tried to make a simple and budget local positioning system with openMV cam for the indoor flight of tiny copter.
-Looks not so good precision but not so bad as a Poor Man's system. A LOITER and LAND flight test with my hachidori copter is here:</p>
-<p><a href="https://www.youtube.com/watch?v=S4lpKn7MHvo"><img alt="A test flight" src="../images/loiter-and-land-0215.jpg"></a></p>
-<p>where only throttle work is done.</p>
-<p>System is simple</p>
-<p><img src="../images/lps-figure.png" alt="figure" width="640"></p>
-<p>OpenMV cam with fish-eye lens has been set at the ceiling and it tracks LED markers mounted on the copter. The tracking data is sent to the host PC via ESP32 connected to openMV cam as a SPI slave device. The host PC also connects to the telemetry port of ArduCopter and is getting ATTITUDE packets and estimates the position and heading with the visual markers and ATTITUDE information.</p>
-<p>The result of estimations are sent back to the telemetry port with VISION_POSITION_DELTA packets.</p>
-<p>Currently, openMV data rate is 40-50fps, ATTITUDE rate 20Hz and VISION_POSITION_DELTA rate is same with cam.</p>
-<p>The coordinate of marker on image sensor is converted to the 3D direction from cam and the height is estimated with the distance of markers and the attitude. I'm using geometric algebra in very primitive way to compute them. Kalman filter is applied for smoothing.
-Here is a test result of 3D positions got when moving the copter by hand.</p>
-<p><img src="../images/marker-spur-3d.png" alt="3D spur" width="640"></p>
-<h2>visual yaw estimation</h2>
-<p>Unfortunately yaw angles based on the compass of the copter are too unreliable in my case. The copter uses coreless motors which can easily break compass measuring and there are many other problematic magnetic sources in my room. The visual yaw estimation is used instead.</p>
-<p>When the pitch angle isn't zero, the direction seen from cam and the real horizontal direction differs. The figure below represents this situation:</p>
-<p><img src="../images/adjyaw-0.png" alt="headings" width="640"></p>
-<p>where w is the real heading vector and v is the vector can be seen as the horizontal direction from cam.  w = (v' rotated with pitch angle) and H is a plane including v, w and cam. A simple geometric algebra computation helps again.</p>
-<p><img src="../images/adjyaw-1.png" alt="headings" width="640"></p>
-<p>This figure shows that computation in geometric algebra. Essentially, vector w can be obtained as the one of the point pair which is the "meet" of the yellow circle K and the green plane H. The corresponding program is fairly straightforward. See <a href="https://github.com/kazkojima/pmlps/tree/master/host">host program</a> for details. Of course, rotation matrices or spherical angles can be used for that computation.</p>
-<p>All programs for openMV, ESP32 and the host PC are in <a href="https://github.com/kazkojima/pmlps">my github</a>, though they are experimental.</p>
-<p>Happy Hacking,</p>                </article>
-            </aside><!-- /#featured -->
+Looks not so good precision but not so bad as a Poor Man's system. A LOITER and LAND flight test with my hachidori copter …</p>
+                <a class="readmore" href="../pmlps-en.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
