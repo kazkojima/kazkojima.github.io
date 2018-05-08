@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>My Bug Has A Program! - versor</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
+        <title>"Geometric Algebra for Computer Science" 紹介</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
 
         <!--[if IE]>
             <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -12,27 +12,32 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
+                <h1><a href="./">My Bug Has A Program! </a></h1>
                 <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
+                    <li class="active"><a href="./category/articles.html">articles</a></li>
+                    <li><a href="./category/english.html">English</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./ga-intro-j.html" rel="bookmark"
+           title="Permalink to "Geometric Algebra for Computer Science" 紹介">"Geometric Algebra for Computer Science" 紹介</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../ga-intro-j.html">"Geometric Algebra for Computer Science" 紹介</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-05T00:00:00+09:00">
                 Published: 土 05 5月 2018
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
         </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/book.html">book</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/versor.html">versor</a> <a href="./tag/book.html">book</a> </p>
+</footer><!-- /.post-info -->      <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/ga-intro-j.html" />
 <meta property="og:title" content="Geometric Algebra for computer science の紹介" />
@@ -43,14 +48,14 @@
 <p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
 <p>の紹介のために書きました。 この本は幾何学的代数の導入から応用までを扱っていますがその内容や語り口に至るまでも素晴らしくいままでに読んだ中でもとびきり良い本です。 レビューといった類ではなくこの本の題材となっているものを本の切り口に沿って説明できればとはじめたのですが私の力ではとても難しいと思い知りました。 ですがこの並外れた本の内容や雰囲気まではかなわなくてもそのかけらでも伝えられればうれしいです。</p>
 <p>幾何学的代数(Geometric Algebra)は幾何学的な対象がつくる代数系だといえます。 この代数系は幾何学積(geometric products)に基づいています。幾何学積の実際の扱いは簡単とはいえませんがその基本的な概念は意外に簡単で初等的でさえあります。</p>
-<p><img src="../images/natural-j.png" alt="natural" width="640"></p>
+<p><img src="./images/natural-j.png" alt="natural" width="640"></p>
 <p>つまり基本的なアイデアは内積と面積などを組にして一度に扱うと話がむしろ簡単になる、ということです。 こういうことはよくあることですよね。</p>
 <p>この幾何学積は空間やもっと高い次元へも拡張できます。 それには向きのついた平行四辺形や平行六面体の拡張概念"k-blade"と内積の拡張概念"contraction"(縮約)が必要になります。</p>
 <p>前者はベクトルu,vでできる向きのついた平行四辺形(面積要素)をu^vと書いて2-bladeと呼び、u,v,wが作る体積要素を3-blade u^v^wとするといった具合です。 ついでにただのベクトルは1-blade、スカラーは0-bladeということにします。</p>
 <p>後者はaがベクトルでu^vが2-bladeのときに左縮約(left contraction) a &lt;&lt; u^v を (a.u)v - (a.v)u とします。 幾何的には a &lt;&lt; u^v は "u^vの一番aでない部分"を表しています。 u^vのaの方向を縮めて約したものといってもいいかもしれません。 この左縮約は k-blade &lt;&lt; n-blade の形に一般化できます。</p>
 <p>これらの概念は基本的で強力です。</p>
 <p>"Geometric Algebra for Computer Science"には実際的な応用やその原型になる実例があふれています。 この本のカバーにある絵もその一つです。 この絵はピンホールカメラAから空間にある直線を見たときにその光線が作る平面を表しています。 この灰色の平面は黄色のピンホールカメラの画像面と青い直線で交差しています。</p>
-<p><img src="../images/GA-Dorst.jpg" alt="cover picture" width="640"></p>
+<p><img src="./images/GA-Dorst.jpg" alt="cover picture" width="640"></p>
 <p>さてここで元々の空間の直線が空間のどこかにあるマーカーから別のカメラBへの光線だとしてみます。 するとカメラAの画像面ではそのマーカーは青い線のどこかに写っているはずです。 この場合この青い線は"epipoler line"と呼ばれす。</p>
 <p>幾何学的代数では以上のことを一行で表す、あるいは計算することができます。</p>
 <p>L = dual(Pa ^ M ^ Pb) &lt;&lt; IPa</p>
@@ -59,7 +64,7 @@
 <p>このように幾何学積は小学校でならう平行四辺形の面積と高校程度の簡単な内積の概念からあまり遠くないところにあるしかし深く豊富な対象です。 この本に対する最低限の予備知識はこれらの初等的な概念です。 もちろん線形代数の知識があればいうことはありませんし、それは大きな助けになります。 本の前書きには詳しい説明があり、どの章や部分にどんな予備知識が必要かや大筋を追うのに必要な章などの記述がされています。</p>
 <p>もし幾何学的代数に興味があるならこの本を強く強くお薦めします。</p>
 <h2>3次元空間の共形(Conformal)モデル</h2>
-<p><img src="../images/dorst-1-1.png" alt="figure 1.1 of book" width="640">
+<p><img src="./images/dorst-1-1.png" alt="figure 1.1 of book" width="640">
 (Fig.1.1 of the book)</p>
 <p>共形モデル(conformal model)を使うと3D空間の点、直線、平面、円周、球面や多くの幾何学的構成を代数的に表すことができるようになります。</p>
 <p>このモデルでは3D空間を表すのに使われる普通の3つの基底以外にあと2つの基底が必要です。 一つは"原点"(origin)を表すもの o、もう一つは"無限遠"をあらわす ∞ です。 読み書きしやすいよう o を "no" とまた  ∞ を "ni" と書くことにします。 3D空間の点 (x, y, z) はこれらを使ってモデルの5Dの点 no + x e1 + y e2 + z e3 + 0.5 α ni で表現されるとします。 ここで α = x x + y y + z z、 e1-3 はそれぞれ x, y, z軸方向を示す基底です.</p>
@@ -70,121 +75,23 @@
 <h3>プランジ Plunge</h3>
 <p>この本にはいままであまり知られていなかった面白い構成や概念も登場します。
 プランジ(Plunge) はその一つです。 プランジ簡単な例をgaviewerで描いてみます:</p>
-<p><img src="../images/plunge-1.png" alt="plunge" width="640"></p>
+<p><img src="./images/plunge-1.png" alt="plunge" width="640"></p>
 <p>p ^ K* = ...とラベルがついている円周は点 p, 球面 S, 平面 H のプランジです。 それは点 p, 球面 S, 平面 Hのどれとも垂直に交わっています。</p>
 <p>緯度線もプランジの一例になります。</p>
-<p><img src="../images/latitude.png" alt="plunge" width="640"></p>
+<p><img src="./images/latitude.png" alt="plunge" width="640"></p>
 <p>もしあなたがこの地表の両極以外の地点 p に住んでいるなら L を地軸としたとき p ^ L* が pを通る緯度線の円周になります。 L を 2つの平面 H と H'の交線と考えると</p>
 <p>p ^ L* = p ^ H* ^ H'*</p>
 <p>となり右辺は p と H と H'のプランジになります。</p>
-<p><img src="../images/dorst-15-5.png" alt="plunge" width="640"></p>
+<p><img src="./images/dorst-15-5.png" alt="plunge" width="640"></p>
 <p>本の Fig.15.5はいろいろな点 p に対して円周 p ^ L* を描いたものです。 なんだか L* が円周に成り得るものの"場"に見えてこないでしょうか?</p>
 <p>著者は繰り返し"convince yourself" of X with doing Yという表現を使っています。 Yにはしばしば著者が公開しているGAViewerという幾何学的代数アプリケーションで実際に試すことが入ります。 ここで紹介した絵は全てGAViewerで作ってそのスクリーンショット機能を使ったものです。
 幾何ですから画や図を書いての直観的な納得はやっぱりとても大事ですよね。</p>
 <h2>GAViewer</h2>
-<p>GAViewerにはマニュアルとは別にGAViewerのオフィシャルな<a href="https://www.researchgate.net/publication/265065144_GABLE_A_GAViewer_Tutorial_for_Geometric_Algebra">チュートリアル</a>があります。 本という形式ではありませんがこのチュートリアルで幾何学的代数の基礎を一通り学ぶこともできるよう構成されています。 素晴らしい。</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>GAViewerにはマニュアルとは別にGAViewerのオフィシャルな<a href="https://www.researchgate.net/publication/265065144_GABLE_A_GAViewer_Tutorial_for_Geometric_Algebra">チュートリアル</a>があります。 本という形式ではありませんがこのチュートリアルで幾何学的代数の基礎を一通り学ぶこともできるよう構成されています。 素晴らしい。</p>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../c3ga-intro.html" rel="bookmark"
-                           title="Permalink to The book "Geometric Algebra for Computer Science" (2)">The book "Geometric Algebra for Computer Science" (2)</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-05-02T00:00:00+09:00">
-                Published: 水 02 5月 2018
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/c3ga-intro.html" />
-<meta property="og:title" content="The book Geometric Algebra for computer science (2)" />
-<meta property="og:description" content="A pre-introduction of the book. Part 2" />
-<meta property="og:image" content="https://kazkojima.github.io/images/dorst-1-1.png" /></p>
-<h2>Conformal model of 3D space</h2>
-<p><img src="../images/dorst-1-1.png" alt="figure 1.1 of book" width="640">
-(Fig.1.1 of the book)</p>
-<p>The conformal model is an ample model of the 3D space. Points, lines, planes, circles, spheres and many known geometrical constructions can be represented with algebraic ways in that model.</p>
-<p>There are 2 additional bases of this representation space …</p>
-                <a class="readmore" href="../c3ga-intro.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../ga-intro.html" rel="bookmark"
-                           title="Permalink to The book "Geometric Algebra for Computer Science" (1)">The book "Geometric Algebra for Computer Science" (1)</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-05-01T00:00:00+09:00">
-                Published: 火 01 5月 2018
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/ga-intro.html" />
-<meta property="og:title" content="The book Geometric Algebra for computer science (1)" />
-<meta property="og:description" content="A pre-introduction of the book. Part 1" />
-<meta property="og:image" content="https://kazkojima.github.io/images/GA-Dorst.jpg" /></p>
-<h2>Geometric Algebra</h2>
-<p>This is an article for the book</p>
-<p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
-<p>which is one of the greatest book I've read. This is NOT a review or somesuch. I'm happy if I can report a tiny bit of flavor of …</p>
-                <a class="readmore" href="../ga-intro.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../pmlps-en.html" rel="bookmark"
-                           title="Permalink to Yet another indoor positioning with single cam">Yet another indoor positioning with single cam</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-02-15T00:00:00+09:00">
-                Published: 木 15 2月 2018
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/pmlps-en.html" />
-<meta property="og:title" content="Indoor positioning with single cam" />
-<meta property="og:description" content="Poor Man's Local Positioning System with single cam." />
-<meta property="og:image" content="https://kazkojima.github.io/images/pmlps-1.jpg" /></p>
-<p><img src="../images/pmlps-1.jpg" alt="openMV+ESP32" width="640"></p>
-<p>Screen shot of opemMV IDE</p>
-<p><img src="../images/ledtrack.png" alt="led tracker" width="320"></p>
-<p>I've tried to make a simple and budget local positioning system with openMV cam for the indoor flight of tiny copter.
-Looks not so good precision but not so bad as a Poor Man's system. A LOITER and LAND flight test with my hachidori copter …</p>
-                <a class="readmore" href="../pmlps-en.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
