@@ -21,7 +21,71 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../ga-intro-j.html">"Geometric Algebra for Computer Science" 紹介</a></h1>
+                    <h1 class="entry-title"><a href="../aircraft-control-simulation-memo1.html">&quot;Aircraft Control and Simulation (3rd ed.)&quot; メモ</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-07-07T00:00:00+09:00">
+                Published: 土 07 7月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/control.html">control</a> </p>
+</footer><!-- /.post-info --><p><a class="reference external" href="https://www.wiley.com/en-us/Aircraft+Control+and+Simulation%3A+Dynamics%2C+Controls+Design%2C+and+Autonomous+Systems%2C+3rd+Edition-p-9781118870983">Aircraft Control and Simulation</a></p>
+<img alt="Book cover of Aircraft Control and Simulation" src="../images/aircraft-book.jpg" style="width: 240px; height: 360px;" />
+<p>を半分まで読んでのメモです。 この分野まったくの素人です。</p>
+<p>Ch1. The kinematics and Dynamics of Aircraft Motion</p>
+<p>航空機の運動を表すのに必要な座標系、そこでの回転や並進と座標変換についての話。古典力学と地球の形状や物理の基礎知識。</p>
+<p>Ch.2 Modeling the Aircraft</p>
+<p>ベーシックな航空力学とそれに基いた航空機のモデル。モデルは線形または非線形の微分方程式あるいはその係数のセット(derivatives)。 実際は複数テーブル化される。 簡単なものだとテーブルが十数個だがF22のsimulationなんかだと数千テーブルが必要で総データポイントは2-300万項にも及ぶらしい。</p>
+<p>Ch.3 Modeling, Design, and Simulation Tools</p>
+<p>古典的な制御の基礎とその航空機simulationでの適用例。次章への準備</p>
+<p>'state-spaceモデル'
+'state equation'
+'network transfer function'
+'Bode plot'
+'数値積分 Runge-Kutta'
+'steady-state flight'
+'feedback control'
+'Nyquist plot'
+'Root locus plot'</p>
+<p>simulationでの適用例ではstate equationを近似的に2つの部分(longitudinal &amp; lateral-directional parts)に分解してそれぞれのtransfer functionのpoleを見て次のような運動のモードに分けて調べている。</p>
+<p>longitudinal modes:</p>
+<blockquote>
+<ul class="simple">
+<li>phugoid (comlex pair, relatively slow and small dumping factor)</li>
+<li>short period (comlex pair, relatively fast and large dumping factor)</li>
+</ul>
+</blockquote>
+<p>lateral-directional modes:</p>
+<blockquote>
+<ul class="simple">
+<li>dutch roll (comlex pair, fast and small dumping)</li>
+<li>spiral (real, slow)</li>
+<li>roll subsidence (real, fast)</li>
+</ul>
+</blockquote>
+<p>ところでBode plotの概形が手でかけるというのを初めて知りました。 &lt;-あきれた奴</p>
+<p>このvideoシリーズがものすごくわかりやすかった:</p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=_eh1conN6YM">Control System Lectures - Bode Plots, Introduction</a></p>
+<p>Ch.4 Aircraft Dynamics and Classical Control Design</p>
+<p>古典的な制御でCAS(control augumented system)やSAS(stability augumented system)を構成する話。 人間工学的な問題? pilot feelやautopilot, landing時の例。</p>
+<p>次章以降で現代的な制御とその航空機への適用の話になるらしくパラパラめくると Kalman, SVD, NNなどという単語が見えてます。 ここまでも理解できていないことが沢山あり、その証拠に演習問題とか手がでません。 しかも先は長そう。 でもとにかく面白い。</p>
+                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../ga-intro-j.html" rel="bookmark"
+                           title="Permalink to "Geometric Algebra for Computer Science" 紹介">"Geometric Algebra for Computer Science" 紹介</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-05T00:00:00+09:00">
                 Published: 土 05 5月 2018
@@ -32,7 +96,7 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/book.html">book</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/ga-intro-j.html" />
 <meta property="og:title" content="Geometric Algebra for computer science の紹介" />
@@ -46,48 +110,10 @@
 <p><img src="../images/natural-j.png" alt="natural" width="640"></p>
 <p>つまり基本的なアイデアは内積と面積などを組にして一度に扱うと話がむしろ簡単になる、ということです。 こういうことはよくあることですよね。</p>
 <p>この幾何学積は空間やもっと高い次元へも拡張できます。 それには向きのついた平行四辺形や平行六面体の拡張概念"k-blade"と内積の拡張概念"contraction"(縮約)が必要になります。</p>
-<p>前者はベクトルu,vでできる向きのついた平行四辺形(面積要素)をu^vと書いて2-bladeと呼び、u,v,wが作る体積要素を3-blade u^v^wとするといった具合です。 ついでにただのベクトルは1-blade、スカラーは0-bladeということにします。</p>
-<p>後者はaがベクトルでu^vが2-bladeのときに左縮約(left contraction) a &lt;&lt; u^v を (a.u)v - (a.v)u とします。 幾何的には a &lt;&lt; u^v は "u^vの一番aでない部分"を表しています。 u^vのaの方向を縮めて約したものといってもいいかもしれません。 この左縮約は k-blade &lt;&lt; n-blade の形に一般化できます。</p>
-<p>これらの概念は基本的で強力です。</p>
-<p>"Geometric Algebra for Computer Science"には実際的な応用やその原型になる実例があふれています。 この本のカバーにある絵もその一つです。 この絵はピンホールカメラAから空間にある直線を見たときにその光線が作る平面を表しています。 この灰色の平面は黄色のピンホールカメラの画像面と青い直線で交差しています。</p>
-<p><img src="../images/GA-Dorst.jpg" alt="cover picture" width="640"></p>
-<p>さてここで元々の空間の直線が空間のどこかにあるマーカーから別のカメラBへの光線だとしてみます。 するとカメラAの画像面ではそのマーカーは青い線のどこかに写っているはずです。 この場合この青い線は"epipoler line"と呼ばれます。</p>
-<p>幾何学的代数では以上のことを一行で表す、あるいは計算することができます。</p>
-<p>L = dual(Pa ^ M ^ Pb) &lt;&lt; IPa</p>
-<p>ここでPa, Pbはカメラの位置、Mはマーカーの位置、IPaはカメラAの画像面です。計算にはbladeをつくる操作(outer product) ^ 縮約 &lt;&lt; と dual() という操作を使いますがどれも幾何学的代数での基本的な操作です。 実はこの式の右辺は"平面IPaと Pa, Pb, Mの三点が決める平面との交線"と読むことができます。 驚くほど簡単で明瞭な意味のある式です。 上の式は実際にモーションキャプチャーを行うプログラム中の一行です。 詳しくはこの本のCh.14をご覧下さい。</p>
-<p>もしカメラや3Dのゲームに詳しい方なら、あれepipoler constraintとかtri-forcal tensorとか幾何的な意味はともかく式の導出がやたら面倒だったはずなんじゃないのと思われるかもしれません。 幾何学的代数とその応用では幾何的な意味と代数的な計算がほぼ対応しています。 これが本の裏表紙にも書かれているように幾何学的代数は高レベル言語であるといわれる理由の一つです。</p>
-<p>このように幾何学積は小学校でならう平行四辺形の面積と高校程度の簡単な内積の概念からあまり遠くないところにあるしかし深く豊富な対象です。 この本に対する最低限の予備知識はこれらの初等的な概念です。 もちろん線形代数の知識があればいうことはありませんし、それは大きな助けになります。 本の前書きには詳しい説明があり、どの章や部分にどんな予備知識が必要かや大筋を追うのに必要な章などの記述がされています。</p>
-<p>もし幾何学的代数に興味があるならこの本を強く強くお薦めします。</p>
-<h2>3次元空間の共形(Conformal)モデル</h2>
-<p><img src="../images/dorst-1-1.png" alt="figure 1.1 of book" width="640">
-(Fig.1.1 of the book)</p>
-<p>共形モデル(conformal model)を使うと3D空間の点、直線、平面、円周、球面や多くの幾何学的構成を代数的に表すことができるようになります。</p>
-<p>このモデルでは3D空間を表すのに使われる普通の3つの基底以外にあと2つの基底が必要です。 一つは"原点"(origin)を表すもの o、もう一つは"無限遠"をあらわす ∞ です。 読み書きしやすいよう o を "no" とまた  ∞ を "ni" と書くことにします。 3D空間の点 (x, y, z) はこれらを使ってモデルの5Dの点 no + x e1 + y e2 + z e3 + 0.5 α ni で表現されるとします。 ここで α = x x + y y + z z、 e1-3 はそれぞれ x, y, z軸方向を示す基底です.</p>
-<p>この表現は非常に奇妙でかなり人工的に見えるのですが、実はとんでもなくうまい埋め込みになっていることがわかっています。 またこれは同次モデルと呼ばれる3D空間の表現の拡張にもなっています。</p>
-<p>この世界には単位擬スカラー(unit psudoscalar) I = no^e1^e2^e3^ni というものがあって一種の"完全な"要素になっています。 このIを使って "Aのdual" を A を左から I で割ったもの A/I として A* と書きます。</p>
-<p>もし p,q,r,s が 一般的な位置にある3D空間の4点をこのモデルで表現したものだとすると S = p^q^r^s はこの4点がその上に乗る球面を表すことが知られています。 またこのとき c が球面S の中心で rho がその半径だとすると S* = c - 0.5 rho rho ni になることがわかります。 なんだかとってもうまくいっている気がしてこないでしょうか?</p>
-<p>このモデルでは回転や平行移動を含む"共形"変換が統一的な形式 - versor - で記述できます。 それらもまた単に理論的なものではなく実際の応用での計算ツールでもあります。 ゲームエンジンとして有名なアンリアルエンジンではライティングの計算に幾何学的代数や共形モデルを応用しているそうです。</p>
-<h3>プランジ Plunge</h3>
-<p>この本にはいままであまり知られていなかった面白い構成や概念も登場します。
-プランジ(Plunge) はその一つです。 プランジの簡単な例をgaviewerで描いてみます:</p>
-<p><img src="../images/plunge-1.png" alt="plunge" width="640"></p>
-<p>p ^ K* = ...とラベルがついている円周は点 p, 球面 S, 平面 H のプランジです。 それは点 p, 球面 S, 平面 Hのどれとも垂直に交わっています。</p>
-<p>緯度線もプランジの一例になります。</p>
-<p><img src="../images/latitude.png" alt="plunge" width="640"></p>
-<p>もしあなたがこの地表の両極以外の地点 p に住んでいるなら L を地軸としたとき p ^ L* が pを通る緯度線の円周になります。 L を 2つの平面 H と H'の交線と考えると</p>
-<p>p ^ L* = p ^ H* ^ H'*</p>
-<p>となり右辺は p と H と H'のプランジになります。</p>
-<p><img src="../images/dorst-15-5.png" alt="plunge" width="640"></p>
-<p>本の Fig.15.5はいろいろな点 p に対して円周 p ^ L* を描いたものです。 なんだか L* が円周に成り得るものの"場"に見えてこないでしょうか?</p>
-<p>著者は繰り返し"convince yourself" of X with doing Yという表現を使っています。 Yにはしばしば著者が公開しているGAViewerという幾何学的代数アプリケーションで実際に試すことが入ります。 ここで紹介した絵は全てGAViewerで作ってそのスクリーンショット機能を使ったものです。
-幾何ですから画や図を書いての直観的な納得はやっぱりとても大事ですよね。</p>
-<h2>GAViewer</h2>
-<p>GAViewerにはマニュアルとは別にGAViewerのオフィシャルな<a href="https://www.researchgate.net/publication/265065144_GABLE_A_GAViewer_Tutorial_for_Geometric_Algebra">チュートリアル</a>があります。 本という形式ではありませんがこのチュートリアルで幾何学的代数の基礎を一通り学ぶこともできるよう構成されています。 素晴らしい。</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>前者はベクトルu,vでできる向きのついた平行四辺形(面積要素)をu^vと書いて2-bladeと呼び、u,v,wが作る体積要素を3-blade u^v …</p>
+                <a class="readmore" href="../ga-intro-j.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -361,38 +387,9 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
                 <a class="readmore" href="../mavlink-howto.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../bee3-en.html" rel="bookmark"
-                           title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-12-01T00:00:00+09:00">
-                Published: 金 01 12月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/bee3-en.html" />
-<meta property="og:title" content="hachidori - APM on PC with remote sensor/actuators" />
-<meta property="og:description" content="Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC." />
-<meta property="og:image" content="https://kazkojima.github.io/images/bee3-flight.jpg" /></p>
-<p><img src="../images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
-<p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting …</p>
-                <a class="readmore" href="../bee3-en.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
                 </ol><!-- /#posts-list -->
 <p class="paginator">
-    Page 1 / 2
+    Page 1 / 3
         <a href="../author/kaz-kojima2.html">&raquo;</a>
 </p>
                 </section><!-- /#content -->

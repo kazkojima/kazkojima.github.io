@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>"Aircraft Control and Simulation (3rd ed.)" メモ</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">My Bug Has A Program! </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="./category/articles.html">articles</a></li>
+                    <li><a href="./category/english.html">English</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./aircraft-control-simulation-memo1.html" rel="bookmark"
+           title="Permalink to "Aircraft Control and Simulation (3rd ed.)" メモ">&quot;Aircraft Control and Simulation (3rd ed.)&quot; メモ</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-07-07T00:00:00+09:00">
+                Published: 土 07 7月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/control.html">control</a> </p>
+</footer><!-- /.post-info -->      <p><a class="reference external" href="https://www.wiley.com/en-us/Aircraft+Control+and+Simulation%3A+Dynamics%2C+Controls+Design%2C+and+Autonomous+Systems%2C+3rd+Edition-p-9781118870983">Aircraft Control and Simulation</a></p>
+<img alt="Book cover of Aircraft Control and Simulation" src="./images/aircraft-book.jpg" style="width: 240px; height: 360px;" />
+<p>を半分まで読んでのメモです。 この分野まったくの素人です。</p>
+<p>Ch1. The kinematics and Dynamics of Aircraft Motion</p>
+<p>航空機の運動を表すのに必要な座標系、そこでの回転や並進と座標変換についての話。古典力学と地球の形状や物理の基礎知識。</p>
+<p>Ch.2 Modeling the Aircraft</p>
+<p>ベーシックな航空力学とそれに基いた航空機のモデル。モデルは線形または非線形の微分方程式あるいはその係数のセット(derivatives)。 実際は複数テーブル化される。 簡単なものだとテーブルが十数個だがF22のsimulationなんかだと数千テーブルが必要で総データポイントは2-300万項にも及ぶらしい。</p>
+<p>Ch.3 Modeling, Design, and Simulation Tools</p>
+<p>古典的な制御の基礎とその航空機simulationでの適用例。次章への準備</p>
+<p>'state-spaceモデル'
+'state equation'
+'network transfer function'
+'Bode plot'
+'数値積分 Runge-Kutta'
+'steady-state flight'
+'feedback control'
+'Nyquist plot'
+'Root locus plot'</p>
+<p>simulationでの適用例ではstate equationを近似的に2つの部分(longitudinal &amp; lateral-directional parts)に分解してそれぞれのtransfer functionのpoleを見て次のような運動のモードに分けて調べている。</p>
+<p>longitudinal modes:</p>
+<blockquote>
+<ul class="simple">
+<li>phugoid (comlex pair, relatively slow and small dumping factor)</li>
+<li>short period (comlex pair, relatively fast and large dumping factor)</li>
+</ul>
+</blockquote>
+<p>lateral-directional modes:</p>
+<blockquote>
+<ul class="simple">
+<li>dutch roll (comlex pair, fast and small dumping)</li>
+<li>spiral (real, slow)</li>
+<li>roll subsidence (real, fast)</li>
+</ul>
+</blockquote>
+<p>ところでBode plotの概形が手でかけるというのを初めて知りました。 &lt;-あきれた奴</p>
+<p>このvideoシリーズがものすごくわかりやすかった:</p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=_eh1conN6YM">Control System Lectures - Bode Plots, Introduction</a></p>
+<p>Ch.4 Aircraft Dynamics and Classical Control Design</p>
+<p>古典的な制御でCAS(control augumented system)やSAS(stability augumented system)を構成する話。 人間工学的な問題? pilot feelやautopilot, landing時の例。</p>
+<p>次章以降で現代的な制御とその航空機への適用の話になるらしくパラパラめくると Kalman, SVD, NNなどという単語が見えてます。 ここまでも理解できていないことが沢山あり、その証拠に演習問題とか手がでません。 しかも先は長そう。 でもとにかく面白い。</p>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
