@@ -79,6 +79,16 @@ LQ(Linear Quadratic)という方法でレギュレータ(Regulater)やトラッ�
 state equationをPI(Performance Index)を最小にするという制約をつけて考える。 問題に応じて'良い' PIを考えることが重要らしい。 'Lagrange multiplier' 'Lyapunov equation'
 open loopな可判別性、可安定性(&lt;可観測性、可制御性)とclosed loopでの解の安定性をRiccati(リカッチみたいに読むのかな?)の方程式が結んでいる。</p>
 <p>2x2行列でRiccatiの方程式を解く例のところでちょっとほっとしました。</p>
+<p><em>[2018-07-27追記]</em></p>
+<p>Ch.6 Robustness and Multivariable Frequency-Domain Techniques</p>
+<p>古典的なSISOの場合に周波数領域でのゲインや位相特性からシステムのロバスト性を調べる方法を現代制御理論の扱うMIMOの場合に拡張する。 プロセスノイズやセンサノイズを考慮する。 数理的な道具はSVD。 最大及び最小のSingular valueが低周波及び高周波領域でのロバスト性を決める。</p>
+<p>フルステートが観測できないシステムではobserverを考えてあたかもフルステートが観測できるかのようにする手法がある。 つまりフルーステートのestimationを考える。</p>
+<p>プロセスノイズやセンサノイズを扱う手法として確率論をベースにしたKalman filterがある。Kalman filterでobserver designを行ってフルステートのフィードバックによるレギュレータなどを考えることができる。</p>
+<p>このとき元のシステムがロバストでもKalman filterをobserverにして構成(Linear Quadratic Gaussian LQG)されたシステムのロバスト性は必ずしも保証できないが、ゲインを調整すればロバスト性を復元することができる。 この手順をLoop Transfer Recovery(LTR)と呼ぶ。 全体としてLQG／LTR。</p>
+<p>Ch.5に続きこの章も難しい。Kalman filterやLTRのところでどうしても判らない所が何箇所か。</p>
+<p>Ch.7 Digital Control</p>
+<p>主にいままで考えてきた連続なシステムを離散化する話。 'BLT' 'MPZ'
+プロセッサでの計算やサンプリング、ZOH(zero order hold)による遅延の扱い。 エイリアスの話。 サチュレーションの扱いや実装時の問題について。</p>
                 </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
