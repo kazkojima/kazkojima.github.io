@@ -38,8 +38,8 @@ bool guess_mag_offset(void)
 
 void loop()
 {
-    // Read the mag data into mx, my, mz
-    code_to_read_mxyz
+    // Read the mag data into mx, my, mz (in milli-Gauss)
+    code_to_read_mxyz_in_mG
  
     if (mx < mx_raw_min)
         mx_raw_min = mx;
