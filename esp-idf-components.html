@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>M5Stack-IDF = ESP-IDF + arduino の仕掛け</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">My Bug Has A Program! </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="./category/articles.html">articles</a></li>
+                    <li><a href="./category/english.html">English</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./esp-idf-components.html" rel="bookmark"
+           title="Permalink to M5Stack-IDF = ESP-IDF + arduino の仕掛け">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-10-18T00:00:00+09:00">
+                Published: 木 18 10月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info -->      <h2>M5Stack-IDFの仕掛け</h2>
+<p><a href="https://github.com/m5stack/M5Stack-IDF">M5Stack-IDF</a>はESP-IDFでArduinoとM5Stackのライブラリを使う環境を提供しています。実は<a href="https://github.com/espressif/esp-idf">ESP-IDF</a>は外部ライブラリを追加して使うメカニズムを持っていてM5Stack-IDFはそれを利用します。
+使える外部ライブラリは内部ライブラリとの相性である程度制限されます。</p>
+<p>ESP-IDFはビルド(make)時に決め打ちのディレクトリとそのサブディレクトリを見に行きそこにcomponent.mkという名前のファイルがあるかどうか調べます。 もしあるとそれぞれのcomponent.mkの中にある指示をビルドへの指示として追加します。
+ESP-IDFのサンプルプログラムを見ると必ずmain/component.mkがあってたいていは中身は空です。 この場合は単にここにもソースがあるよという意味になります。 少し複雑なライブラリでよく使われるのは</p>
+<div class="highlight"><pre><span></span>COMPONENT_ADD_INCLUDEDIRS := include src
+COMPONENT_SRCDIRS := src
+CXXFLAGS += -fno-rtti -Wno-error=unused-value
+</pre></div>
+
+
+<p>の3つの変数あたりでこの例の場合component.mkのあるディレクトリ下のsrcの中にソースがあり、includeとsrcの2つのディレクトリをインクルードのサーチパスに加え、c++でのコンパイル時にオプション -fno-rtti -Wno-error=unused-value を追加することを指示しています。 <a href="https://github.com/espressif/arduino-esp32">arduino-esp32</a>にはさらに複雑な指示のあるcomponent.mkがあります。</p>
+<p>決め打ちのディレクトリとしてmakeするディレクトリの中にあるmainとcomponentsがあります。 なのでcomponentsにいろいろなライブラリを並べライブラリのルートとなるところに各ライブラリに対応する
+component.mkを置いてやればライブラリ・コンポーネントの追加ができるというわけです。 例えば</p>
+<div class="highlight"><pre><span></span>.
+├── Makefile
+├── README.md
+├── components
+│   ├── arduino -&gt; /B/arduino-esp32
+│   ├── btstack
+│   └── m5stack -&gt; /A/M5Stack-IDF/components/m5stack
+├── main
+│   ├── component.mk
+│   ├── hid_host_demo.c
+│   └── main.cpp
+└── sdkconfig
+</pre></div>
+
+
+<p>というようなツリーを作っておいてarduino-esp32, btstack, m5stackにcomponent.mkを書けばこの3つのライブラリをESP-IDF環境下で使えるということになります。 arduino-esp32やm5stackにはすでにcomponent.mkがあるのでそれが使えます。 M5Stack-IDFのサンプルプログラムだと最初から</p>
+<div class="highlight"><pre><span></span>.
+├── Makefile
+├── README.md
+├── components
+│   ├── arduino
+│   └── m5stack
+├── main
+│   ├── component.mk
+│   └── main.cpp
+└── sdkconfig
+</pre></div>
+
+
+<p>の形になっていてM5Stack-IDFの用意するarduino, m5stackにはそれぞれcomponent.mkが書いてあるというわけです。</p>
+<h2>Arduinoのloopとsetup</h2>
+<p>Arduinoはちょっと特別なライブラリというかプロセスなので1つのコアにピン止めして動かします。 またsetup()で準備してあとはメインループをぐるぐる回る構造なのでESP-IDFで動かす時には次のような手順になります。 ESP-IDFでユーザにコントロールがくるのはapp_main()関数なのでそこから何かの方法で</p>
+<div class="highlight"><pre><span></span>extern &quot;C&quot; void m5_arduino_main()
+{
+    initArduino();
+
+    xTaskCreatePinnedToCore(loopTask, &quot;loopTask&quot;, 8192, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
+}
+</pre></div>
+
+
+<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref-注1"><a class="footnote-ref" href="#fn-注1">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
+<div class="highlight"><pre><span></span>void loopTask(void *pvParameters)
+{
+    setup();
+
+    while(1) {
+        loop ();
+    }
+}
+</pre></div>
+
+
+<p>とArduinoではお馴染みのsetup()とloop()を呼出します。</p>
+<p>いくつか<a href="https://github.com/kazkojima/m5stack-app">外部ライブラリをつかった例</a>を試したのでご参考までに。</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn-注1">
+<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref-注2"><a class="footnote-ref" href="#fn-注2">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref-注1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn-注2">
+<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref-注2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

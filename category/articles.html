@@ -21,7 +21,110 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../aircraft-control-simulation-memo1.html">&quot;Aircraft Control and Simulation (3rd ed.)&quot; メモ</a></h1>
+                    <h1 class="entry-title"><a href="../esp-idf-components.html">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-10-18T00:00:00+09:00">
+                Published: 木 18 10月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><h2>M5Stack-IDFの仕掛け</h2>
+<p><a href="https://github.com/m5stack/M5Stack-IDF">M5Stack-IDF</a>はESP-IDFでArduinoとM5Stackのライブラリを使う環境を提供しています。実は<a href="https://github.com/espressif/esp-idf">ESP-IDF</a>は外部ライブラリを追加して使うメカニズムを持っていてM5Stack-IDFはそれを利用します。
+使える外部ライブラリは内部ライブラリとの相性である程度制限されます。</p>
+<p>ESP-IDFはビルド(make)時に決め打ちのディレクトリとそのサブディレクトリを見に行きそこにcomponent.mkという名前のファイルがあるかどうか調べます。 もしあるとそれぞれのcomponent.mkの中にある指示をビルドへの指示として追加します。
+ESP-IDFのサンプルプログラムを見ると必ずmain/component.mkがあってたいていは中身は空です。 この場合は単にここにもソースがあるよという意味になります。 少し複雑なライブラリでよく使われるのは</p>
+<div class="highlight"><pre><span></span>COMPONENT_ADD_INCLUDEDIRS := include src
+COMPONENT_SRCDIRS := src
+CXXFLAGS += -fno-rtti -Wno-error=unused-value
+</pre></div>
+
+
+<p>の3つの変数あたりでこの例の場合component.mkのあるディレクトリ下のsrcの中にソースがあり、includeとsrcの2つのディレクトリをインクルードのサーチパスに加え、c++でのコンパイル時にオプション -fno-rtti -Wno-error=unused-value を追加することを指示しています。 <a href="https://github.com/espressif/arduino-esp32">arduino-esp32</a>にはさらに複雑な指示のあるcomponent.mkがあります。</p>
+<p>決め打ちのディレクトリとしてmakeするディレクトリの中にあるmainとcomponentsがあります。 なのでcomponentsにいろいろなライブラリを並べライブラリのルートとなるところに各ライブラリに対応する
+component.mkを置いてやればライブラリ・コンポーネントの追加ができるというわけです。 例えば</p>
+<div class="highlight"><pre><span></span>.
+├── Makefile
+├── README.md
+├── components
+│   ├── arduino -&gt; /B/arduino-esp32
+│   ├── btstack
+│   └── m5stack -&gt; /A/M5Stack-IDF/components/m5stack
+├── main
+│   ├── component.mk
+│   ├── hid_host_demo.c
+│   └── main.cpp
+└── sdkconfig
+</pre></div>
+
+
+<p>というようなツリーを作っておいてarduino-esp32, btstack, m5stackにcomponent.mkを書けばこの3つのライブラリをESP-IDF環境下で使えるということになります。 arduino-esp32やm5stackにはすでにcomponent.mkがあるのでそれが使えます。 M5Stack-IDFのサンプルプログラムだと最初から</p>
+<div class="highlight"><pre><span></span>.
+├── Makefile
+├── README.md
+├── components
+│   ├── arduino
+│   └── m5stack
+├── main
+│   ├── component.mk
+│   └── main.cpp
+└── sdkconfig
+</pre></div>
+
+
+<p>の形になっていてM5Stack-IDFの用意するarduino, m5stackにはそれぞれcomponent.mkが書いてあるというわけです。</p>
+<h2>Arduinoのloopとsetup</h2>
+<p>Arduinoはちょっと特別なライブラリというかプロセスなので1つのコアにピン止めして動かします。 またsetup()で準備してあとはメインループをぐるぐる回る構造なのでESP-IDFで動かす時には次のような手順になります。 ESP-IDFでユーザにコントロールがくるのはapp_main()関数なのでそこから何かの方法で</p>
+<div class="highlight"><pre><span></span>extern &quot;C&quot; void m5_arduino_main()
+{
+    initArduino();
+
+    xTaskCreatePinnedToCore(loopTask, &quot;loopTask&quot;, 8192, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
+}
+</pre></div>
+
+
+<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref-注1"><a class="footnote-ref" href="#fn-注1">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
+<div class="highlight"><pre><span></span>void loopTask(void *pvParameters)
+{
+    setup();
+
+    while(1) {
+        loop ();
+    }
+}
+</pre></div>
+
+
+<p>とArduinoではお馴染みのsetup()とloop()を呼出します。</p>
+<p>いくつか<a href="https://github.com/kazkojima/m5stack-app">外部ライブラリをつかった例</a>を試したのでご参考までに。</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn-注1">
+<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref-注2"><a class="footnote-ref" href="#fn-注2">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref-注1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn-注2">
+<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref-注2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../aircraft-control-simulation-memo1.html" rel="bookmark"
+                           title="Permalink to "Aircraft Control and Simulation (3rd ed.)" メモ">&quot;Aircraft Control and Simulation (3rd ed.)&quot; メモ</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-07-07T00:00:00+09:00">
                 Published: 土 07 7月 2018
@@ -32,7 +135,7 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/control.html">control</a> <a href="../tag/book.html">book</a> </p>
-</footer><!-- /.post-info --><p><a class="reference external" href="https://www.wiley.com/en-us/Aircraft+Control+and+Simulation%3A+Dynamics%2C+Controls+Design%2C+and+Autonomous+Systems%2C+3rd+Edition-p-9781118870983">Aircraft Control and Simulation</a></p>
+</footer><!-- /.post-info -->                <p><a class="reference external" href="https://www.wiley.com/en-us/Aircraft+Control+and+Simulation%3A+Dynamics%2C+Controls+Design%2C+and+Autonomous+Systems%2C+3rd+Edition-p-9781118870983">Aircraft Control and Simulation</a></p>
 <img alt="Book cover of Aircraft Control and Simulation" src="../images/aircraft-book.jpg" style="width: 240px; height: 360px;" />
 <p>を読んでのメモです。 この分野まったくの素人です。</p>
 <p>Ch1. The Kinematics and Dynamics of Aircraft Motion</p>
@@ -47,60 +150,10 @@
 'Bode plot'
 '数値積分 Runge-Kutta'
 'steady-state flight'
-'feedback control'
-'Nyquist plot'
-'Root locus plot'</p>
-<p>simulationでの適用例ではstate equationを近似的に2つの部分(longitudinal &amp; lateral-directional parts)に分解(decoupling)してそれぞれのtransfer functionのpoleを見て次のような運動のモードに分けて調べている。</p>
-<p>longitudinal modes:</p>
-<blockquote>
-<ul class="simple">
-<li>phugoid (comlex pair, relatively slow and small dumping factor)</li>
-<li>short period (comlex pair, relatively fast and large dumping factor)</li>
-</ul>
-</blockquote>
-<p>lateral-directional modes:</p>
-<blockquote>
-<ul class="simple">
-<li>dutch roll (comlex pair, fast and small dumping)</li>
-<li>roll subsidence (real, fast)</li>
-<li>spiral (real, slow)</li>
-</ul>
-</blockquote>
-<p>ところでBode plotの概形が手でかけるというのを初めて知りました。 &lt;-あきれた奴</p>
-<p>このvideoシリーズがものすごくわかりやすかった:</p>
-<p><a class="reference external" href="https://www.youtube.com/watch?v=_eh1conN6YM">Control System Lectures - Bode Plots, Introduction</a></p>
-<p>Ch.4 Aircraft Dynamics and Classical Control Design</p>
-<p>古典的な制御でCAS(control augumented system)やSAS(stability augumented system)を構成する話。 人間工学的な問題? pilot feelやautopilot, landing時の例。</p>
-<p>次章以降で現代的な制御とその航空機への適用の話になるらしくパラパラめくると Kalman, SVD, NNなどという単語が見えてます。 ここまでも理解できていないことが沢山あり、その証拠に演習問題とか手がでません。 しかも先は長そう。 でもとにかく面白い。</p>
-<p><em>[2018-07-19追記]</em></p>
-<p>Ch.5 Modern Design Techniques</p>
-<p>航空機制御での現代制御理論入門?
-LQ(Linear Quadratic)という方法でレギュレータ(Regulater)やトラッカー(Tracker)とよばれる制御の問題を解くのが主題。
-state equationをPI(Performance Index)を最小にするという制約をつけて考える。 問題に応じて'良い' PIを考えることが重要らしい。 'Lagrange multiplier' 'Lyapunov equation'
-open loopな可判別性、可安定性(&lt;可観測性、可制御性)とclosed loopでの解の安定性をRiccati(リカッチみたいに読むのかな?)の方程式が結んでいる。</p>
-<p>2x2行列でRiccatiの方程式を解く例のところでちょっとほっとしました。</p>
-<p><em>[2018-07-27追記]</em></p>
-<p>Ch.6 Robustness and Multivariable Frequency-Domain Techniques</p>
-<p>古典的なSISOの場合に周波数領域でのゲインや位相特性からシステムのロバスト性を調べる方法を現代制御理論の扱うMIMOの場合に拡張する。 プロセスノイズやセンサノイズを考慮する。 数理的な道具はSVD。 最大及び最小のSingular valueが低周波及び高周波領域でのロバスト性を決める。</p>
-<p>フルステートが観測できないシステムではobserverを考えてあたかもフルステートが観測できるかのようにする手法がある。 つまりフルステートのestimationを考える。</p>
-<p>プロセスノイズやセンサノイズを扱う手法として確率論をベースにしたKalman filterがある。Kalman filterでobserver designを行ってフルステートのフィードバックによるレギュレータなどを考えることができる。</p>
-<p>このとき元のシステムがロバストでもKalman filterをobserverにして構成(Linear Quadratic Gaussian LQG)されたシステムのロバスト性は必ずしも保証できないが、ゲインを調整すればロバスト性を復元することができる。 この手順をLoop Transfer Recovery(LTR)と呼ぶ。 全体としてLQG／LTR。</p>
-<p>Ch.5に続きこの章も難しい。Kalman filterやLTRのところでどうしても判らない所が何箇所か。</p>
-<p>Ch.7 Digital Control</p>
-<p>主にいままで考えてきた連続なシステムを離散化する話。 'BLT' 'MPZ'
-プロセッサでの計算やサンプリング、ZOH(zero order hold)による遅延の扱い。 エイリアスの話。 サチュレーションの扱いや実装時の問題について。</p>
-<p><em>[2018-07-29追記]</em></p>
-<p>Ch.8 Modeling and Simulation of Miniature Aerial Vehicles</p>
-<p>小さなUAVを例にして主にプロペラやローターの力学。次章への準備にもなっている。</p>
-<p>Ch.9 Adaptive Control With Application to Miniature Aerial Vehicles</p>
-<p>適応制御とその航空機制御への適用での問題。 安定性の保証。 Single hidden layerのNueral Networkでの適応制御。 attitudeとguidance(position) controlのそれぞれ適応制御された2つの系をカスケードして統合したシステム。 その8章のUAVへの適用例、simulation結果。</p>
-<p>Ch.8とCh.9の冒頭は歴史を辿った解説でもあります。 考えさせられるものがありました。</p>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+'feedback control' …</p>
+                <a class="readmore" href="../aircraft-control-simulation-memo1.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -422,45 +475,6 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 生のlatencyや処理コスト的にespnowは魅力的なのですが、リモートセンサ/アクチュエータ方式でコプターを飛ばすのは今の所少し厳しい感じです.</p>
 
                 <a class="readmore" href="../testing-espnow.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-deep-sleep.html" rel="bookmark"
-                           title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-07-28T00:00:00+09:00">
-                Published: 金 28 7月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
-<p>最初はdeep sleep modeに入る前に消しておいたらと思ったのですがdeep sleepするとGPIOがlowレベルになって全点灯してしまいました.  いろいろやるうちに逃げ道を見つけることができました.
-いつまでこれでうまくいくかはわからないのですが.</p>
-<p>話は簡単で</p>
-<blockquote>
-<ul class="simple">
-<li>GPIOのコンフィグでのpull-up/downはdeep sleep時でも有効</li>
-</ul>
-</blockquote>
-<p>なことを利用します. 問題のシステムでpull-upを立てておくとdeep sleep時にそれが効いてレベルがhighになって全消灯できました. こんな感じです (このシステムではRGBLED_OFF=1)</p>
-<pre class="code c literal-block">
-<span class="n">gpio_config_t</span> <span class="n">io_conf</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">intr_type</span> <span class="o">=</span> <span class="n">GPIO_PIN_INTR_DISABLE</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">GPIO_MODE_OUTPUT</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
-                        <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="c1">// This ensures that all leds are off in deep sleep …</span></pre>
-                <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->

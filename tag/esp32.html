@@ -21,7 +21,110 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../esp32-vl53l1x.html">VL53L1X on ESP-IDF</a></h1>
+                    <h1 class="entry-title"><a href="../esp-idf-components.html">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-10-18T00:00:00+09:00">
+                Published: 木 18 10月 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info --><h2>M5Stack-IDFの仕掛け</h2>
+<p><a href="https://github.com/m5stack/M5Stack-IDF">M5Stack-IDF</a>はESP-IDFでArduinoとM5Stackのライブラリを使う環境を提供しています。実は<a href="https://github.com/espressif/esp-idf">ESP-IDF</a>は外部ライブラリを追加して使うメカニズムを持っていてM5Stack-IDFはそれを利用します。
+使える外部ライブラリは内部ライブラリとの相性である程度制限されます。</p>
+<p>ESP-IDFはビルド(make)時に決め打ちのディレクトリとそのサブディレクトリを見に行きそこにcomponent.mkという名前のファイルがあるかどうか調べます。 もしあるとそれぞれのcomponent.mkの中にある指示をビルドへの指示として追加します。
+ESP-IDFのサンプルプログラムを見ると必ずmain/component.mkがあってたいていは中身は空です。 この場合は単にここにもソースがあるよという意味になります。 少し複雑なライブラリでよく使われるのは</p>
+<div class="highlight"><pre><span></span>COMPONENT_ADD_INCLUDEDIRS := include src
+COMPONENT_SRCDIRS := src
+CXXFLAGS += -fno-rtti -Wno-error=unused-value
+</pre></div>
+
+
+<p>の3つの変数あたりでこの例の場合component.mkのあるディレクトリ下のsrcの中にソースがあり、includeとsrcの2つのディレクトリをインクルードのサーチパスに加え、c++でのコンパイル時にオプション -fno-rtti -Wno-error=unused-value を追加することを指示しています。 <a href="https://github.com/espressif/arduino-esp32">arduino-esp32</a>にはさらに複雑な指示のあるcomponent.mkがあります。</p>
+<p>決め打ちのディレクトリとしてmakeするディレクトリの中にあるmainとcomponentsがあります。 なのでcomponentsにいろいろなライブラリを並べライブラリのルートとなるところに各ライブラリに対応する
+component.mkを置いてやればライブラリ・コンポーネントの追加ができるというわけです。 例えば</p>
+<div class="highlight"><pre><span></span>.
+├── Makefile
+├── README.md
+├── components
+│   ├── arduino -&gt; /B/arduino-esp32
+│   ├── btstack
+│   └── m5stack -&gt; /A/M5Stack-IDF/components/m5stack
+├── main
+│   ├── component.mk
+│   ├── hid_host_demo.c
+│   └── main.cpp
+└── sdkconfig
+</pre></div>
+
+
+<p>というようなツリーを作っておいてarduino-esp32, btstack, m5stackにcomponent.mkを書けばこの3つのライブラリをESP-IDF環境下で使えるということになります。 arduino-esp32やm5stackにはすでにcomponent.mkがあるのでそれが使えます。 M5Stack-IDFのサンプルプログラムだと最初から</p>
+<div class="highlight"><pre><span></span>.
+├── Makefile
+├── README.md
+├── components
+│   ├── arduino
+│   └── m5stack
+├── main
+│   ├── component.mk
+│   └── main.cpp
+└── sdkconfig
+</pre></div>
+
+
+<p>の形になっていてM5Stack-IDFの用意するarduino, m5stackにはそれぞれcomponent.mkが書いてあるというわけです。</p>
+<h2>Arduinoのloopとsetup</h2>
+<p>Arduinoはちょっと特別なライブラリというかプロセスなので1つのコアにピン止めして動かします。 またsetup()で準備してあとはメインループをぐるぐる回る構造なのでESP-IDFで動かす時には次のような手順になります。 ESP-IDFでユーザにコントロールがくるのはapp_main()関数なのでそこから何かの方法で</p>
+<div class="highlight"><pre><span></span>extern &quot;C&quot; void m5_arduino_main()
+{
+    initArduino();
+
+    xTaskCreatePinnedToCore(loopTask, &quot;loopTask&quot;, 8192, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
+}
+</pre></div>
+
+
+<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref-注1"><a class="footnote-ref" href="#fn-注1">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
+<div class="highlight"><pre><span></span>void loopTask(void *pvParameters)
+{
+    setup();
+
+    while(1) {
+        loop ();
+    }
+}
+</pre></div>
+
+
+<p>とArduinoではお馴染みのsetup()とloop()を呼出します。</p>
+<p>いくつか<a href="https://github.com/kazkojima/m5stack-app">外部ライブラリをつかった例</a>を試したのでご参考までに。</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn-注1">
+<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref-注2"><a class="footnote-ref" href="#fn-注2">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref-注1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn-注2">
+<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref-注2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp32-vl53l1x.html" rel="bookmark"
+                           title="Permalink to VL53L1X on ESP-IDF">VL53L1X on ESP-IDF</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-03-23T00:00:00+09:00">
                 Published: 金 23 3月 2018
@@ -32,42 +135,15 @@
         </address>
 <p>In <a href="../category/english.html">English</a>.</p>
 <p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
+</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/esp32-vl53l1x.html" />
 <meta property="og:title" content="VL53L1X on ESP-IDF" />
 <meta property="og:description" content="A simple example which uses ST's driver of VL53L1X with ESP-IDF." /></p>
-<p>VL53L1X is a ST's new TOF(time of flight) sensor. ST gives its driver and API library with the dual license. See <a href="http://www.st.com/en/ecosystems/x-cube-53l1a1.html">ST's page</a> for detail. Although that code is for the STM32 platforms primarily, they are written with the highly modular manner and possible to be used with other platforms.</p>
-<p><a href="https://github.com/espressif/esp-idf">ESP-IDF</a> build system has several ways to import such external libraries. This article is a simple example of one of them. The source code I've written is pushed on my github as <a href="https://github.com/kazkojima/esp32-vl53l1x-test">esp32-vl53l1x-test</a>.</p>
-<p>When something are built with ESP-IDF, it scans some directories and looks for component.mk files. It also read those files and determines what to do.</p>
-<p>Here is the <a href="https://github.com/kazkojima/esp32-vl53l1x-test/blob/master/main/component.mk">component.mk file</a> in my esp32-vl53l1x-test/main directory.</p>
-<div class="highlight"><pre><span></span>STM32CUBEEXPANSION_53L1A1 = symlink-STM32CubeExpansion_53L1A1_V1.0.0
-
-COMPONENT_SRCDIRS := . \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/Components/vl53l1x
-
-COMPONENT_ADD_INCLUDEDIRS = \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/X-NUCLEO-53L1A1 \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/Components/vl53l1x \
-    $(STM32CUBEEXPANSION_53L1A1)/Projects/Multi/Examples/VL53L1X/SimpleRangingExamples/Inc
-
-CFLAGS += -Wno-unused-variable -Wno-maybe-uninitialized -DI2C_HandleTypeDef=int
-</pre></div>
-
-
-<p>The file path is relative to main/ itself. The definition of COMPONENT_SRCDIRS can be read as '. ./symlink-STM32CubeExpansion_53L1A1_V1.0.0/Drivers/BSP/Components/vl53l1x'. The build system adds these directories as the directory which has sources to be compiled. If you symlink the root directory of ST's driver to symlink-STM32CubeExpansion_53L1A1_V1.0.0, the sources in Drivers/BSP/Components/vl53l1x of ST's source are compiled with.</p>
-<p>COMPONENT_ADD_INCLUDEDIRS is the list of directories which are added as the search paths for the include files. CFLAGS is the option flags during compiling. In this example, it adds a few -W flags to avoid failure with warnings and gives a missing type definition. Thus I could use ST's source tree without modifying. Easy enough, isn't it?</p>
-<p><img src="../images/vl53l1x.png" alt="bread board" width="720"></p>
-<p>The test circuit is using ESP32 I2C1(not I2C0), IO32(SDA), IO33(SCLK) and pretty simple except 3V3 - 2V8 level converter. I'm not sure if the level converter is deadly needed.</p>
-<p><img src="../images/alternative-ROI.png" alt="a test" width="640"></p>
-<p>The test itself is a simple use of ST's API. With switching ROIs(region of interest), the sensor can detect 'edge' or 'slope' somehow.</p>
-<p><a href="https://youtu.be/HekUzrfqgoY"><img alt="2nd test" src="../images/switching-ROI-2.png"></a></p>
-<p><img src="../images/vl53l1x-emit.jpg" alt="emittion"></p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>VL53L1X is a ST's new TOF(time of flight) sensor. ST gives its driver and API library with the dual license. See <a href="http://www.st.com/en/ecosystems/x-cube-53l1a1.html">ST's page</a> for detail. Although that code is for the STM32 platforms primarily, they are written with the highly modular manner and possible to be used with other …</p>
+                <a class="readmore" href="../esp32-vl53l1x.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -347,32 +423,6 @@ Looks not so good precision but not so bad as a Poor Man's system. A LOITER and 
 生のlatencyや処理コスト的にespnowは魅力的なのですが、リモートセンサ/アクチュエータ方式でコプターを飛ばすのは今の所少し厳しい感じです.</p>
 
                 <a class="readmore" href="../testing-espnow.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-2khz.html" rel="bookmark"
-                           title="Permalink to ESP32 0.5ms tick">ESP32 0.5ms tick</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-10-22T00:00:00+09:00">
-                Published: 日 22 10月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/freertos.html">freertos</a> </p>
-</footer><!-- /.post-info -->                <p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
-<img alt="esp-idf menuconfig 1000Hz" src="../images/config-1000Hz.png" style="width: 640px; height: 400px;" />
-<p>This is ok for almost applications and if you require sub-milli time precision, the extra timer or interrupt would be your friend.
-But why can't be 2000Hz tick rate set on 240Mz CPU?
-Here is a famous LED blinker …</p>
-                <a class="readmore" href="../esp32-2khz.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->

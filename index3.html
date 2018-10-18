@@ -23,6 +23,34 @@
                     <ol id="posts-list" class="hfeed" start="9">
             <li><article class="hentry">
                 <header>
+                    <h1><a href="./esp32-spi.html" rel="bookmark"
+                           title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-06-26T00:00:00+09:00">
+                Published: 月 26 6月 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> </p>
+</footer><!-- /.post-info -->                <div class="figure align-left">
+<img alt="esp-wroom-32 board" src="./images/bee3-board.png" style="width: 600.0px; height: 337.5px;" />
+</div>
+<p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
+With enabling command phase, the problem went away.</p>
+<pre class="code c literal-block">
+<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105</span><span class="p">,</span><span class="mi">12 …</span></pre>
+                <a class="readmore" href="./esp32-spi.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
                     <h1><a href="./gr-neug.html" rel="bookmark"
                            title="Permalink to GnuRadio companion で新しい機能ブロック">GnuRadio companion で新しい機能ブロック</a></h1>
                 </header>
