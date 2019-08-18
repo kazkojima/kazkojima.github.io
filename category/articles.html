@@ -4,10 +4,6 @@
         <meta charset="utf-8" />
         <title>My Bug Has A Program! - articles</title>
         <link rel="stylesheet" href="../theme/css/main.css" />
-
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
 </head>
 
 <body id="index" class="home">
@@ -87,7 +83,7 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 </pre></div>
 
 
-<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref-注1"><a class="footnote-ref" href="#fn-注1">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
+<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref:注1"><a class="footnote-ref" href="#fn:注1" rel="footnote">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
 <div class="highlight"><pre><span></span>void loopTask(void *pvParameters)
 {
     setup();
@@ -104,14 +100,52 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 <h3>[追記] はまりポイント</h3>
 <p>Arduinoでは動いてたのにESP-IDFのコンポーネント化をしたら動かなくなってはまってしまうことがあります。原因は様々なようでなかなか特定できないのですがいくつかはArduinoのプログラムがESP-IDF側のシステムの初期化やinitArduino()より先に動いてしまうケースでした。 普通にはおきないのですがコンストラクタでArduino側の機能を呼んでしまうようなクラスがあって、その静的なオブジェクトが使われると実行のごく初期に静的イニシャライザでコンストラクタからその機能が呼ばれてしまいます。 純粋なArduino環境ではその時すでにある程度のArduino環境がセットアップされていて問題がなくてもESP-IDF環境だと呼ぶのが早過ぎておかしなことになるようです。</p>
 <p>そういうオブジェクトについては例えばsetup()内で動的に確保するとか、コンストラクタ内で呼ぶようなArduino側の機能を別のイニシャライズ用メソッドを作って移し、setup()で呼び出すとかしてなんとかごまかしています。</p>
+<h3>[追記2] btstack/components.mk</h3>
+<p>上の例でのbtstack/components.mkの記述は</p>
+<div class="highlight"><pre><span></span>COMPONENT_DEPENDS += micro-ecc
+
+COMPONENT_ADD_INCLUDEDIRS := \
+    3rd-party/bluedroid/decoder/include \
+    3rd-party/bluedroid/encoder/include \
+    3rd-party/hxcmod-player \
+    3rd-party/hxcmod-player/mods \
+    3rd-party/md5 \
+    3rd-party/yxml \
+    src/classic \
+    src/ble/gatt-service \
+    src/ble \
+    src/classic \
+    src \
+    platform/embedded \
+    platform/freertos \
+    include \
+
+COMPONENT_SRCDIRS := \
+    3rd-party/bluedroid/decoder/srce \
+    3rd-party/bluedroid/encoder/srce \
+    3rd-party/hxcmod-player \
+    3rd-party/hxcmod-player/mods \
+    3rd-party/md5 \
+    src/ble/gatt-service \
+    src/ble \
+    src/classic \
+    src/ \
+    platform/freertos \
+    . \
+
+CFLAGS += -Wno-format
+</pre></div>
+
+
+<p>と少し複雑です。最初はbtstackのexampleのMakefileを参考にCOMPONENT_ADD_INCLUDEDIRS/COMPONENT_SRCDIRSを書いておいて関数がないと言われてはCOMPONENT_SRCDIRSに追加しincludeできないと言われてはCOMPONENT_ADD_INCLUDEDIRSに追加、コンパイル時の警告がエラー扱いされるときにはCFLAGSに警告を出さないようにオプション追加、といった試行錯誤をしました。</p>
 <div class="footnote">
 <hr>
 <ol>
-<li id="fn-注1">
-<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref-注2"><a class="footnote-ref" href="#fn-注2">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref-注1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<li id="fn:注1">
+<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref:注2"><a class="footnote-ref" href="#fn:注2" rel="footnote">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref:注1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
-<li id="fn-注2">
-<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref-注2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+<li id="fn:注2">
+<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref:注2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>                </article>
