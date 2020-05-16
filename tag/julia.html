@@ -17,7 +17,7 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../cuda-jl.html">A Memo for CUDAnative.jl</a></h1>
+                    <h1 class="entry-title"><a href="../cuda-jl.html">Jetson nanoでCUDAnative.jl</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2020-05-16T00:00:00+09:00">
                 Published: 土 16 5月 2020
@@ -28,7 +28,58 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>
-</footer><!-- /.post-info --><h2>CUDAnative.jl メモ</h2>
+</footer><!-- /.post-info --><h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
+<h1>Juliaのインストール</h1>
+<ul>
+<li>https://julialang.org/downloads/からGeneric Linux Binaries for ARMの64-bit(AArch64)用のJulia(例えばjulia-1.4.1-linux-aarch64.tar.gz)をdownload</li>
+<li>それを例えば/optに展開し/opt/julia-1.4.1/binをPATHに追加</li>
+</ul>
+<h1>Juliaで必要なパッケージを追加</h1>
+<ul>
+<li>Juliaを起動してpkgモードで</li>
+</ul>
+<div class="highlight"><pre><span></span>add CUDAnative
+add CUDAdrv
+add CuArrays
+</pre></div>
+
+
+<h1>Sampleを走らせる</h1>
+<div class="highlight"><pre><span></span><span class="err">#</span> <span class="nx">listing</span> <span class="mi">16</span>
+<span class="nx">using</span> <span class="nx">CUDAnative</span><span class="p">,</span> <span class="nx">CuArrays</span>
+
+<span class="kd">function</span> <span class="nx">vadd</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="p">(</span><span class="nx">blockIdx</span><span class="p">().</span><span class="nx">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nx">blockDim</span><span class="p">().</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">threadIdx</span><span class="p">().</span><span class="nx">x</span>
+    <span class="nx">c</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+    <span class="k">return</span>
+<span class="nx">end</span>
+
+<span class="nx">len</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="nx">a</span> <span class="o">=</span> <span class="nx">rand</span><span class="p">(</span><span class="nx">Float32</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span>
+<span class="nx">b</span> <span class="o">=</span> <span class="nx">rand</span><span class="p">(</span><span class="nx">Float32</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span>
+
+<span class="nx">d_a</span> <span class="o">=</span> <span class="nx">CuArray</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="nx">d_b</span> <span class="o">=</span> <span class="nx">CuArray</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>
+<span class="nx">d_c</span> <span class="o">=</span> <span class="nx">similar</span><span class="p">(</span><span class="nx">d_a</span><span class="p">)</span>
+
+<span class="kd">@time</span> <span class="kd">@cuda</span> <span class="nx">threads</span><span class="o">=</span><span class="nx">len</span> <span class="nx">vadd</span><span class="p">(</span><span class="nx">d_a</span><span class="p">,</span> <span class="nx">d_b</span><span class="p">,</span> <span class="nx">d_c</span><span class="p">)</span>
+</pre></div>
+
+
+<p>これはcompileするので時間がかかります。Jetson nanoだと
+  49.464224 seconds (32.68 M allocations: 1.546 GiB, 4.34% gc time)</p>
+<p>ここで</p>
+<div class="highlight"><pre><span></span>c = Base.Array(d_c)
+</pre></div>
+
+
+<p>で結果を見れます。２回めの呼び出しは速いです。</p>
+<div class="highlight"><pre><span></span>ulia&gt; @time @cuda threads=len vadd(d_a, d_b, d_c)
+  0.016108 seconds (65 allocations: 2.141 KiB)
+</pre></div>
+
+
+<h2>CUDAnative.jl メモ</h2>
 <p>JuliaでCUDAのkernel関数を記述して呼ぶことが出来る<a href="https://github.com/JuliaGPU/CUDAapi.jl.git">CUDAnative.jl</a>を読もうとしての<a href="../images/cudanative-note.pdf">メモ</a></p>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
