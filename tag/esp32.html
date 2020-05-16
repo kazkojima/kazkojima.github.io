@@ -83,7 +83,7 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 </pre></div>
 
 
-<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref:注1"><a class="footnote-ref" href="#fn:注1" rel="footnote">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
+<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref:注1"><a class="footnote-ref" href="#fn:注1">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
 <div class="highlight"><pre><span></span>void loopTask(void *pvParameters)
 {
     setup();
@@ -142,10 +142,10 @@ CFLAGS += -Wno-format
 <hr>
 <ol>
 <li id="fn:注1">
-<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref:注2"><a class="footnote-ref" href="#fn:注2" rel="footnote">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref:注1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref:注2"><a class="footnote-ref" href="#fn:注2">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref:注1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:注2">
-<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref:注2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref:注2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>                </article>

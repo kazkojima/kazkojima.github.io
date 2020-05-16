@@ -17,7 +17,32 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="../esp-idf-components.html">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
+                    <h1 class="entry-title"><a href="../cuda-jl.html">A Memo for CUDAnative.jl</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2020-05-16T00:00:00+09:00">
+                Published: 土 16 5月 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+        </address>
+<p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>
+</footer><!-- /.post-info --><h2>CUDAnative.jl メモ</h2>
+<p>JuliaでCUDAのkernel関数を記述して呼ぶことが出来る<a href="https://github.com/JuliaGPU/CUDAapi.jl.git">CUDAnative.jl</a>を読もうとしての<a href="{filename}/images/cudanative.pdf">メモ</a></p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../esp-idf-components.html" rel="bookmark"
+                           title="Permalink to M5Stack-IDF = ESP-IDF + arduino の仕掛け">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-10-18T00:00:00+09:00">
                 Published: 木 18 10月 2018
@@ -28,7 +53,7 @@
         </address>
 <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info --><h2>M5Stack-IDFの仕掛け</h2>
+</footer><!-- /.post-info -->                <h2>M5Stack-IDFの仕掛け</h2>
 <p><a href="https://github.com/m5stack/M5Stack-IDF">M5Stack-IDF</a>はESP-IDFでArduinoとM5Stackのライブラリを使う環境を提供しています。実は<a href="https://github.com/espressif/esp-idf">ESP-IDF</a>は外部ライブラリを追加して使うメカニズムを持っていてM5Stack-IDFはそれを利用します。
 使える外部ライブラリは内部ライブラリとの相性である程度制限されます。</p>
 <p>ESP-IDFはビルド(make)時に決め打ちのディレクトリとそのサブディレクトリを見に行きそこにcomponent.mkという名前のファイルがあるかどうか調べます。 もしあるとそれぞれのcomponent.mkの中にある指示をビルドへの指示として追加します。
@@ -46,114 +71,10 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 ├── Makefile
 ├── README.md
 ├── components
-│   ├── arduino -&gt; /B/arduino-esp32
-│   ├── btstack
-│   └── m5stack -&gt; /A/M5Stack-IDF/components/m5stack
-├── main
-│   ├── component.mk
-│   ├── hid_host_demo.c
-│   └── main.cpp
-└── sdkconfig
-</pre></div>
-
-
-<p>というようなツリーを作っておいてarduino-esp32, btstack, m5stackにcomponent.mkを書けばこの3つのライブラリをESP-IDF環境下で使えるということになります。 arduino-esp32やm5stackにはすでにcomponent.mkがあるのでそれが使えます。 M5Stack-IDFのサンプルプログラムだと最初から</p>
-<div class="highlight"><pre><span></span>.
-├── Makefile
-├── README.md
-├── components
-│   ├── arduino
-│   └── m5stack
-├── main
-│   ├── component.mk
-│   └── main.cpp
-└── sdkconfig
-</pre></div>
-
-
-<p>の形になっていてM5Stack-IDFの用意するarduino, m5stackにはそれぞれcomponent.mkが書いてあるというわけです。</p>
-<h2>Arduinoのloopとsetup</h2>
-<p>Arduinoはちょっと特別なライブラリというかプロセスなので1つのコアにピン止めして動かします。 またsetup()で準備してあとはメインループをぐるぐる回る構造なのでESP-IDFで動かす時には次のような手順になります。 ESP-IDFでユーザにコントロールがくるのはapp_main()関数なのでそこから何かの方法で</p>
-<div class="highlight"><pre><span></span>extern &quot;C&quot; void m5_arduino_main()
-{
-    initArduino();
-
-    xTaskCreatePinnedToCore(loopTask, &quot;loopTask&quot;, 8192, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
-}
-</pre></div>
-
-
-<p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref:注1"><a class="footnote-ref" href="#fn:注1" rel="footnote">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
-<div class="highlight"><pre><span></span>void loopTask(void *pvParameters)
-{
-    setup();
-
-    while(1) {
-        loop ();
-    }
-}
-</pre></div>
-
-
-<p>とArduinoではお馴染みのsetup()とloop()を呼出します。</p>
-<p>いくつか<a href="https://github.com/kazkojima/m5stack-app">外部ライブラリをつかった例</a>を試したのでご参考までに。</p>
-<h3>[追記] はまりポイント</h3>
-<p>Arduinoでは動いてたのにESP-IDFのコンポーネント化をしたら動かなくなってはまってしまうことがあります。原因は様々なようでなかなか特定できないのですがいくつかはArduinoのプログラムがESP-IDF側のシステムの初期化やinitArduino()より先に動いてしまうケースでした。 普通にはおきないのですがコンストラクタでArduino側の機能を呼んでしまうようなクラスがあって、その静的なオブジェクトが使われると実行のごく初期に静的イニシャライザでコンストラクタからその機能が呼ばれてしまいます。 純粋なArduino環境ではその時すでにある程度のArduino環境がセットアップされていて問題がなくてもESP-IDF環境だと呼ぶのが早過ぎておかしなことになるようです。</p>
-<p>そういうオブジェクトについては例えばsetup()内で動的に確保するとか、コンストラクタ内で呼ぶようなArduino側の機能を別のイニシャライズ用メソッドを作って移し、setup()で呼び出すとかしてなんとかごまかしています。</p>
-<h3>[追記2] btstack/components.mk</h3>
-<p>上の例でのbtstack/components.mkの記述は</p>
-<div class="highlight"><pre><span></span>COMPONENT_DEPENDS += micro-ecc
-
-COMPONENT_ADD_INCLUDEDIRS := \
-    3rd-party/bluedroid/decoder/include \
-    3rd-party/bluedroid/encoder/include \
-    3rd-party/hxcmod-player \
-    3rd-party/hxcmod-player/mods \
-    3rd-party/md5 \
-    3rd-party/yxml \
-    src/classic \
-    src/ble/gatt-service \
-    src/ble \
-    src/classic \
-    src \
-    platform/embedded \
-    platform/freertos \
-    include \
-
-COMPONENT_SRCDIRS := \
-    3rd-party/bluedroid/decoder/srce \
-    3rd-party/bluedroid/encoder/srce \
-    3rd-party/hxcmod-player \
-    3rd-party/hxcmod-player/mods \
-    3rd-party/md5 \
-    src/ble/gatt-service \
-    src/ble \
-    src/classic \
-    src/ \
-    platform/freertos \
-    . \
-
-CFLAGS += -Wno-format
-</pre></div>
-
-
-<p>と少し複雑です。最初はbtstackのexampleのMakefileを参考にCOMPONENT_ADD_INCLUDEDIRS/COMPONENT_SRCDIRSを書いておいて関数がないと言われてはCOMPONENT_SRCDIRSに追加しincludeできないと言われてはCOMPONENT_ADD_INCLUDEDIRSに追加、コンパイル時の警告がエラー扱いされるときにはCFLAGSに警告を出さないようにオプション追加、といった試行錯誤をしました。</p>
-<div class="footnote">
-<hr>
-<ol>
-<li id="fn:注1">
-<p>CONFIG_FREERTOS_UNICOREがセットされている場合。make menuconfig<sup id="fnref:注2"><a class="footnote-ref" href="#fn:注2" rel="footnote">2</a></sup>でComponent config ---&gt; FreeRTOS ---&gt; [*] Run FreeRTOS only on first core&#160;<a class="footnote-backref" href="#fnref:注1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
-</li>
-<li id="fn:注2">
-<p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref:注2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
-</li>
-</ol>
-</div>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+│   ├── arduino …</pre></div>
+                <a class="readmore" href="../esp-idf-components.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -474,44 +395,6 @@ cloneしたc_library_v2をどこかに置いてそれがc/c++プログラムのi
 <li>これらの回転の推計（あまり変わらないに違いない)をQuaternionで表しておいてそれらを結ぶ（短い）測地線上に最良の答えがあるはずだと考える</li>
 <li>t q …</li></ul></blockquote>
                 <a class="readmore" href="../madgwick-filter-memo.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../testing-espnow.html" rel="bookmark"
-                           title="Permalink to Testing ESPNOW">Testing ESPNOW</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-10-28T00:00:00+09:00">
-                Published: 土 28 10月 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>ESP32の <a class="reference external" href="../esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="../images/bee3-board.png">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
-<img alt="esp32 ether-espnow brigde" src="../images/ether-now-bridge.png" style="width: 640px; height: 400px;" />
-<p>でPCの上ではarducopterとテスト用のUDPサーバの両方を動かして試してみました.</p>
-<p><em>結果</em></p>
-<p>現在のESP32のespnowは次のような挙動をするようです.</p>
-<blockquote>
-<ul class="simple">
-<li>近接で通信した場合latencyは2ms位で安定している</li>
-<li>送信と送信の間で間隔を空けることが必要で送信のみ繰り返す場合で~2msが必要に見える</li>
-<li>受信を行うとこの間隔が影響される</li>
-</ul>
-</blockquote>
-<p>実際のテストではセンサボードからespnowでパケットを投げ送信終了のコールバックが終わるまで待つようにしました. 送信のみの場合~500Hzぐらいのレートで~70byteぐらいのデータが送信できていました.</p>
-<p>100Hzのレートで~30byteほどを受信するようにすると送信側のレートは10%以上低下しました. 送受の切り替え時にデッドタイムがあることを想像させるような挙動ですが、espnowのライブラリはソースがないので確かなことはわかりません.</p>
-<p>このセンサボードからはIMUなどのパケットが1msに40byte程度でてくるのですが受信も行いながらだとパケットが最初に期待していたようなlatencyでは送り切れない状態が発生しています.
-生のlatencyや処理コスト的にespnowは魅力的なのですが、リモートセンサ/アクチュエータ方式でコプターを飛ばすのは今の所少し厳しい感じです.</p>
-
-                <a class="readmore" href="../testing-espnow.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->
