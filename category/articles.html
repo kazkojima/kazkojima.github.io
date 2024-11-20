@@ -31,7 +31,7 @@
         <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
 </footer><!-- /.post-info --><h2>同期検波</h2>
-<p>受信した信号から特定の周波数成分を取り出すのに使われるのが同期検波です</p>
+<p>受信した信号から特定の周波数成分を取り出すのに使われるのが(直交)同期検波です</p>
 <p>信号を時間 t の関数 s(t) で表すときに特定の周波数 f の成分の大きさが  A cos(2πf t) + B cos(2πf t) だとするとこれと cos(2πf t) および sin(2πf t) と掛けて、それを時刻 0, N の間で積算つまり積分して A や B を知ろうというアイデアに基づいています</p>
 <p>例えば</p>
 <p>A cos(2πf t) cos(2πf t) = A (cos(4πf t) +1)/2</p>
@@ -53,8 +53,8 @@
 <p>オーロラ同様、地磁気緯度の高い地方の方が受信に有利でまた周波数が低いために都市ノイズが大きな障害になります</p>
 <p>受信環境としてはすべての電力線から10km離れていることが望ましいとまで言われているので受信は大変難しそうです</p>
 <p>whistler  波を模擬し c を定数として cos(c/t) 0 &lt; a &lt; t &lt; b というテスト関数を考えてみます</p>
-<p>位相 ϕ が c/t なので時刻 t1 での瞬間周波数は 1/(2π) \cdot d/dt(c/t) = -c/(2π t^2) になります</p>
-<p>例えば c = 1800, a = 0.4, b = 1.4 とすると瞬間周波数が1秒間で 11.25kHz -&gt; 0.9kHz と降下する信号が得られます</p>
+<p>位相 ϕ が c/t なので時刻 t1 での瞬間周波数は 1/(2π) * d/dt(c/t) = -c/(2π t^2) になります</p>
+<p>例えば c/(2π) = 1800, a = 0.4, b = 1.4 とすると瞬間周波数が1秒間で 11.25kHz -&gt; 0.9kHz と降下する信号が得られます</p>
 <p><img src="../images/pseudo-whistler.png" alt="pseudo whistler wave" width="640"></p>
 <p>この信号を0.003倍して実際のELF受信データのある部分に加えて人工的なデータを作りました</p>
 <p><img src="../images/test-data.png" alt="test signal" width="640"></p>
