@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>ELF(極長波)ノイズ観察</title>
+                        <link rel="stylesheet" href="./theme/css/main.css" />
+    <meta name="description" content="200Hz-12kHz の極長波帯を観察 しかけ アンテナもとい磁気ピックアップ フィルタ付きプリアンプ S/PDIF 出力の ADC S/PDIF - ethernet 変換器 …" />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="./">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="./category/articles.html">articles</a></li>
+                                                <li><a href="./category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="./noise-viewing.html" rel="bookmark"
+             title="Permalink to ELF(極長波)ノイズ観察">ELF(極長波)ノイズ観察</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-11-20T00:00:00+09:00">
+                Published: 水 20 11月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->        <h1>200Hz-12kHz の極長波帯を観察</h1>
+<h2>しかけ</h2>
+<ul>
+<li>アンテナもとい磁気ピックアップ</li>
+<li>フィルタ付きプリアンプ</li>
+<li>S/PDIF 出力の ADC</li>
+<li>S/PDIF - ethernet 変換器</li>
+<li>PC</li>
+</ul>
+<p>観察だけならピックアップを PC のオーディオ入力につなぐだけでも ok ですが
+別の目的もあったので上記のような構成になっています</p>
+<p>磁気ピックアップ
+<img src="./images/loop-pickup.jpg" alt="pickup" width="640"></p>
+<p>フィルタ付きプリアンプ
+<img src="./images/filter-amp.jpg" alt="preamp" width="640"></p>
+<p>PC と ADC と S/PDIF - ethernet 変換器
+<img src="./images/adc-recording.jpg" alt="recording system" width="640"></p>
+<p>ADC 96kHz なので 48kHz まで見られるのですが 200Hz-10kHz のバンドパスフィルタが入っているので 15kHz までのスペクトラムを見るとこんな感じになります</p>
+<p><img src="./images/elf-output.png" alt="spectrum" width="640"></p>
+<p>2kHz 以下のクシ状のピークはほぼ 50Hz商用電源の高調波で特に奇数時の高調波が強烈です</p>
+<p>5.9kHz 付近に正体不明の強力な信号/ノイズがあります</p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

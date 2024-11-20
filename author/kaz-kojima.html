@@ -1,34 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>My Bug Has A Program! - Kaz Kojima</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>My Bug Has A Program! - Kaz Kojima</title>
+                        <link rel="stylesheet" href="../theme/css/main.css" />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li><a href="../category/articles.html">articles</a></li>
+                                                <li><a href="../category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../cuda-jl.html">Jetson nanoでCUDAnative.jl</a></h1>
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="../noise-viewing.html">ELF(極長波)ノイズ観察</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2024-11-20T00:00:00+09:00">
+                Published: 水 20 11月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info --><h1>200Hz-12kHz の極長波帯を観察</h1>
+<h2>しかけ</h2>
+<ul>
+<li>アンテナもとい磁気ピックアップ</li>
+<li>フィルタ付きプリアンプ</li>
+<li>S/PDIF 出力の ADC</li>
+<li>S/PDIF - ethernet 変換器</li>
+<li>PC</li>
+</ul>
+<p>観察だけならピックアップを PC のオーディオ入力につなぐだけでも ok ですが
+別の目的もあったので上記のような構成になっています</p>
+<p>磁気ピックアップ
+<img src="../images/loop-pickup.jpg" alt="pickup" width="640"></p>
+<p>フィルタ付きプリアンプ
+<img src="../images/filter-amp.jpg" alt="preamp" width="640"></p>
+<p>PC と ADC と S/PDIF - ethernet 変換器
+<img src="../images/adc-recording.jpg" alt="recording system" width="640"></p>
+<p>ADC 96kHz なので 48kHz まで見られるのですが 200Hz-10kHz のバンドパスフィルタが入っているので 15kHz までのスペクトラムを見るとこんな感じになります</p>
+<p><img src="../images/elf-output.png" alt="spectrum" width="640"></p>
+<p>2kHz 以下のクシ状のピークはほぼ 50Hz商用電源の高調波で特に奇数時の高調波が強烈です</p>
+<p>5.9kHz 付近に正体不明の強力な信号/ノイズがあります</p>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../multi-pdm-mic.html" rel="bookmark"
+                               title="Permalink to Multiple PDM mics with Raspberry Pi pico">Multiple PDM mics with Raspberry Pi pico</a></h1>
+                    </header>
+
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2021-11-04T00:00:00+09:00">
+                Published: 木 04 11月 2021
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/acoustic.html">acoustic</a> </p>        
+</footer><!-- /.post-info -->                        <h2>複数 PDM マイク出力を平均化して USB でアクセス</h2>
+<p>Raspberry Pi Pico で PDM マイクを USBマイク化できる <a href="https://github.com/ArmDeveloperEcosystem/microphone-library-for-pico.git">Microphone Library for Pico</a>を複数マイクの平均を取得できるよ …</p>
+                        <a class="readmore" href="../multi-pdm-mic.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../cuda-jl.html" rel="bookmark"
+                               title="Permalink to Jetson nanoでCUDAnative.jl">Jetson nanoでCUDAnative.jl</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2020-05-16T00:00:00+09:00">
                 Published: 土 16 5月 2020
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>
-</footer><!-- /.post-info --><h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->                        <h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
 <h1>Juliaのインストール</h1>
 <ul>
 <li>https://julialang.org/downloads/からGeneric Linux Binaries for ARMの64-bit(AArch64)用のJulia(例えばjulia-1.4.1-linux-aarch64.tar.gz)をdownload</li>
@@ -38,150 +107,84 @@
 <ul>
 <li>Juliaを起動してpkgモードで</li>
 </ul>
-<div class="highlight"><pre><span></span>add CUDAnative
+<div class="highlight"><pre><span></span><code>add CUDAnative
 add CUDAdrv
 add CuArrays
-</pre></div>
+</code></pre></div>
 
+<h1>Sampleを走らせる …</h1>
+                        <a class="readmore" href="../cuda-jl.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-<h1>Sampleを走らせる</h1>
-<div class="highlight"><pre><span></span><span class="err">#</span> <span class="nx">listing</span> <span class="mi">16</span>
-<span class="nx">using</span> <span class="nx">CUDAnative</span><span class="p">,</span> <span class="nx">CuArrays</span>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp-idf-components.html" rel="bookmark"
+                               title="Permalink to M5Stack-IDF = ESP-IDF + arduino の仕掛け">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
+                    </header>
 
-<span class="kd">function</span> <span class="nx">vadd</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span>
-    <span class="nx">i</span> <span class="o">=</span> <span class="p">(</span><span class="nx">blockIdx</span><span class="p">().</span><span class="nx">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nx">blockDim</span><span class="p">().</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">threadIdx</span><span class="p">().</span><span class="nx">x</span>
-    <span class="nx">c</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
-    <span class="k">return</span>
-<span class="nx">end</span>
-
-<span class="nx">len</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="nx">a</span> <span class="o">=</span> <span class="nx">rand</span><span class="p">(</span><span class="nx">Float32</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span>
-<span class="nx">b</span> <span class="o">=</span> <span class="nx">rand</span><span class="p">(</span><span class="nx">Float32</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span>
-
-<span class="nx">d_a</span> <span class="o">=</span> <span class="nx">CuArray</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<span class="nx">d_b</span> <span class="o">=</span> <span class="nx">CuArray</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>
-<span class="nx">d_c</span> <span class="o">=</span> <span class="nx">similar</span><span class="p">(</span><span class="nx">d_a</span><span class="p">)</span>
-
-<span class="kd">@time</span> <span class="kd">@cuda</span> <span class="nx">threads</span><span class="o">=</span><span class="nx">len</span> <span class="nx">vadd</span><span class="p">(</span><span class="nx">d_a</span><span class="p">,</span> <span class="nx">d_b</span><span class="p">,</span> <span class="nx">d_c</span><span class="p">)</span>
-</pre></div>
-
-
-<p>これはcompileするので時間がかかります。Jetson nanoだと
-  49.464224 seconds (32.68 M allocations: 1.546 GiB, 4.34% gc time)</p>
-<p>ここで</p>
-<div class="highlight"><pre><span></span>c = Base.Array(d_c)
-</pre></div>
-
-
-<p>で結果を見れます。２回めの呼び出しは速いです。</p>
-<div class="highlight"><pre><span></span>ulia&gt; @time @cuda threads=len vadd(d_a, d_b, d_c)
-  0.016108 seconds (65 allocations: 2.141 KiB)
-</pre></div>
-
-
-<h2>CUDAnative.jl メモ</h2>
-<p>JuliaでCUDAのkernel関数を記述して呼ぶことが出来る<a href="https://github.com/JuliaGPU/CUDAapi.jl.git">CUDAnative.jl</a>を読もうとしての<a href="../images/cudanative-note.pdf">メモ</a></p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp-idf-components.html" rel="bookmark"
-                           title="Permalink to M5Stack-IDF = ESP-IDF + arduino の仕掛け">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
-                </header>
-
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-10-18T00:00:00+09:00">
                 Published: 木 18 10月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <h2>M5Stack-IDFの仕掛け</h2>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->                        <h2>M5Stack-IDFの仕掛け</h2>
 <p><a href="https://github.com/m5stack/M5Stack-IDF">M5Stack-IDF</a>はESP-IDFでArduinoとM5Stackのライブラリを使う環境を提供しています。実は<a href="https://github.com/espressif/esp-idf">ESP-IDF</a>は外部ライブラリを追加して使うメカニズムを持っていてM5Stack-IDFはそれを利用します。
-使える外部ライブラリは内部ライブラリとの相性である程度制限されます。</p>
-<p>ESP-IDFはビルド(make)時に決め打ちのディレクトリとそのサブディレクトリを見に行きそこにcomponent.mkという名前のファイルがあるかどうか調べます。 もしあるとそれぞれのcomponent.mkの中にある指示をビルドへの指示として追加します。
-ESP-IDFのサンプルプログラムを見ると必ずmain/component.mkがあってたいていは中身は空です。 この場合は単にここにもソースがあるよという意味になります。 少し複雑なライブラリでよく使われるのは</p>
-<div class="highlight"><pre><span></span>COMPONENT_ADD_INCLUDEDIRS := include src
-COMPONENT_SRCDIRS := src
-CXXFLAGS += -fno-rtti -Wno-error=unused-value
-</pre></div>
+使える外部ライブラリは内部ライブ …</p>
+                        <a class="readmore" href="../esp-idf-components.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../aircraft-control-simulation-memo1.html" rel="bookmark"
+                               title="Permalink to "Aircraft Control and Simulation (3rd ed.)" メモ">&quot;Aircraft Control and Simulation (3rd ed.)&quot; メモ</a></h1>
+                    </header>
 
-<p>の3つの変数あたりでこの例の場合component.mkのあるディレクトリ下のsrcの中にソースがあり、includeとsrcの2つのディレクトリをインクルードのサーチパスに加え、c++でのコンパイル時にオプション -fno-rtti -Wno-error=unused-value を追加することを指示しています。 <a href="https://github.com/espressif/arduino-esp32">arduino-esp32</a>にはさらに複雑な指示のあるcomponent.mkがあります。</p>
-<p>決め打ちのディレクトリとしてmakeするディレクトリの中にあるmainとcomponentsがあります。 なのでcomponentsにいろいろなライブラリを並べライブラリのルートとなるところに各ライブラリに対応する
-component.mkを置いてやればライブラリ・コンポーネントの追加ができるというわけです。 例えば</p>
-<div class="highlight"><pre><span></span>.
-├── Makefile
-├── README.md
-├── components
-│   ├── arduino …</pre></div>
-                <a class="readmore" href="../esp-idf-components.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../aircraft-control-simulation-memo1.html" rel="bookmark"
-                           title="Permalink to "Aircraft Control and Simulation (3rd ed.)" メモ">&quot;Aircraft Control and Simulation (3rd ed.)&quot; メモ</a></h1>
-                </header>
-
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-07-07T00:00:00+09:00">
                 Published: 土 07 7月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/control.html">control</a> <a href="../tag/book.html">book</a> </p>
-</footer><!-- /.post-info -->                <p><a class="reference external" href="https://www.wiley.com/en-us/Aircraft+Control+and+Simulation%3A+Dynamics%2C+Controls+Design%2C+and+Autonomous+Systems%2C+3rd+Edition-p-9781118870983">Aircraft Control and Simulation</a></p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/control.html">control</a> <a href="../tag/book.html">book</a> </p>        
+</footer><!-- /.post-info -->                        <p><a class="reference external" href="https://www.wiley.com/en-us/Aircraft+Control+and+Simulation%3A+Dynamics%2C+Controls+Design%2C+and+Autonomous+Systems%2C+3rd+Edition-p-9781118870983">Aircraft Control and Simulation</a></p>
 <img alt="Book cover of Aircraft Control and Simulation" src="../images/aircraft-book.jpg" style="width: 240px; height: 360px;" />
 <p>を読んでのメモです。 この分野まったくの素人です。</p>
 <p>Ch1. The Kinematics and Dynamics of Aircraft Motion</p>
-<p>航空機の運動を表すのに必要な座標系、そこでの回転や並進と座標変換についての話。古典力学と地球の形状や物理の基礎知識。</p>
-<p>Ch.2 Modeling the Aircraft</p>
-<p>ベーシックな航空力学とそれに基いた航空機のモデル。モデルは線形または非線形の微分方程式あるいはその係数のセット(derivatives)。 実際は複数テーブル化される。 簡単なものだとテーブルが十数個だがF22のsimulationなんかだと数千テーブルが必要で総データポイントは2-300万項にも及ぶらしい。</p>
-<p>Ch.3 Modeling, Design, and Simulation Tools</p>
-<p>古典的な制御の基礎とその航空機simulationでの適用例。次章への準備</p>
-<p>'state-spaceモデル'
-'state equation'
-'network transfer function'
-'Bode plot'
-'数値積分 Runge-Kutta'
-'steady-state flight'
-'feedback control' …</p>
-                <a class="readmore" href="../aircraft-control-simulation-memo1.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+<p>航空機の運動を表すのに必要な座標 …</p>
+                        <a class="readmore" href="../aircraft-control-simulation-memo1.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../ga-intro-j.html" rel="bookmark"
-                           title="Permalink to "Geometric Algebra for Computer Science" 紹介">"Geometric Algebra for Computer Science" 紹介</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../ga-intro-j.html" rel="bookmark"
+                               title="Permalink to "Geometric Algebra for Computer Science" 紹介">"Geometric Algebra for Computer Science" 紹介</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-05T00:00:00+09:00">
                 Published: 土 05 5月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/book.html">book</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/book.html">book</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/ga-intro-j.html" />
 <meta property="og:title" content="Geometric Algebra for computer science の紹介" />
@@ -190,34 +193,29 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 <h2>Geometric Algebra 幾何学的代数</h2>
 <p>これは幾何学的代数をテーマにした本</p>
 <p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
-<p>の紹介のために書きました。 この本は幾何学的代数の導入から応用までを扱っていますがその内容や語り口に至るまでも素晴らしくいままでに読んだ中でもとびきり良い本です。 レビューといった類ではなくこの本の題材となっているものを本の切り口に沿って説明できればとはじめたのですが私の力ではとても難しいと思い知りました。 ですがこの並外れた本の内容や雰囲気まではかなわなくてもそのかけらでも伝えられればうれしいです。</p>
-<p>幾何学的代数(Geometric Algebra)は幾何学的な対象がつくる代数系だといえます。 この代数系は幾何学積(geometric products)に基づいています。幾何学積の実際の扱いは簡単とはいえませんがその基本的な概念は意外に簡単で初等的でさえあります。</p>
-<p><img src="../images/natural-j.png" alt="natural" width="640"></p>
-<p>つまり基本的なアイデアは内積と面積などを組にして一度に扱うと話がむしろ簡単になる、ということです。 こういうことはよくあることですよね。</p>
-<p>この幾何学積は空間やもっと高い次元へも拡張できます。 それには向きのついた平行四辺形や平行六面体の拡張概念"k-blade"と内積の拡張概念"contraction"(縮約)が必要になります。</p>
-<p>前者はベクトルu,vでできる向きのついた平行四辺形(面積要素)をu^vと書いて2-bladeと呼び、u,v,wが作る体積要素を3-blade u^v …</p>
-                <a class="readmore" href="../ga-intro-j.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+<p>の紹介のために書きました …</p>
+                        <a class="readmore" href="../ga-intro-j.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../c3ga-intro.html" rel="bookmark"
-                           title="Permalink to The book "Geometric Algebra for Computer Science" (2)">The book "Geometric Algebra for Computer Science" (2)</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../c3ga-intro.html" rel="bookmark"
+                               title="Permalink to The book "Geometric Algebra for Computer Science" (2)">The book "Geometric Algebra for Computer Science" (2)</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-02T00:00:00+09:00">
                 Published: 水 02 5月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/c3ga-intro.html" />
 <meta property="og:title" content="The book Geometric Algebra for computer science (2)" />
@@ -228,28 +226,28 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 (Fig.1.1 of the book)</p>
 <p>The conformal model is an ample model of the 3D space. Points, lines, planes, circles, spheres and many known geometrical constructions can be represented with algebraic ways in that model.</p>
 <p>There are 2 additional bases of this representation space …</p>
-                <a class="readmore" href="../c3ga-intro.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../c3ga-intro.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../ga-intro.html" rel="bookmark"
-                           title="Permalink to The book "Geometric Algebra for Computer Science" (1)">The book "Geometric Algebra for Computer Science" (1)</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../ga-intro.html" rel="bookmark"
+                               title="Permalink to The book "Geometric Algebra for Computer Science" (1)">The book "Geometric Algebra for Computer Science" (1)</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-01T00:00:00+09:00">
                 Published: 火 01 5月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/ga-intro.html" />
 <meta property="og:title" content="The book Geometric Algebra for computer science (1)" />
@@ -259,55 +257,55 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 <p>This is an article for the book</p>
 <p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
 <p>which is one of the greatest book I've read. This is NOT a review or somesuch. I'm happy if I can report a tiny bit of flavor of …</p>
-                <a class="readmore" href="../ga-intro.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../ga-intro.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-vl53l1x.html" rel="bookmark"
-                           title="Permalink to VL53L1X on ESP-IDF">VL53L1X on ESP-IDF</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp32-vl53l1x.html" rel="bookmark"
+                               title="Permalink to VL53L1X on ESP-IDF">VL53L1X on ESP-IDF</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-03-23T00:00:00+09:00">
                 Published: 金 23 3月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/esp32-vl53l1x.html" />
 <meta property="og:title" content="VL53L1X on ESP-IDF" />
 <meta property="og:description" content="A simple example which uses ST's driver of VL53L1X with ESP-IDF." /></p>
 <p>VL53L1X is a ST's new TOF(time of flight) sensor. ST gives its driver and API library with the dual license. See <a href="http://www.st.com/en/ecosystems/x-cube-53l1a1.html">ST's page</a> for detail. Although that code is for the STM32 platforms primarily, they are written with the highly modular manner and possible to be used with other …</p>
-                <a class="readmore" href="../esp32-vl53l1x.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../esp32-vl53l1x.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../pmlps-en.html" rel="bookmark"
-                           title="Permalink to Yet another indoor positioning with single cam">Yet another indoor positioning with single cam</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../pmlps-en.html" rel="bookmark"
+                               title="Permalink to Yet another indoor positioning with single cam">Yet another indoor positioning with single cam</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-02-15T00:00:00+09:00">
                 Published: 木 15 2月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/pmlps-en.html" />
 <meta property="og:title" content="Indoor positioning with single cam" />
@@ -318,118 +316,45 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 <p><img src="../images/ledtrack.png" alt="led tracker" width="320"></p>
 <p>I've tried to make a simple and budget local positioning system with openMV cam for the indoor flight of tiny copter.
 Looks not so good precision but not so bad as a Poor Man's system. A LOITER and LAND flight test with my hachidori copter …</p>
-                <a class="readmore" href="../pmlps-en.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../pmlps-en.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+                    </ol><!-- /#posts-list -->
+  <nav>
+    <ul>
+      <li>Page 1 / 3</li>
+        <li><a href="../author/kaz-kojima2.html">&rang;</a></li>
+        <li><a href="../author/kaz-kojima3.html">&Rang;</a></li>
+    </ul>
+  </nav>
+                    </section><!-- /#content -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../visual-yaw.html" rel="bookmark"
-                           title="Permalink to Visual yaw estimation">Visual yaw estimation</a></h1>
-                </header>
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-02-15T00:00:00+09:00">
-                Published: 木 15 2月 2018
-        </abbr>
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
-</footer><!-- /.post-info -->                <meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/visual-yaw.html" />
-<meta property="og:title" content="Visual yaw estimation" />
-<meta property="og:description" content="A primitive use of Geometric Algebra." /><p>以前紹介した <a class="reference external" href="https://kazkojima.github.io/versor-app.html">室内測位システム</a> ではフレームの姿勢をMAVLinkで貰ってるんですが室内なのとコアレスモーターがついてるせいでフレームに載せているコンパスがくるってしまい、それで得られるyawの値も酷いものなので代わりに天井のカムからみたマーカーで推定できるヘッドの方向を使っています.</p>
-<p>一般には斜め上からみることになるので頭と尾のマーカーがちょうど南北を向いているように見えても機体が水平でないと実際には南北を向いていません. 絵で書くとこんな感じになります</p>
-<img alt="figure" src="../images/adjyaw-0.png" style="width: 640px; height: 400px;" />
-<p>wが機体の頭と尾のマーカーを結んだ直線の方向でカムからこれをみると方向がvであるかのように見えています. 実際は真上から見た方向v'をpitchの分だけ回転したのがwなわけです. 斜めになった緑の面Hはカムやvやwを含む平面です.</p>
-<p>なので問題は見かけの方向を機首の上げ下げの情報で修正する、つまり</p>
-<blockquote>
-vとpitchからwを求める</blockquote>
-<p>になります. 通常このような問題は回転行列や球面角で計算するのだと思うのですがgeometric algebraを使って求めることができます.</p>
-<img alt="Adjust yaw" src="../images/adjyaw-1.png" style="width: 640px; height: 400px;" />
-<p>図のようにvをvとz-軸方向でできる面内でpitchだけ回転した黄色のベクトルの終点をPとしてこの点を通って水平に球上を回る円周Kを描きます. wの終点はK上にあるはずです. vとwを含む面Hはvとカムから球の中心への方向uとを含む面でもあるのでKとHの2つの交点のどちらかの表す方向がwになります. これらの操作はgeometric algebraでの簡単な操作に対応していてlibvsrだと</p>
-<pre class="code c++ literal-block">
-<span class="k">auto</span> <span class="n">bi</span> <span class="o">=</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">rop</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">::</span><span class="n">rot</span><span class="p">(</span><span class="n">bi</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">pitch_angle</span><span class="o">/</span><span class="mi">2</span><span class="p">));</span>
-<span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="p">(</span><span class="n">PT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">u</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">)).</span><span class="n">dual</span><span class="p">();</span>
-<span class="k">auto</span> <span class="n">K</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">sp</span><span class="p">(</span><span class="n">rop …</span></pre>
-                <a class="readmore" href="../visual-yaw.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../versor-app.html" rel="bookmark"
-                           title="Permalink to 貧者的局所測位系 The versorer's apprentice">貧者的局所測位系 The versorer's apprentice</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-01-28T00:00:00+09:00">
-                Published: 日 28 1月 2018
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
-</footer><!-- /.post-info -->                <meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/versor-app.html" />
-<meta property="og:title" content="貧者的局所測位系" />
-<meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenMV cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計するというのを作っています.</p>
-<img alt="OpenMV cam M7 + fish-eye + esp32" src="../images/pmlps-1.jpg" style="width: 640px; height: 400px;" />
-<img alt="OpenMV ide" src="../images/ledtrack.png" style="width: 640px; height: 400px;" />
-<p>魚眼レンズで得られるイメージセンサー上のマーカーの位置からcamからの方向を計算してマーカーの高さの情報をヒントにマーカーのcamを基準にした水平位置をだしてます. このセンサ上のマーカーの位置から3Dの方向を計算するところはいわゆるステレオグラフィックプロジェクション(立体射影)になっていて、三角関数や線形代数を使って計算できます.</p>
-<p>前置きが長くなりましたがフレームの水平位置を求めるところまでをgeometric algebraを使ったらどうなるか試してみました.</p>
-<pre class="code c++ literal-block">
-<span class="k">auto</span> <span class="n">pointO</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">pointP</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">h</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">line</span> <span class="o">=</span> <span class="n">pointO</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0 …</span></pre>
-                <a class="readmore" href="../versor-app.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-<p class="paginator">
-    Page 1 / 3
-        <a href="../author/kaz-kojima2.html">&raquo;</a>
-</p>
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
-</body>
+        </body>
 </html>

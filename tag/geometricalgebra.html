@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>My Bug Has A Program! - GeometricAlgebra</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>My Bug Has A Program! - GeometricAlgebra</title>
+                        <link rel="stylesheet" href="../theme/css/main.css" />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li><a href="../category/articles.html">articles</a></li>
+                                                <li><a href="../category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../visual-yaw.html">Visual yaw estimation</a></h1>
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="../visual-yaw.html">Visual yaw estimation</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2018-02-15T00:00:00+09:00">
                 Published: 木 15 2月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>        
 </footer><!-- /.post-info --><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/visual-yaw.html" />
@@ -43,92 +45,82 @@ vとpitchからwを求める</blockquote>
 <img alt="Adjust yaw" src="../images/adjyaw-1.png" style="width: 640px; height: 400px;" />
 <p>図のようにvをvとz-軸方向でできる面内でpitchだけ回転した黄色のベクトルの終点をPとしてこの点を通って水平に球上を回る円周Kを描きます. wの終点はK上にあるはずです. vとwを含む面Hはvとカムから球の中心への方向uとを含む面でもあるのでKとHの2つの交点のどちらかの表す方向がwになります. これらの操作はgeometric algebraでの簡単な操作に対応していてlibvsrだと</p>
 <pre class="code c++ literal-block">
-<span class="k">auto</span> <span class="n">bi</span> <span class="o">=</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">rop</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">::</span><span class="n">rot</span><span class="p">(</span><span class="n">bi</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">pitch_angle</span><span class="o">/</span><span class="mi">2</span><span class="p">));</span>
-<span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="p">(</span><span class="n">PT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">u</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">)).</span><span class="n">dual</span><span class="p">();</span>
-<span class="k">auto</span> <span class="n">K</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">sp</span><span class="p">(</span><span class="n">rop</span><span class="p">).</span><span class="n">null</span><span class="p">()</span> <span class="o">^</span> <span class="n">Biv</span><span class="o">::</span><span class="n">xy</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">pp</span> <span class="o">=</span> <span class="n">H</span> <span class="o">&lt;=</span> <span class="n">K</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">w</span> <span class="o">=</span> <span class="n">Round</span><span class="o">::</span><span class="n">split</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">bi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
+</span><span class="k">auto</span><span class="w"> </span><span class="n">rop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gen</span><span class="o">::</span><span class="n">rot</span><span class="p">(</span><span class="n">bi</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">pitch_angle</span><span class="o">/</span><span class="mi">2</span><span class="p">));</span><span class="w">
+</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">PT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">)).</span><span class="n">dual</span><span class="p">();</span><span class="w">
+</span><span class="k">auto</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">sp</span><span class="p">(</span><span class="n">rop</span><span class="p">).</span><span class="n">null</span><span class="p">()</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">Biv</span><span class="o">::</span><span class="n">xy</span><span class="p">;</span><span class="w">
+</span><span class="k">auto</span><span class="w"> </span><span class="n">pp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">K</span><span class="p">;</span><span class="w">
+</span><span class="k">auto</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Round</span><span class="o">::</span><span class="n">split</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
 </pre>
 <p>というようなプログラムになります.</p>
 <p>HとKの交点を求める操作はgeometric algebraではmeetと呼ばれる演算でこの場合の結果は点対(point pair)と呼ばれるものになります. 実はKやHそしてこの点対ppには向きがあり、その向きで点対の2点には順番がつけられます. Round::splitは第二引数がtrueなら最初のそうでなければ2番目の点を返す静的メソッドです. 上のプログラムでは向きまで考えると点対の最初の点がwになります.</p>
 <p>結果をyaw角に直したければ</p>
 <pre class="code c++ literal-block">
-<span class="n">yaw_meas</span> <span class="o">=</span> <span class="n">atan2f</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="n">yaw_meas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atan2f</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 </pre>
 <p>とすればokです. 回転行列や球面角を使うと中間計算で三角関数を多用することになりライブラリなどを使うとしてもいろいろとめんどうなのですが、geometric algebraでは描いた絵をほぼそのままプログラムにしてしまえることがわかると思います.</p>
 <p>得られたyaw角は当然カムでの測定時の誤差などいろいろなノイズがのっているのでそのままではなくカルマンフィルターを使ってその推定値を利用しています. そもそもそれ程の精度はないのですがそれでもコンパスで得られるyawの値よりだいぶまともなようです. この測位系での <a class="reference external" href="https://www.youtube.com/watch?v=S4lpKn7MHvo">ホバーリング</a> もだいぶ安定したものになりました.</p>
-                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../versor-app.html" rel="bookmark"
-                           title="Permalink to 貧者的局所測位系 The versorer's apprentice">貧者的局所測位系 The versorer's apprentice</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../versor-app.html" rel="bookmark"
+                               title="Permalink to 貧者的局所測位系 The versorer's apprentice">貧者的局所測位系 The versorer's apprentice</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-01-28T00:00:00+09:00">
                 Published: 日 28 1月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
-</footer><!-- /.post-info -->                <meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>        
+</footer><!-- /.post-info -->                        <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/versor-app.html" />
 <meta property="og:title" content="貧者的局所測位系" />
-<meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenMV cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計するというのを作っています.</p>
-<img alt="OpenMV cam M7 + fish-eye + esp32" src="../images/pmlps-1.jpg" style="width: 640px; height: 400px;" />
-<img alt="OpenMV ide" src="../images/ledtrack.png" style="width: 640px; height: 400px;" />
-<p>魚眼レンズで得られるイメージセンサー上のマーカーの位置からcamからの方向を計算してマーカーの高さの情報をヒントにマーカーのcamを基準にした水平位置をだしてます. このセンサ上のマーカーの位置から3Dの方向を計算するところはいわゆるステレオグラフィックプロジェクション(立体射影)になっていて、三角関数や線形代数を使って計算できます.</p>
-<p>前置きが長くなりましたがフレームの水平位置を求めるところまでをgeometric algebraを使ったらどうなるか試してみました.</p>
-<pre class="code c++ literal-block">
-<span class="k">auto</span> <span class="n">pointO</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">pointP</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">h</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">line</span> <span class="o">=</span> <span class="n">pointO</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0 …</span></pre>
-                <a class="readmore" href="../versor-app.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+<meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenMV cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計す …</p>
+                        <a class="readmore" href="../versor-app.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+                    </ol><!-- /#posts-list -->
+                    </section><!-- /#content -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-</body>
+        </body>
 </html>

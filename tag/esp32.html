@@ -1,64 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>My Bug Has A Program! - esp32</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>My Bug Has A Program! - esp32</title>
+                        <link rel="stylesheet" href="../theme/css/main.css" />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li><a href="../category/articles.html">articles</a></li>
+                                                <li><a href="../category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../esp-idf-components.html">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="../esp-idf-components.html">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2018-10-18T00:00:00+09:00">
                 Published: 木 18 10月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>        
 </footer><!-- /.post-info --><h2>M5Stack-IDFの仕掛け</h2>
 <p><a href="https://github.com/m5stack/M5Stack-IDF">M5Stack-IDF</a>はESP-IDFでArduinoとM5Stackのライブラリを使う環境を提供しています。実は<a href="https://github.com/espressif/esp-idf">ESP-IDF</a>は外部ライブラリを追加して使うメカニズムを持っていてM5Stack-IDFはそれを利用します。
 使える外部ライブラリは内部ライブラリとの相性である程度制限されます。</p>
 <p>ESP-IDFはビルド(make)時に決め打ちのディレクトリとそのサブディレクトリを見に行きそこにcomponent.mkという名前のファイルがあるかどうか調べます。 もしあるとそれぞれのcomponent.mkの中にある指示をビルドへの指示として追加します。
 ESP-IDFのサンプルプログラムを見ると必ずmain/component.mkがあってたいていは中身は空です。 この場合は単にここにもソースがあるよという意味になります。 少し複雑なライブラリでよく使われるのは</p>
-<div class="highlight"><pre><span></span>COMPONENT_ADD_INCLUDEDIRS := include src
-COMPONENT_SRCDIRS := src
-CXXFLAGS += -fno-rtti -Wno-error=unused-value
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="nv">COMPONENT_ADD_INCLUDEDIRS</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nv">include</span><span class="w"> </span><span class="nv">src</span>
+<span class="nv">COMPONENT_SRCDIRS</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nv">src</span>
+<span class="nv">CXXFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="nv">fno</span><span class="o">-</span><span class="nv">rtti</span><span class="w"> </span><span class="o">-</span><span class="nv">Wno</span><span class="o">-</span><span class="nv">error</span><span class="o">=</span><span class="nv">unused</span><span class="o">-</span><span class="nv">value</span>
+</code></pre></div>
 
 <p>の3つの変数あたりでこの例の場合component.mkのあるディレクトリ下のsrcの中にソースがあり、includeとsrcの2つのディレクトリをインクルードのサーチパスに加え、c++でのコンパイル時にオプション -fno-rtti -Wno-error=unused-value を追加することを指示しています。 <a href="https://github.com/espressif/arduino-esp32">arduino-esp32</a>にはさらに複雑な指示のあるcomponent.mkがあります。</p>
 <p>決め打ちのディレクトリとしてmakeするディレクトリの中にあるmainとcomponentsがあります。 なのでcomponentsにいろいろなライブラリを並べライブラリのルートとなるところに各ライブラリに対応する
 component.mkを置いてやればライブラリ・コンポーネントの追加ができるというわけです。 例えば</p>
-<div class="highlight"><pre><span></span>.
-├── Makefile
-├── README.md
-├── components
-│   ├── arduino -&gt; /B/arduino-esp32
-│   ├── btstack
-│   └── m5stack -&gt; /A/M5Stack-IDF/components/m5stack
-├── main
-│   ├── component.mk
-│   ├── hid_host_demo.c
-│   └── main.cpp
-└── sdkconfig
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="p">.</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">Makefile</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">README</span><span class="p">.</span><span class="n">md</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">components</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">arduino</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">B</span><span class="o">/</span><span class="n">arduino</span><span class="o">-</span><span class="n">esp32</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">btstack</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">m5stack</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">A</span><span class="o">/</span><span class="n">M5Stack</span><span class="o">-</span><span class="n">IDF</span><span class="o">/</span><span class="n">components</span><span class="o">/</span><span class="n">m5stack</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">main</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">component</span><span class="p">.</span><span class="n">mk</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">hid_host_demo</span><span class="p">.</span><span class="n">c</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">main</span><span class="p">.</span><span class="n">cpp</span>
+<span class="err">└──</span><span class="w"> </span><span class="n">sdkconfig</span>
+</code></pre></div>
 
 <p>というようなツリーを作っておいてarduino-esp32, btstack, m5stackにcomponent.mkを書けばこの3つのライブラリをESP-IDF環境下で使えるということになります。 arduino-esp32やm5stackにはすでにcomponent.mkがあるのでそれが使えます。 M5Stack-IDFのサンプルプログラムだと最初から</p>
-<div class="highlight"><pre><span></span>.
+<div class="highlight"><pre><span></span><code>.
 ├── Makefile
 ├── README.md
 ├── components
@@ -68,23 +68,21 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 │   ├── component.mk
 │   └── main.cpp
 └── sdkconfig
-</pre></div>
-
+</code></pre></div>
 
 <p>の形になっていてM5Stack-IDFの用意するarduino, m5stackにはそれぞれcomponent.mkが書いてあるというわけです。</p>
 <h2>Arduinoのloopとsetup</h2>
 <p>Arduinoはちょっと特別なライブラリというかプロセスなので1つのコアにピン止めして動かします。 またsetup()で準備してあとはメインループをぐるぐる回る構造なのでESP-IDFで動かす時には次のような手順になります。 ESP-IDFでユーザにコントロールがくるのはapp_main()関数なのでそこから何かの方法で</p>
-<div class="highlight"><pre><span></span>extern &quot;C&quot; void m5_arduino_main()
+<div class="highlight"><pre><span></span><code>extern &quot;C&quot; void m5_arduino_main()
 {
     initArduino();
 
     xTaskCreatePinnedToCore(loopTask, &quot;loopTask&quot;, 8192, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
 }
-</pre></div>
-
+</code></pre></div>
 
 <p>といったような関数を呼出してARDUINO_RUNNING_CORE(通常はcore 0<sup id="fnref:注1"><a class="footnote-ref" href="#fn:注1">1</a></sup>)にピン止めしたloopTask()タスクを起動します。 loopTask()は</p>
-<div class="highlight"><pre><span></span>void loopTask(void *pvParameters)
+<div class="highlight"><pre><span></span><code>void loopTask(void *pvParameters)
 {
     setup();
 
@@ -92,8 +90,7 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
         loop ();
     }
 }
-</pre></div>
-
+</code></pre></div>
 
 <p>とArduinoではお馴染みのsetup()とloop()を呼出します。</p>
 <p>いくつか<a href="https://github.com/kazkojima/m5stack-app">外部ライブラリをつかった例</a>を試したのでご参考までに。</p>
@@ -102,40 +99,39 @@ component.mkを置いてやればライブラリ・コンポーネントの追�
 <p>そういうオブジェクトについては例えばsetup()内で動的に確保するとか、コンストラクタ内で呼ぶようなArduino側の機能を別のイニシャライズ用メソッドを作って移し、setup()で呼び出すとかしてなんとかごまかしています。</p>
 <h3>[追記2] btstack/components.mk</h3>
 <p>上の例でのbtstack/components.mkの記述は</p>
-<div class="highlight"><pre><span></span>COMPONENT_DEPENDS += micro-ecc
+<div class="highlight"><pre><span></span><code><span class="n">COMPONENT_DEPENDS</span> <span class="o">+=</span> <span class="n">micro</span><span class="o">-</span><span class="n">ecc</span>
 
-COMPONENT_ADD_INCLUDEDIRS := \
-    3rd-party/bluedroid/decoder/include \
-    3rd-party/bluedroid/encoder/include \
-    3rd-party/hxcmod-player \
-    3rd-party/hxcmod-player/mods \
-    3rd-party/md5 \
-    3rd-party/yxml \
-    src/classic \
-    src/ble/gatt-service \
-    src/ble \
-    src/classic \
-    src \
-    platform/embedded \
-    platform/freertos \
-    include \
+<span class="n">COMPONENT_ADD_INCLUDEDIRS</span> <span class="p">:</span><span class="o">=</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">bluedroid</span><span class="o">/</span><span class="n">decoder</span><span class="o">/</span><span class="n">include</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">bluedroid</span><span class="o">/</span><span class="n">encoder</span><span class="o">/</span><span class="n">include</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">hxcmod</span><span class="o">-</span><span class="n">player</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">hxcmod</span><span class="o">-</span><span class="n">player</span><span class="o">/</span><span class="n">mods</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">md5</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">yxml</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span><span class="n">classic</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span><span class="n">ble</span><span class="o">/</span><span class="n">gatt</span><span class="o">-</span><span class="n">service</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span><span class="n">ble</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span><span class="n">classic</span> <span class="err">\</span>
+    <span class="n">src</span> <span class="err">\</span>
+    <span class="n">platform</span><span class="o">/</span><span class="n">embedded</span> <span class="err">\</span>
+    <span class="n">platform</span><span class="o">/</span><span class="n">freertos</span> <span class="err">\</span>
+    <span class="n">include</span> <span class="err">\</span>
 
-COMPONENT_SRCDIRS := \
-    3rd-party/bluedroid/decoder/srce \
-    3rd-party/bluedroid/encoder/srce \
-    3rd-party/hxcmod-player \
-    3rd-party/hxcmod-player/mods \
-    3rd-party/md5 \
-    src/ble/gatt-service \
-    src/ble \
-    src/classic \
-    src/ \
-    platform/freertos \
-    . \
+<span class="n">COMPONENT_SRCDIRS</span> <span class="p">:</span><span class="o">=</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">bluedroid</span><span class="o">/</span><span class="n">decoder</span><span class="o">/</span><span class="n">srce</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">bluedroid</span><span class="o">/</span><span class="n">encoder</span><span class="o">/</span><span class="n">srce</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">hxcmod</span><span class="o">-</span><span class="n">player</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">hxcmod</span><span class="o">-</span><span class="n">player</span><span class="o">/</span><span class="n">mods</span> <span class="err">\</span>
+    <span class="mi">3</span><span class="n">rd</span><span class="o">-</span><span class="n">party</span><span class="o">/</span><span class="n">md5</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span><span class="n">ble</span><span class="o">/</span><span class="n">gatt</span><span class="o">-</span><span class="n">service</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span><span class="n">ble</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span><span class="n">classic</span> <span class="err">\</span>
+    <span class="n">src</span><span class="o">/</span> <span class="err">\</span>
+    <span class="n">platform</span><span class="o">/</span><span class="n">freertos</span> <span class="err">\</span>
+    <span class="p">.</span> <span class="err">\</span>
 
-CFLAGS += -Wno-format
-</pre></div>
-
+<span class="n">CFLAGS</span> <span class="o">+=</span> <span class="o">-</span><span class="n">Wno</span><span class="o">-</span><span class="n">format</span>
+</code></pre></div>
 
 <p>と少し複雑です。最初はbtstackのexampleのMakefileを参考にCOMPONENT_ADD_INCLUDEDIRS/COMPONENT_SRCDIRSを書いておいて関数がないと言われてはCOMPONENT_SRCDIRSに追加しincludeできないと言われてはCOMPONENT_ADD_INCLUDEDIRSに追加、コンパイル時の警告がエラー扱いされるときにはCFLAGSに警告を出さないようにオプション追加、といった試行錯誤をしました。</p>
 <div class="footnote">
@@ -148,58 +144,58 @@ CFLAGS += -Wno-format
 <p>Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉&#160;<a class="footnote-backref" href="#fnref:注2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
-</div>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</div>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-vl53l1x.html" rel="bookmark"
-                           title="Permalink to VL53L1X on ESP-IDF">VL53L1X on ESP-IDF</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp32-vl53l1x.html" rel="bookmark"
+                               title="Permalink to VL53L1X on ESP-IDF">VL53L1X on ESP-IDF</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-03-23T00:00:00+09:00">
                 Published: 金 23 3月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/esp32-vl53l1x.html" />
 <meta property="og:title" content="VL53L1X on ESP-IDF" />
 <meta property="og:description" content="A simple example which uses ST's driver of VL53L1X with ESP-IDF." /></p>
 <p>VL53L1X is a ST's new TOF(time of flight) sensor. ST gives its driver and API library with the dual license. See <a href="http://www.st.com/en/ecosystems/x-cube-53l1a1.html">ST's page</a> for detail. Although that code is for the STM32 platforms primarily, they are written with the highly modular manner and possible to be used with other …</p>
-                <a class="readmore" href="../esp32-vl53l1x.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../esp32-vl53l1x.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../pmlps-en.html" rel="bookmark"
-                           title="Permalink to Yet another indoor positioning with single cam">Yet another indoor positioning with single cam</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../pmlps-en.html" rel="bookmark"
+                               title="Permalink to Yet another indoor positioning with single cam">Yet another indoor positioning with single cam</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-02-15T00:00:00+09:00">
                 Published: 木 15 2月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openMV</a> <a href="../tag/versor.html">versor</a> <a href="../tag/english.html">english</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/pmlps-en.html" />
 <meta property="og:title" content="Indoor positioning with single cam" />
@@ -210,64 +206,54 @@ CFLAGS += -Wno-format
 <p><img src="../images/ledtrack.png" alt="led tracker" width="320"></p>
 <p>I've tried to make a simple and budget local positioning system with openMV cam for the indoor flight of tiny copter.
 Looks not so good precision but not so bad as a Poor Man's system. A LOITER and LAND flight test with my hachidori copter …</p>
-                <a class="readmore" href="../pmlps-en.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../pmlps-en.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../versor-app.html" rel="bookmark"
-                           title="Permalink to 貧者的局所測位系 The versorer's apprentice">貧者的局所測位系 The versorer's apprentice</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../versor-app.html" rel="bookmark"
+                               title="Permalink to 貧者的局所測位系 The versorer's apprentice">貧者的局所測位系 The versorer's apprentice</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-01-28T00:00:00+09:00">
                 Published: 日 28 1月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
-</footer><!-- /.post-info -->                <meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>        
+</footer><!-- /.post-info -->                        <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/versor-app.html" />
 <meta property="og:title" content="貧者的局所測位系" />
-<meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenMV cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計するというのを作っています.</p>
-<img alt="OpenMV cam M7 + fish-eye + esp32" src="../images/pmlps-1.jpg" style="width: 640px; height: 400px;" />
-<img alt="OpenMV ide" src="../images/ledtrack.png" style="width: 640px; height: 400px;" />
-<p>魚眼レンズで得られるイメージセンサー上のマーカーの位置からcamからの方向を計算してマーカーの高さの情報をヒントにマーカーのcamを基準にした水平位置をだしてます. このセンサ上のマーカーの位置から3Dの方向を計算するところはいわゆるステレオグラフィックプロジェクション(立体射影)になっていて、三角関数や線形代数を使って計算できます.</p>
-<p>前置きが長くなりましたがフレームの水平位置を求めるところまでをgeometric algebraを使ったらどうなるか試してみました.</p>
-<pre class="code c++ literal-block">
-<span class="k">auto</span> <span class="n">pointO</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">pointP</span> <span class="o">=</span> <span class="n">Construct</span><span class="o">::</span><span class="n">point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">h</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">line</span> <span class="o">=</span> <span class="n">pointO</span> <span class="o">^</span> <span class="n">v</span> <span class="o">^</span> <span class="n">Inf</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">dlp</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointP</span> <span class="o">&lt;=</span> <span class="n">Drv</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0 …</span></pre>
-                <a class="readmore" href="../versor-app.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+<meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenMV cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計す …</p>
+                        <a class="readmore" href="../versor-app.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../m5propo-en.html" rel="bookmark"
-                           title="Permalink to M5 propo - A tiny transmitter">M5 propo - A tiny transmitter</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../m5propo-en.html" rel="bookmark"
+                               title="Permalink to M5 propo - A tiny transmitter">M5 propo - A tiny transmitter</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-23T00:00:00+09:00">
                 Published: 土 23 12月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/m5stack.html">M5Stack</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/m5stack.html">M5Stack</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/m5propo-en.html" />
 <meta property="og:title" content="M5 propo - A tiny transmitter" />
@@ -276,28 +262,28 @@ Looks not so good precision but not so bad as a Poor Man's system. A LOITER and 
 <p><img src="../images/m5propo.jpg" alt="m5propo" width="640"></p>
 <p>M5 propo is a tiny RC transmitter with <a href="http://www.m5stack.com/">M5Stack</a> which has MPU-9250 9-axis sensor. It sends control PWM values with the format which Parrot Bebop uses.</p>
 <p>There are 4 bars on the LCD. The cyan bar is the roll gage and the green one is the pitch gage. The bottom …</p>
-                <a class="readmore" href="../m5propo-en.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../m5propo-en.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../bee3-en.html" rel="bookmark"
-                           title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../bee3-en.html" rel="bookmark"
+                               title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-01T00:00:00+09:00">
                 Published: 金 01 12月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/bee3-en.html" />
 <meta property="og:title" content="hachidori - APM on PC with remote sensor/actuators" />
@@ -305,28 +291,28 @@ Looks not so good precision but not so bad as a Poor Man's system. A LOITER and 
 <meta property="og:image" content="https://kazkojima.github.io/images/bee3-flight.jpg" /></p>
 <p><img src="../images/bee3-flight2.jpg" alt="hachidori" width="640"></p>
 <p>Hachidori which means 'humming bird' is a remote sensor/actuator board controlled by ArduPilot running on PC.  It's intended to contribute to ArduPilot, though it's still in the experimental phase. It's a tiny open project of <a href="https://github.com/DCoJA">DCoJA</a> started by DroneWorks Inc. I was a contractor with DroneWorks mainly for porting …</p>
-                <a class="readmore" href="../bee3-en.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../bee3-en.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../jbee3.html" rel="bookmark"
-                           title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../jbee3.html" rel="bookmark"
+                               title="Permalink to hachidori - APM on PC with remote sensor/actuators">hachidori - APM on PC with remote sensor/actuators</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-01T00:00:00+09:00">
                 Published: 金 01 12月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">KiCad</a> </p>
-</footer><!-- /.post-info -->                <p><meta name="twitter:card" content="summary" />
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/ardupilot.html">ardupilot</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">KiCad</a> </p>        
+</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/jbee3.html" />
 <meta property="og:title" content="hachidori - APM on PC with remote sensor/actuators" />
@@ -334,115 +320,81 @@ Looks not so good precision but not so bad as a Poor Man's system. A LOITER and 
 <meta property="og:image" content="https://kazkojima.github.io/images/bee3-flight.jpg" /></p>
 <p><img src="../images/bee3-flight.jpg" alt="hachidori" width="640"></p>
 <p>hachidori はPC上で走らせたArduPilotで制御する実験的なリモートセンサ/アクチュエータで, ArduPilotプロジェクトへの寄与を目的に始まった<a href="https://github.com/DCoJA">DCoJA</a>による小さなプロジェクトです.</p>
-<p>私はDCoJAのメンバーであるドローンワークス社のコントラクターとしてArduPilotを同社が開発していたFCにポーティングする作業を行っていたのですがhachidoriはその中で派生したプロジェクトでした. 私とドローンワークス社とのコントラクトはすでに終了していますがオープンなプロジェクトとしてhachidoriの開発を続けています. プロジェクトの成果はDCoJAを通じてソフトウェアやプロトタイプの回路図などが<a href="https://github.com/DCoJA">オープンソースとして公開</a>されています.</p>
-<p><img src="../images/hachidori-01.png" alt="scheme" width="640"></p>
-<p>hachidoriからみるとArduPilotはセンサーデータを受け取りアクチュエータへの指示としてPWMの値を返すUDPサーバーです. このようなリモートセンサ/アクチュエータは実に古典的なアイデアですが,このスキームには大小様々な問題があります.</p>
-<p>とりあえずトイドローンタイプのhachidoriの飛行はこんな感じです:</p>
-<p><a href="https://drive.google.com/open?id=17t-W2Hi5uMc7od1iT-kai-gEbZudtBSQ"><img alt="test flight" src="../images/test-flight-toy.png"></a></p>
-<p>これはstabilizeモードです. APM(ArduPilot)はうまく姿勢を制御できているように見えます. arducopterはlaptop PCのUbuntu 4.4.0-lowlatencyカーネル上で動かしています.</p>
-<p>250mmフレームにのせた別のhachidoriとAPMが動いているホストPCです:</p>
-<p><img src="../images/hachidori-250-liftup.jpg" alt="250frame" width=320>
-<img src="../images/hachidori-core-and-pc.jpg" alt="250 and PC" width=320></p>
-<p>実験的なhachidori用ドライバを含んだArduPilotのソースツリー等は<a href="https://github.com/DCoJA">DCoJAのgithubリポジトリ</a>中のardupilotのhachidoriブランチにあります.</p>
-<p>hachidoriのファームウェアは<a href="https://github.com/espressif/esp-idf">esp-idf</a>上の<a href="https://github.com/DCoJA/esp32-app/hachidori">application</a>になっています.
-テストやコンフィグレーションのためのPC上の小さなUDPサーバーが<a href="https://github.com/DCoJA/junkyard">junkyard</a>の中にあります. b3testはセンサーデータの表示やモーターのテストのためのサーバー, b3confは設定や定数などをhachidoriに書きこむためのサーバーです.</p>
-<h2>レイテンシ latency</h2>
-<p>このようなスキームでの大きな問題の一つがレイテンシです. ご存知のように私達が普通に目にするほとんど全ての無線プロトコルはレイテンシに重点を置いていません. Wi-Fiを除けばそれらはいつも低消費電力が歌い文句ですしWi-Fiはスループット優先です. これらのプロトコルには再送という操作が存在することが多くこれがレイテンシの大きな原因となっています. 物理的データを再送するとリアルタイム性を失いあまり意味がない場合があります. ドローンのIMUから得られるデータが0.2秒遅れて送られて来た場合それは制御にどの程度役立つでしょうか? このケースでは再送などせずにさっさと次のデータを送って欲しいのですがそのようなプロトコルは一般的ではなく、またWi-FiやBTのようにある程度オープンなものはありません …</p>
-                <a class="readmore" href="../jbee3.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+<p>私はDCoJAのメンバーであるドローンワークス社のコントラクターとしてArduPilotを同社が開発していたFCにポーティングする作業を行っていたのですがhachidoriはその中で派生したプロジェクトでした. 私とドローンワークス社とのコントラクトは …</p>
+                        <a class="readmore" href="../jbee3.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../nrf24-shockburst.html" rel="bookmark"
-                           title="Permalink to nRF24L01+ and ESP32">nRF24L01+ and ESP32</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../nrf24-shockburst.html" rel="bookmark"
+                               title="Permalink to nRF24L01+ and ESP32">nRF24L01+ and ESP32</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-11-15T00:00:00+09:00">
                 Published: 水 15 11月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->                        <p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
 <img alt="nrf24 spiclock to cs hold" src="../images/nrf24-test.jpg" style="width: 640px; height: 400px;" />
 <p>対抗しているのはRaspiとnRF24L01+の組でそちらは</p>
 <p><a class="reference external" href="http://tmrh20.github.io/RF24/">http://tmrh20.github.io/RF24/</a></p>
 <p>にあるライブラリやプログラムを使いました.</p>
-<p>このトランシーバーはBTやWiFiではなくShockburstという形式で通信します. コンフィグでACKを必要としないたれ流しができそうなのでレイテンシが減らせるか試そうと思っています.
-リアルタイムのIMUデータとかなんども再送されてもあまりうれしくないしというのがもともとの動機です.</p>
-<p>SPIでつなぐこと自体は簡単でGPIOの番号を</p>
-<pre class="code c literal-block">
-<span class="cp">#define PIN_NUM_MISO 19
-#define PIN_NUM_MOSI 23
-#define PIN_NUM_CLK  18
-#define PIN_NUM_CS    5</span>
-</pre>
-<p>としています. SPI以外にnRF24L01+のRFトランシーバーをイネーブルするCEと割り込みの/INTを</p>
-<pre class="code c literal-block">
-<span class="cp">#define GPIO_NRF24_INT  GPIO_NUM_22
-#define GPIO_NRF24_CE   GPIO_NUM_21</span>
-</pre>
-<p>につなぎました. SPIのコンフィグは</p>
-<pre class="code c literal-block">
-<span class="n">spi_bus_config_t</span> <span class="n">buscfg</span><span class="o">=</span><span class="p">{</span>
-    <span class="p">.</span><span class="n">miso_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MISO</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadhd_io_num …</span></pre>
-                <a class="readmore" href="../nrf24-shockburst.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+<p>このトラン …</p>
+                        <a class="readmore" href="../nrf24-shockburst.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-phy2.html" rel="bookmark"
-                           title="Permalink to ESP32 PHY board 2">ESP32 PHY board 2</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp32-phy2.html" rel="bookmark"
+                               title="Permalink to ESP32 PHY board 2">ESP32 PHY board 2</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-11-07T00:00:00+09:00">
                 Published: 火 07 11月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>
-</footer><!-- /.post-info -->                <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>        
+</footer><!-- /.post-info -->                        <p>I'm trying another simple board for esp32 with ethernet. This is a board to mount ESP32 DevKit-C and Waveshare LAN8720 PHY module with a few extra parts. It can also use ESP-WROOM-32 chip directly instead of DevKit-C module.</p>
 <img alt="esp32-wslan8720 test" src="../images/esp32ether2-test.jpg" style="width: 640px; height: 400px;" />
 <img alt="esp32-wslan8720 board" src="../images/esp32ether2-board.jpg" style="width: 640px; height: 400px;" />
 <p>KiCAD files for this board can be seen <a class="reference external" href="https://github.com/kazkojima/esp32-phy">here</a> as hardware/esp32-wslan8720 …</p>
-                <a class="readmore" href="../esp32-phy2.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+                        <a class="readmore" href="../esp32-phy2.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../testing-espnow.html" rel="bookmark"
-                           title="Permalink to Testing ESPNOW">Testing ESPNOW</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../testing-espnow.html" rel="bookmark"
+                               title="Permalink to Testing ESPNOW">Testing ESPNOW</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-10-28T00:00:00+09:00">
                 Published: 土 28 10月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>ESP32の <a class="reference external" href="../esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="../images/bee3-board.png">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->                        <p>ESP32の <a class="reference external" href="../esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="../images/bee3-board.png">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
 <img alt="esp32 ether-espnow brigde" src="../images/ether-now-bridge.png" style="width: 640px; height: 400px;" />
 <p>でPCの上ではarducopterとテスト用のUDPサーバの両方を動かして試してみました.</p>
 <p><em>結果</em></p>
@@ -450,51 +402,46 @@ Looks not so good precision but not so bad as a Poor Man's system. A LOITER and 
 <blockquote>
 <ul class="simple">
 <li>近接で通信した場合latencyは2ms位で安定している</li>
-<li>送信と送信の間で間隔を空けることが必要で送信のみ繰り返す場合で~2msが必要に見える</li>
-<li>受信を行うとこの間隔が影響される</li>
-</ul>
-</blockquote>
-<p>実際のテストではセンサボードからespnowでパケットを投げ送信終了のコールバックが終わるまで待つようにしました. 送信のみの場合~500Hzぐらいのレートで~70byteぐらいのデータが送信できていました.</p>
-<p>100Hzのレートで~30byteほどを受信するようにすると送信側のレートは10%以上低下しました. 送受の切り替え時にデッドタイムがあることを想像させるような挙動ですが、espnowのライブラリはソースがないので確かなことはわかりません.</p>
-<p>このセンサボードからはIMUなどのパケットが1msに40byte程度でてくるのですが受信も行いながらだとパケットが最初に期待していたようなlatencyでは送り切れない状態が発生しています.
-生のlatencyや処理コスト的にespnowは魅力的なのですが、リモートセンサ/アクチュエータ方式でコプターを飛ばすのは今の所少し厳しい感じです.</p>
+<li>送信と送信の間で間隔を空ける …</li></ul></blockquote>
+                        <a class="readmore" href="../testing-espnow.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+                    </ol><!-- /#posts-list -->
+  <nav>
+    <ul>
+      <li>Page 1 / 2</li>
+        <li><a href="../tag/esp322.html">&rang;</a></li>
+        <li><a href="../tag/esp322.html">&Rang;</a></li>
+    </ul>
+  </nav>
+                    </section><!-- /#content -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-                <a class="readmore" href="../testing-espnow.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-<p class="paginator">
-    Page 1 / 2
-        <a href="../tag/esp322.html">&raquo;</a>
-</p>
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
-</body>
+        </body>
 </html>

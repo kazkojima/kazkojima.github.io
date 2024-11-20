@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>nRF24L01+ and ESP32</title>
-        <link rel="stylesheet" href="./theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>nRF24L01+ and ESP32</title>
+                        <link rel="stylesheet" href="./theme/css/main.css" />
+    <meta name="description" content="Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました 対抗しているのはRaspiとnRF24L01+の組でそちらは http://tmrh20.github.io/RF24/ にあるライブラリやプログラムを使いました. このトラン …" />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="./">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li class="active"><a href="./category/articles.html">articles</a></li>
-                    <li><a href="./category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="./nrf24-shockburst.html" rel="bookmark"
-           title="Permalink to nRF24L01+ and ESP32">nRF24L01+ and ESP32</a></h1>
-    </header>
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="./">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="./category/articles.html">articles</a></li>
+                                                <li><a href="./category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="./nrf24-shockburst.html" rel="bookmark"
+             title="Permalink to nRF24L01+ and ESP32">nRF24L01+ and ESP32</a></h1>
+      </header>
 
-    <div class="entry-content">
+      <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-11-15T00:00:00+09:00">
                 Published: 水 15 11月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="./category/articles.html">articles</a>.</p>
-<p>tags: <a href="./tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->      <p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->        <p>Nordic semiconductorのトランシーバーnRF24L01+をESP32にSPI接続して実験してみました</p>
 <img alt="nrf24 spiclock to cs hold" src="./images/nrf24-test.jpg" style="width: 640px; height: 400px;" />
 <p>対抗しているのはRaspiとnRF24L01+の組でそちらは</p>
 <p><a class="reference external" href="http://tmrh20.github.io/RF24/">http://tmrh20.github.io/RF24/</a></p>
@@ -54,26 +57,26 @@
 </pre>
 <p>につなぎました. SPIのコンフィグは</p>
 <pre class="code c literal-block">
-<span class="n">spi_bus_config_t</span> <span class="n">buscfg</span><span class="o">=</span><span class="p">{</span>
-    <span class="p">.</span><span class="n">miso_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MISO</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">quadhd_io_num</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">max_transfer_sz</span><span class="o">=</span><span class="mi">0</span>
-<span class="p">};</span>
-<span class="n">spi_device_interface_config_t</span> <span class="n">devcfg</span><span class="o">=</span><span class="p">{</span>
-    <span class="p">.</span><span class="n">command_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">address_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">dummy_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">clock_speed_hz</span><span class="o">=</span><span class="mi">8000000</span><span class="p">,</span>                <span class="c1">//Clock out at 8MHz
-</span>    <span class="p">.</span><span class="n">duty_cycle_pos</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                                <span class="c1">//SPI mode 0
-</span>    <span class="p">.</span><span class="n">cs_ena_posttrans</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">spics_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CS</span><span class="p">,</span>               <span class="c1">//CS pin
-</span>    <span class="p">.</span><span class="n">queue_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                          <span class="c1">//queue size
-</span>    <span class="p">.</span><span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<span class="p">};</span>
+<span class="n">spi_bus_config_t</span><span class="w"> </span><span class="n">buscfg</span><span class="o">=</span><span class="p">{</span><span class="w">
+    </span><span class="p">.</span><span class="n">miso_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MISO</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">mosi_io_num</span><span class="o">=</span><span class="n">PIN_NUM_MOSI</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">sclk_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CLK</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">quadwp_io_num</span><span class="o">=</span><span class="mi">-1</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">quadhd_io_num</span><span class="o">=</span><span class="mi">-1</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">max_transfer_sz</span><span class="o">=</span><span class="mi">0</span><span class="w">
+</span><span class="p">};</span><span class="w">
+</span><span class="n">spi_device_interface_config_t</span><span class="w"> </span><span class="n">devcfg</span><span class="o">=</span><span class="p">{</span><span class="w">
+    </span><span class="p">.</span><span class="n">command_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">address_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">dummy_bits</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">clock_speed_hz</span><span class="o">=</span><span class="mi">8000000</span><span class="p">,</span><span class="w">                </span><span class="c1">//Clock out at 8MHz
+</span><span class="w">    </span><span class="p">.</span><span class="n">duty_cycle_pos</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">                                </span><span class="c1">//SPI mode 0
+</span><span class="w">    </span><span class="p">.</span><span class="n">cs_ena_posttrans</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="p">.</span><span class="n">spics_io_num</span><span class="o">=</span><span class="n">PIN_NUM_CS</span><span class="p">,</span><span class="w">               </span><span class="c1">//CS pin
+</span><span class="w">    </span><span class="p">.</span><span class="n">queue_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w">                          </span><span class="c1">//queue size
+</span><span class="w">    </span><span class="p">.</span><span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">
+</span><span class="p">};</span>
 </pre>
 <p>を使って簡単なSPIアクセスを試しました. 最初.cs_ena_posttrans=1を指定していなかったのですがこれがないとペイロードの読み書きのような多バイトのtransactionがうまくいかずパケットが飛びませんでした. ところが/csに指が触れたときにパケットが飛んだことからこれに気がつきました. nRF24L01+のドキュメントだとclockの立ち下がりと/csの立ち上がり間には2ns以上のhold timeが必要なのですが指定なしだとギリギリだめなんだと思われます. 指定すると</p>
 <img alt="nrf24 spiclock to cs hold" src="./images/nrf24-spi-cs-hold.png" style="width: 640px; height: 400px;" />
@@ -82,37 +85,37 @@
 <img alt="nrf24 payload write" src="./images/nrf24-spi.png" style="width: 640px; height: 400px;" />
 <p>MISOの最初に見えている0Eがstatusレジスタの内容です. 上のESP32のSPIの設定だと.command_bits=8になっているのですがその間の受信データは無視されるようです.</p>
 
-    </div><!-- /.entry-content -->
+      </div><!-- /.entry-content -->
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-</body>
+        </body>
 </html>

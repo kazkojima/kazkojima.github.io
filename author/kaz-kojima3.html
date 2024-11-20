@@ -1,158 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>My Bug Has A Program! - Kaz Kojima</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>My Bug Has A Program! - Kaz Kojima</title>
+                        <link rel="stylesheet" href="../theme/css/main.css" />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li><a href="../category/articles.html">articles</a></li>
+                                                <li><a href="../category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
 
-                <section id="content" class="body">
-                    <ol id="posts-list" class="hfeed" start="9">
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-deep-sleep.html" rel="bookmark"
-                           title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
-                </header>
+                    <section id="content" class="body">
+                        <ol id="posts-list" class="hfeed" start="9">
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp32-2khz.html" rel="bookmark"
+                               title="Permalink to ESP32 0.5ms tick">ESP32 0.5ms tick</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-10-22T00:00:00+09:00">
+                Published: 日 22 10月 2017
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/freertos.html">freertos</a> </p>        
+</footer><!-- /.post-info -->                        <p>You know that the maximal tick rate in ESP-IDF is 1000Hz.</p>
+<img alt="esp-idf menuconfig 1000Hz" src="../images/config-1000Hz.png" style="width: 640px; height: 400px;" />
+<p>This is ok for almost applications and if you require sub-milli time precision, the extra timer or interrupt would be your friend.
+But why can't be 2000Hz tick rate set on 240Mz CPU?
+Here is a famous LED blinker …</p>
+                        <a class="readmore" href="../esp32-2khz.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp32-phy.html" rel="bookmark"
+                               title="Permalink to ESP32 PHY board">ESP32 PHY board</a></h1>
+                    </header>
+
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-10-18T00:00:00+09:00">
+                Published: 水 18 10月 2017
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/kicad.html">kicad</a> </p>        
+</footer><!-- /.post-info -->                        <p>I'm making a simple esp32 board with ethernet. ESP32 has MAC and esp-idf supports PHYs like LAN87x0 and TLK110 already. Here is the schematic with KiCAD:</p>
+<img alt="esp32-tlk110 schematic" src="../images/esp32-tlk110.png" style="width: 640px; height: 400px;" />
+<p>I'll create a git repository for that hardware if it works.</p>
+<p><em>Update 2017-10-21</em></p>
+<p>Now it works!</p>
+<img alt="esp32-tlk110 works" src="../images/esp32-tlk110-jumpers.jpg" style="width: 640px; height: 400px;" />
+<p>Revised KiCAD files for this board can be …</p>
+                        <a class="readmore" href="../esp32-phy.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp32-deep-sleep.html" rel="bookmark"
+                               title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-07-28T00:00:00+09:00">
                 Published: 金 28 7月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->                        <p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
 <p>最初はdeep sleep modeに入る前に消しておいたらと思ったのですがdeep sleepするとGPIOがlowレベルになって全点灯してしまいました.  いろいろやるうちに逃げ道を見つけることができました.
-いつまでこれでうまくいくかはわからないのですが.</p>
-<p>話は簡単で</p>
-<blockquote>
-<ul class="simple">
-<li>GPIOのコンフィグでのpull-up/downはdeep sleep時でも有効</li>
-</ul>
-</blockquote>
-<p>なことを利用します. 問題のシステムでpull-upを立てておくとdeep sleep時にそれが効いてレベルがhighになって全消灯できました. こんな感じです (このシステムではRGBLED_OFF=1)</p>
-<pre class="code c literal-block">
-<span class="n">gpio_config_t</span> <span class="n">io_conf</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">intr_type</span> <span class="o">=</span> <span class="n">GPIO_PIN_INTR_DISABLE</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">GPIO_MODE_OUTPUT</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
-                        <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="c1">// This ensures that all leds are off in deep sleep …</span></pre>
-                <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+いつま …</p>
+                        <a class="readmore" href="../esp32-deep-sleep.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../esp32-spi.html" rel="bookmark"
-                           title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../esp32-spi.html" rel="bookmark"
+                               title="Permalink to ESP32 SPI master issue">ESP32 SPI master issue</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-06-26T00:00:00+09:00">
                 Published: 月 26 6月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->                <div class="figure align-left">
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->                        <div class="figure align-left">
 <img alt="esp-wroom-32 board" src="../images/bee3-board.png" style="width: 600.0px; height: 337.5px;" />
 </div>
 <p>My ESP-WROOM-32 board has 2 spi slave devices MPU-9250 and MS5611. I've troubled with DMA on spi. It looks <a class="reference external" href="https://github.com/espressif/esp-idf/issues/598">issue 598</a> which happens when DMA is used with the half-duplex mode and the command/address phases are disabled.
 With enabling command phase, the problem went away.</p>
 <pre class="code c literal-block">
-<span class="err">&#64;&#64;</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">12</span> <span class="o">+</span><span class="mi">105</span><span class="p">,</span><span class="mi">12 …</span></pre>
-                <a class="readmore" href="../esp32-spi.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+<span class="err">&#64;&#64;</span><span class="w"> </span><span class="mi">-105</span><span class="p">,</span><span class="mi">12</span><span class="w"> </span><span class="o">+</span><span class="mi">105</span><span class="p">,</span><span class="mi">12 …</span></pre>
+                        <a class="readmore" href="../esp32-spi.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="../gr-neug.html" rel="bookmark"
-                           title="Permalink to GnuRadio companion で新しい機能ブロック">GnuRadio companion で新しい機能ブロック</a></h1>
-                </header>
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../gr-neug.html" rel="bookmark"
+                               title="Permalink to GnuRadio companion で新しい機能ブロック">GnuRadio companion で新しい機能ブロック</a></h1>
+                    </header>
 
-                <div class="entry-content">
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-06-25T00:00:00+09:00">
                 Published: 日 25 6月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/gnuradio.html">gnuradio</a> </p>
-</footer><!-- /.post-info -->                <p><em>(元の文章は2015/05/13のものです)</em></p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/gnuradio.html">gnuradio</a> </p>        
+</footer><!-- /.post-info -->                        <p><em>(元の文章は2015/05/13のものです)</em></p>
 <p><a class="reference external" href="https://wiki.gnuradio.org/index.php/Main_Page">GnuRadio</a> companion でGUIベースで用意された信号処理ブロックを結線してラジオをはじめいろいろなものが作れます. 新しいブロックの作成は意外に簡単です.</p>
 <p><a class="reference external" href="https://wiki.gnuradio.org/index.php/OutOfTreeModules">Extending GNU Radio with own functionality and blocks</a></p>
-<p>に従ってg新部さんの <a class="reference external" href="http://www.gniibe.org/memo/development/gnuk/rng/neug.html">NeuG</a> を信号ソースにしてみました.</p>
-<p>neugはg新部さんの <a class="reference external" href="http://www.gniibe.org/category/fst-01.html">FST-01</a> を使った乱数発生器です. FSFでも紹介されています <a class="footnote-reference" href="#id2" id="id1">[1]</a></p>
-<p>作業はDebien jessieでやったのですがパッケージとして gnuradio-dev, cmake, boost, libcppunit-dev, liblog4cpp5-devなどをインストールしておくことが必要でした.</p>
-<blockquote>
-<ul>
-<li><p class="first">ツリーを作製:</p>
-<pre class="literal-block">
-gr_modtool newmod neug         # これで gr-neugができるので
-cd gr-neug
-gr_modtool add -t sync neug    # syncのところはgeneric,decimator,interpolator...
-</pre>
-</li>
-<li><p class="first">python/qa_neug.pyを編集: unit …</p></li></ul></blockquote>
-                <a class="readmore" href="../gr-neug.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-<p class="paginator">
-        <a href="../author/kaz-kojima2.html">&laquo;</a>
-    Page 3 / 3
-</p>
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+<p>に従ってg新部さんの <a class="reference external" href="http://www.gniibe.org/memo/development/gnuk/rng/neug.html">NeuG</a> を信号ソース …</p>
+                        <a class="readmore" href="../gr-neug.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+                    </ol><!-- /#posts-list -->
+  <nav>
+    <ul>
+        <li><a href="../author/kaz-kojima.html">&Lang;</a></li>
+        <li><a href="../author/kaz-kojima2.html">&lang;</a></li>
+      <li>Page 3 / 3</li>
+    </ul>
+  </nav>
+                    </section><!-- /#content -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-</body>
+        </body>
 </html>

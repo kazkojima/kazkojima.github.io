@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>My Bug Has A Program! - vl53l1x</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>My Bug Has A Program! - vl53l1x</title>
+                        <link rel="stylesheet" href="../theme/css/main.css" />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li><a href="../category/articles.html">articles</a></li>
+                                                <li><a href="../category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../esp32-vl53l1x.html">VL53L1X on ESP-IDF</a></h1>
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="../esp32-vl53l1x.html">VL53L1X on ESP-IDF</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2018-03-23T00:00:00+09:00">
                 Published: 金 23 3月 2018
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/english.html">English</a>.</p>
+<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/vl53l1x.html">vl53l1x</a> <a href="../tag/english.html">english</a> </p>        
 </footer><!-- /.post-info --><p><meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@1gkojima" />
 <meta property="og:url" content="https://kazkojima.github.io/esp32-vl53l1x.html" />
@@ -37,19 +39,18 @@
 <p><a href="https://github.com/espressif/esp-idf">ESP-IDF</a> build system has several ways to import such external libraries. This article is a simple example of one of them. The source code I've written is pushed on my github as <a href="https://github.com/kazkojima/esp32-vl53l1x-test">esp32-vl53l1x-test</a>.</p>
 <p>When something are built with ESP-IDF, it scans some directories and looks for component.mk files. It also read those files and determines what to do.</p>
 <p>Here is the <a href="https://github.com/kazkojima/esp32-vl53l1x-test/blob/master/main/component.mk">component.mk file</a> in my esp32-vl53l1x-test/main directory.</p>
-<div class="highlight"><pre><span></span>STM32CUBEEXPANSION_53L1A1 = symlink-STM32CubeExpansion_53L1A1_V1.0.0
+<div class="highlight"><pre><span></span><code><span class="n">STM32CUBEEXPANSION_53L1A1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">symlink</span><span class="o">-</span><span class="n">STM32CubeExpansion_53L1A1_V1</span><span class="o">.</span><span class="mf">0.0</span>
 
-COMPONENT_SRCDIRS := . \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/Components/vl53l1x
+<span class="n">COMPONENT_SRCDIRS</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">.</span><span class="w"> </span>\
+<span class="w">    </span><span class="o">$</span><span class="p">(</span><span class="n">STM32CUBEEXPANSION_53L1A1</span><span class="p">)</span><span class="o">/</span><span class="n">Drivers</span><span class="o">/</span><span class="n">BSP</span><span class="o">/</span><span class="n">Components</span><span class="o">/</span><span class="n">vl53l1x</span>
 
-COMPONENT_ADD_INCLUDEDIRS = \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/X-NUCLEO-53L1A1 \
-    $(STM32CUBEEXPANSION_53L1A1)/Drivers/BSP/Components/vl53l1x \
-    $(STM32CUBEEXPANSION_53L1A1)/Projects/Multi/Examples/VL53L1X/SimpleRangingExamples/Inc
+<span class="n">COMPONENT_ADD_INCLUDEDIRS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>\
+<span class="w">    </span><span class="o">$</span><span class="p">(</span><span class="n">STM32CUBEEXPANSION_53L1A1</span><span class="p">)</span><span class="o">/</span><span class="n">Drivers</span><span class="o">/</span><span class="n">BSP</span><span class="o">/</span><span class="n">X</span><span class="o">-</span><span class="n">NUCLEO</span><span class="o">-</span><span class="mi">53</span><span class="n">L1A1</span><span class="w"> </span>\
+<span class="w">    </span><span class="o">$</span><span class="p">(</span><span class="n">STM32CUBEEXPANSION_53L1A1</span><span class="p">)</span><span class="o">/</span><span class="n">Drivers</span><span class="o">/</span><span class="n">BSP</span><span class="o">/</span><span class="n">Components</span><span class="o">/</span><span class="n">vl53l1x</span><span class="w"> </span>\
+<span class="w">    </span><span class="o">$</span><span class="p">(</span><span class="n">STM32CUBEEXPANSION_53L1A1</span><span class="p">)</span><span class="o">/</span><span class="n">Projects</span><span class="o">/</span><span class="n">Multi</span><span class="o">/</span><span class="n">Examples</span><span class="o">/</span><span class="n">VL53L1X</span><span class="o">/</span><span class="n">SimpleRangingExamples</span><span class="o">/</span><span class="n">Inc</span>
 
-CFLAGS += -Wno-unused-variable -Wno-maybe-uninitialized -DI2C_HandleTypeDef=int
-</pre></div>
-
+<span class="n">CFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="n">Wno</span><span class="o">-</span><span class="n">unused</span><span class="o">-</span><span class="n">variable</span><span class="w"> </span><span class="o">-</span><span class="n">Wno</span><span class="o">-</span><span class="n">maybe</span><span class="o">-</span><span class="n">uninitialized</span><span class="w"> </span><span class="o">-</span><span class="n">DI2C_HandleTypeDef</span><span class="o">=</span><span class="nb nb-Type">int</span>
+</code></pre></div>
 
 <p>The file path is relative to main/ itself. The definition of COMPONENT_SRCDIRS can be read as '. ./symlink-STM32CubeExpansion_53L1A1_V1.0.0/Drivers/BSP/Components/vl53l1x'. The build system adds these directories as the directory which has sources to be compiled. If you symlink the root directory of ST's driver to symlink-STM32CubeExpansion_53L1A1_V1.0.0, the sources in Drivers/BSP/Components/vl53l1x of ST's source are compiled with.</p>
 <p>COMPONENT_ADD_INCLUDEDIRS is the list of directories which are added as the search paths for the include files. CFLAGS is the option flags during compiling. In this example, it adds a few -W flags to avoid failure with warnings and gives a missing type definition. Thus I could use ST's source tree without modifying. Easy enough, isn't it?</p>
@@ -58,35 +59,35 @@ CFLAGS += -Wno-unused-variable -Wno-maybe-uninitialized -DI2C_HandleTypeDef=int
 <p><img src="../images/alternative-ROI.png" alt="a test" width="640"></p>
 <p>The test itself is a simple use of ST's API. With switching ROIs(region of interest), the sensor can detect 'edge' or 'slope' somehow.</p>
 <p><a href="https://youtu.be/HekUzrfqgoY"><img alt="2nd test" src="../images/switching-ROI-2.png"></a></p>
-<p><img src="../images/vl53l1x-emit.jpg" alt="emittion"></p>                </article>
-            </aside><!-- /#featured -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+<p><img src="../images/vl53l1x-emit.jpg" alt="emittion"></p>                    </article>
+                </aside><!-- /#featured -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-</body>
+        </body>
 </html>

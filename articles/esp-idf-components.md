@@ -92,39 +92,9 @@ Arduinoでは動いてたのにESP-IDFのコンポーネント化をしたら動
 
 [^注2]:Arduinoコンポーネントを使う場合、M5Stack-IDF/にあるsdkconfigがArduino用にカスタマイズされているのでそれをコピーして修正していくのが吉
 
-### \[追記2\] 例
+### \[追記2\] btstack/components.mk
 
-もう少し複雑な場合としてBTのスタックBstackをM5Stackで使った例です。
-その例ではソースツリーは
-
-```
-.
-├── Makefile
-├── README.md
-├── components
-│   ├── arduino -> /git/arduino-esp32
-│   ├── btstack
-│   ├── m5stack -> /git/M5Stack-IDF/components/m5stack
-│   └── micro-ecc
-├── main
-│   ├── Kconfig.projbuild
-│   ├── component.mk
-│   ├── hid_host_demo.c
-│   ├── main.cpp
-│   └── spi.c
-└── sdkconfig
-```
-のようになっていてbtstack(https://github.com/bluekitchen/btstack.git)とmicro-ecc(https://github.com/kmackay/micro-ecc.git)をcomponentの下にcloneしています。
-btstackの版によってはすでにmicro-eccがbtstackの下に取り込まれているのですがこの例で使っている版では別に置くことが必要でした。
-
-micro-ecc/component.mkの内容は
-```
-COMPONENT_DEPENDS += micro-ecc
-COMPONENT_ADD_INCLUDEDIRS := .
-COMPONENT_SRCDIRS := .
-CFLAGS += -Wno-format
-```
-と単純ですがbtstack/component.mkの内容は
+上の例でのbtstack/components.mkの記述は
 ```
 COMPONENT_DEPENDS += micro-ecc
 
@@ -159,5 +129,4 @@ COMPONENT_SRCDIRS := \
 
 CFLAGS += -Wno-format
 ```
-とちょっと複雑になってしまいました。
-最初は適当にCOMPONENT_ADD_INCLUDEDIRS/COMPONENT_SRCDIRSを書いておいて関数がないと言われてはCOMPONENT_SRCDIRSに追加しincludeできないと言われてはCOMPONENT_ADD_INCLUDEDIRSを追加、コンパイル時の警告がエラー扱いされるときにはCFLAGSに警告を出さないようにオプション追加、といった試行錯誤が必要になったケースです。
+と少し複雑です。最初はbtstackのexampleのMakefileを参考にCOMPONENT_ADD_INCLUDEDIRS/COMPONENT_SRCDIRSを書いておいて関数がないと言われてはCOMPONENT_SRCDIRSに追加しincludeできないと言われてはCOMPONENT_ADD_INCLUDEDIRSに追加、コンパイル時の警告がエラー扱いされるときにはCFLAGSに警告を出さないようにオプション追加、といった試行錯誤をしました。

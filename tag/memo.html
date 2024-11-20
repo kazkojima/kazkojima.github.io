@@ -1,34 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>My Bug Has A Program! - memo</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>My Bug Has A Program! - memo</title>
+                        <link rel="stylesheet" href="../theme/css/main.css" />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="../">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li><a href="../category/articles.html">articles</a></li>
-                    <li><a href="../category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li><a href="../category/articles.html">articles</a></li>
+                                                <li><a href="../category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../cuda-jl.html">Jetson nanoでCUDAnative.jl</a></h1>
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="../noise-viewing.html">ELF(極長波)ノイズ観察</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2024-11-20T00:00:00+09:00">
+                Published: 水 20 11月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info --><h1>200Hz-12kHz の極長波帯を観察</h1>
+<h2>しかけ</h2>
+<ul>
+<li>アンテナもとい磁気ピックアップ</li>
+<li>フィルタ付きプリアンプ</li>
+<li>S/PDIF 出力の ADC</li>
+<li>S/PDIF - ethernet 変換器</li>
+<li>PC</li>
+</ul>
+<p>観察だけならピックアップを PC のオーディオ入力につなぐだけでも ok ですが
+別の目的もあったので上記のような構成になっています</p>
+<p>磁気ピックアップ
+<img src="../images/loop-pickup.jpg" alt="pickup" width="640"></p>
+<p>フィルタ付きプリアンプ
+<img src="../images/filter-amp.jpg" alt="preamp" width="640"></p>
+<p>PC と ADC と S/PDIF - ethernet 変換器
+<img src="../images/adc-recording.jpg" alt="recording system" width="640"></p>
+<p>ADC 96kHz なので 48kHz まで見られるのですが 200Hz-10kHz のバンドパスフィルタが入っているので 15kHz までのスペクトラムを見るとこんな感じになります</p>
+<p><img src="../images/elf-output.png" alt="spectrum" width="640"></p>
+<p>2kHz 以下のクシ状のピークはほぼ 50Hz商用電源の高調波で特に奇数時の高調波が強烈です</p>
+<p>5.9kHz 付近に正体不明の強力な信号/ノイズがあります</p>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../cuda-jl.html" rel="bookmark"
+                               title="Permalink to Jetson nanoでCUDAnative.jl">Jetson nanoでCUDAnative.jl</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2020-05-16T00:00:00+09:00">
                 Published: 土 16 5月 2020
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>
-</footer><!-- /.post-info --><h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->                        <h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
 <h1>Juliaのインストール</h1>
 <ul>
 <li>https://julialang.org/downloads/からGeneric Linux Binaries for ARMの64-bit(AArch64)用のJulia(例えばjulia-1.4.1-linux-aarch64.tar.gz)をdownload</li>
@@ -38,77 +84,44 @@
 <ul>
 <li>Juliaを起動してpkgモードで</li>
 </ul>
-<div class="highlight"><pre><span></span>add CUDAnative
+<div class="highlight"><pre><span></span><code>add CUDAnative
 add CUDAdrv
 add CuArrays
-</pre></div>
+</code></pre></div>
 
+<h1>Sampleを走らせる …</h1>
+                        <a class="readmore" href="../cuda-jl.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+                    </ol><!-- /#posts-list -->
+                    </section><!-- /#content -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-<h1>Sampleを走らせる</h1>
-<div class="highlight"><pre><span></span><span class="err">#</span> <span class="nx">listing</span> <span class="mi">16</span>
-<span class="nx">using</span> <span class="nx">CUDAnative</span><span class="p">,</span> <span class="nx">CuArrays</span>
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-<span class="kd">function</span> <span class="nx">vadd</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span>
-    <span class="nx">i</span> <span class="o">=</span> <span class="p">(</span><span class="nx">blockIdx</span><span class="p">().</span><span class="nx">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nx">blockDim</span><span class="p">().</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">threadIdx</span><span class="p">().</span><span class="nx">x</span>
-    <span class="nx">c</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
-    <span class="k">return</span>
-<span class="nx">end</span>
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-<span class="nx">len</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="nx">a</span> <span class="o">=</span> <span class="nx">rand</span><span class="p">(</span><span class="nx">Float32</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span>
-<span class="nx">b</span> <span class="o">=</span> <span class="nx">rand</span><span class="p">(</span><span class="nx">Float32</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span>
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-<span class="nx">d_a</span> <span class="o">=</span> <span class="nx">CuArray</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<span class="nx">d_b</span> <span class="o">=</span> <span class="nx">CuArray</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>
-<span class="nx">d_c</span> <span class="o">=</span> <span class="nx">similar</span><span class="p">(</span><span class="nx">d_a</span><span class="p">)</span>
-
-<span class="kd">@time</span> <span class="kd">@cuda</span> <span class="nx">threads</span><span class="o">=</span><span class="nx">len</span> <span class="nx">vadd</span><span class="p">(</span><span class="nx">d_a</span><span class="p">,</span> <span class="nx">d_b</span><span class="p">,</span> <span class="nx">d_c</span><span class="p">)</span>
-</pre></div>
-
-
-<p>これはcompileするので時間がかかります。Jetson nanoだと
-  49.464224 seconds (32.68 M allocations: 1.546 GiB, 4.34% gc time)</p>
-<p>ここで</p>
-<div class="highlight"><pre><span></span>c = Base.Array(d_c)
-</pre></div>
-
-
-<p>で結果を見れます。２回めの呼び出しは速いです。</p>
-<div class="highlight"><pre><span></span>ulia&gt; @time @cuda threads=len vadd(d_a, d_b, d_c)
-  0.016108 seconds (65 allocations: 2.141 KiB)
-</pre></div>
-
-
-<h2>CUDAnative.jl メモ</h2>
-<p>JuliaでCUDAのkernel関数を記述して呼ぶことが出来る<a href="https://github.com/JuliaGPU/CUDAapi.jl.git">CUDAnative.jl</a>を読もうとしての<a href="../images/cudanative-note.pdf">メモ</a></p>                </article>
-            </aside><!-- /#featured -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
-</body>
+        </body>
 </html>

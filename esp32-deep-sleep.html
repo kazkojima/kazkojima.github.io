@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>ESP32 GPIO output in deep sleep mode</title>
-        <link rel="stylesheet" href="./theme/css/main.css" />
-</head>
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>ESP32 GPIO output in deep sleep mode</title>
+                        <link rel="stylesheet" href="./theme/css/main.css" />
+    <meta name="description" content="ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました...." />
+        </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="./">My Bug Has A Program! </a></h1>
-                <nav><ul>
-                    <li class="active"><a href="./category/articles.html">articles</a></li>
-                    <li><a href="./category/english.html">English</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="./esp32-deep-sleep.html" rel="bookmark"
-           title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
-    </header>
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="./">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="./category/articles.html">articles</a></li>
+                                                <li><a href="./category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="./esp32-deep-sleep.html" rel="bookmark"
+             title="Permalink to ESP32 GPIO output in deep sleep mode">ESP32 GPIO output in deep sleep mode</a></h1>
+      </header>
 
-    <div class="entry-content">
+      <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-07-28T00:00:00+09:00">
                 Published: 金 28 7月 2017
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
-        </address>
-<p>In <a href="./category/articles.html">articles</a>.</p>
-<p>tags: <a href="./tag/esp32.html">esp32</a> </p>
-</footer><!-- /.post-info -->      <p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/esp32.html">esp32</a> </p>        
+</footer><!-- /.post-info -->        <p>ESP32のGPIOをOUTPUT modeにしてバッファSN74LVC3G07を使ってRGBのLEDを点灯させていたのですがdeep sleep modeにしたときに全点灯してしまうことに気がつきました. まあこのシステムだとESP32が止まっても他に電力を食うものがあるので光ること自体はあまり問題ではないんですがちょっと格好悪いです.</p>
 <p>最初はdeep sleep modeに入る前に消しておいたらと思ったのですがdeep sleepするとGPIOがlowレベルになって全点灯してしまいました.  いろいろやるうちに逃げ道を見つけることができました.
 いつまでこれでうまくいくかはわからないのですが.</p>
 <p>話は簡単で</p>
@@ -44,48 +47,48 @@
 </blockquote>
 <p>なことを利用します. 問題のシステムでpull-upを立てておくとdeep sleep時にそれが効いてレベルがhighになって全消灯できました. こんな感じです (このシステムではRGBLED_OFF=1)</p>
 <pre class="code c literal-block">
-<span class="n">gpio_config_t</span> <span class="n">io_conf</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">intr_type</span> <span class="o">=</span> <span class="n">GPIO_PIN_INTR_DISABLE</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">GPIO_MODE_OUTPUT</span><span class="p">;</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span>
-                        <span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span>
-<span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="c1">// This ensures that all leds are off in deep sleep mode.
-</span><span class="n">io_conf</span><span class="p">.</span><span class="n">pull_up_en</span> <span class="o">=</span> <span class="n">RGBLED_OFF</span><span class="p">;</span>
-<span class="n">gpio_config</span><span class="p">(</span><span class="o">&amp;</span><span class="n">io_conf</span><span class="p">);</span>
+<span class="n">gpio_config_t</span><span class="w"> </span><span class="n">io_conf</span><span class="p">;</span><span class="w">
+</span><span class="n">io_conf</span><span class="p">.</span><span class="n">intr_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GPIO_PIN_INTR_DISABLE</span><span class="p">;</span><span class="w">
+</span><span class="n">io_conf</span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GPIO_MODE_OUTPUT</span><span class="p">;</span><span class="w">
+</span><span class="n">io_conf</span><span class="p">.</span><span class="n">pin_bit_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_RED</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_GREEN</span><span class="p">)</span><span class="w">
+                        </span><span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">GPIO_LED_BLUE</span><span class="p">));</span><span class="w">
+</span><span class="n">io_conf</span><span class="p">.</span><span class="n">pull_down_en</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span><span class="c1">// This ensures that all leds are off in deep sleep mode.
+</span><span class="n">io_conf</span><span class="p">.</span><span class="n">pull_up_en</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RGBLED_OFF</span><span class="p">;</span><span class="w">
+</span><span class="n">gpio_config</span><span class="p">(</span><span class="o">&amp;</span><span class="n">io_conf</span><span class="p">);</span>
 </pre>
 
-    </div><!-- /.entry-content -->
+      </div><!-- /.entry-content -->
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="http://www.fsij.org/">FSIJ</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
 
-                            <li><a href="https://twitter.com/1gkojima">twitter</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-</body>
+        </body>
 </html>
