@@ -4,33 +4,39 @@
                         <meta charset="utf-8" />
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
-                        <title>My Bug Has A Program! - memo</title>
-                        <link rel="stylesheet" href="../theme/css/main.css" />
+                        <title>信号を探して</title>
+                        <link rel="stylesheet" href="./theme/css/main.css" />
+    <meta name="description" content="同期検波 受信した信号から特定の周波数成分を取り出すのに使われるのが同期検波です 信号を時間 t の関数 s(t …" />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <h1><a href="./">My Bug Has A Program!</a></h1>
                         <nav><ul>
-                                                <li><a href="../category/articles.html">articles</a></li>
-                                                <li><a href="../category/english.html">English</a></li>
+                                                <li class="active"><a href="./category/articles.html">articles</a></li>
+                                                <li><a href="./category/english.html">English</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="./look-for-signal.html" rel="bookmark"
+             title="Permalink to 信号を探して">信号を探して</a></h1>
+      </header>
 
-                <aside id="featured" class="body">
-                    <article>
-                        <h1 class="entry-title"><a href="../look-for-signal.html">信号を探して</a></h1>
+      <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2024-11-20T00:00:00+09:00">
                 Published: 水 20 11月 2024
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
                 </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info --><h2>同期検波</h2>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/whistler.html">whistler</a> <a href="./tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->        <h2>同期検波</h2>
 <p>受信した信号から特定の周波数成分を取り出すのに使われるのが同期検波です</p>
 <p>信号を時間 t の関数 s(t) で表すときに特定の周波数 f の成分の大きさが  $A cos(2πf t) + B cos(2πf t)$ だとするとこれと $cos(2πf t)$ および $sin(2πf t)$ と掛けて、それを時刻 0, N の間で積算つまり積分して A や B を知ろうというアイデアに基づいています</p>
 <p>例えば</p>
@@ -54,85 +60,17 @@
 <p>whistler  波を模擬し c を定数として $cos(c/t)$ $0 &lt; a &lt; t &lt; b$ というテスト関数を考えてみます</p>
 <p>位相 $ϕ$ が $c/t$ なので時刻 t1 での瞬間周波数は $1/(2π) \cdot d/dt(c/t) = -c/(2π t^2)$ になります</p>
 <p>例えば c = 1800, a = 0.4, b = 1.4 とすると瞬間周波数が1秒間で 11.25kHz -&gt; 0.9kHz と降下する信号が得られます</p>
-<p><img src="../images/pseudo-whistler.png" alt="pseudo whistler wave" width="640"></p>
+<p><img src="./images/pseudo-whistler.png" alt="pseudo whistler wave" width="640"></p>
 <p>この信号を0.003倍して実際のELF受信データのある部分に加えて人工的なデータを作りました</p>
-<p><img src="../images/test-data.png" alt="test signal" width="640"></p>
+<p><img src="./images/test-data.png" alt="test signal" width="640"></p>
 <p>このデータを信号とし、$cos(c/t), sin(c/t)$ とで時間をずらしながら同期検波して結果をIとQという配列に入れました</p>
 <p>IQの隣り合うデータ同士の距離をプロットすると</p>
-<p><img src="../images/match-filter.png" alt="matched filter" width="640"></p>
-<p>となってなんとか検出に成功しているようです</p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+<p><img src="./images/match-filter.png" alt="matched filter" width="640"></p>
+<p>となってなんとか検出に成功しているようです</p>
+      </div><!-- /.entry-content -->
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../noise-viewing.html" rel="bookmark"
-                               title="Permalink to ELF(極長波)ノイズ観察">ELF(極長波)ノイズ観察</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2024-11-20T00:00:00+09:00">
-                Published: 水 20 11月 2024
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info -->                        <h1>200Hz-12kHz の極長波帯を観察</h1>
-<h2>しかけ</h2>
-<ul>
-<li>アンテナもとい磁気ピックアップ</li>
-<li>フィルタ付きプリアンプ</li>
-<li>S/PDIF 出力の ADC</li>
-<li>S/PDIF - ethernet 変換器 …</li></ul>
-                        <a class="readmore" href="../noise-viewing.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../cuda-jl.html" rel="bookmark"
-                               title="Permalink to Jetson nanoでCUDAnative.jl">Jetson nanoでCUDAnative.jl</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2020-05-16T00:00:00+09:00">
-                Published: 土 16 5月 2020
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info -->                        <h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
-<h1>Juliaのインストール</h1>
-<ul>
-<li>https://julialang.org/downloads/からGeneric Linux Binaries for ARMの64-bit(AArch64)用のJulia(例えばjulia-1.4.1-linux-aarch64.tar.gz)をdownload</li>
-<li>それを例えば/optに展開し/opt/julia-1.4.1/binをPATHに追加</li>
-</ul>
-<h1>Juliaで必要なパッケージを追加</h1>
-<ul>
-<li>Juliaを起動してpkgモードで</li>
-</ul>
-<div class="highlight"><pre><span></span><code>add CUDAnative
-add CUDAdrv
-add CuArrays
-</code></pre></div>
-
-<h1>Sampleを走らせる …</h1>
-                        <a class="readmore" href="../cuda-jl.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-                    </ol><!-- /#posts-list -->
-                    </section><!-- /#content -->
+    </article>
+  </section>
                 <section id="extras" class="body">
                                 <div class="blogroll">
                                         <h2>links</h2>
