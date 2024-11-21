@@ -64,10 +64,17 @@
 <p><img src="./images/pseudo-whistler.png" alt="pseudo whistler wave" width="640"></p>
 <p>この信号を0.003倍して実際のELF受信データのある部分に加えて人工的なデータを作りました</p>
 <p><img src="./images/test-data.png" alt="test signal" width="640"></p>
-<p>このデータを信号とし、cos(c/t), sin(c/t) とで時間をずらしながら同期検波して結果をIとQという配列に入れました</p>
+<p>このデータを信号とし、cos(c/t), sin(c/t) とで時間を0.01msずらしながら約0.5秒間同期検波して結果をIとQという配列に入れました</p>
 <p>IQの隣り合うデータ同士の距離をプロットすると</p>
 <p><img src="./images/match-filter.png" alt="matched filter" width="640"></p>
 <p>となってこの場合はどうにか検出に成功しているようです</p>
+<p>ELF受信データを平均値 0 標準偏差 0.03 の正規分布のノイズ に代えて同じ操作をすると</p>
+<p><img src="./images/matched-filter-randn.png" alt="matched filter" width="640"></p>
+<p>となりました</p>
+<p>この場合ノイズと埋め込んだ信号のレベル差は 20dB ですが時間方向の積分のおかげで検出できています</p>
+<p>積分する時間を増やせばもっとレベル差があっても検出できそうです</p>
+<p>実際の受信データの場合はそのスペクトログラムを見てもわかるように約 2kHz 以下の商用電源由来の強力な高調波があって計算の障害になります</p>
+<p>積分時間を増やすにはこの部分でのノイズの低減や計算上での工夫が必要そうです</p>
       </div><!-- /.entry-content -->
 
     </article>
