@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>ノイズの学習</title>
+                        <link rel="stylesheet" href="./theme/css/main.css" />
+    <meta name="description" content="ELFノイズを機械学習してみる 磁気ピックアップでELF・VLF帯域のノイズを記録してみると50Hz商用電源の高調波、特に奇数時の高調波が強烈でした 時間領域でみても10msや20msを周期にしたインパルス状の信号が見てとれます このノイズをLSTMを使った簡単な学習で予測してみました..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="./">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="./category/articles.html">articles</a></li>
+                                                <li><a href="./category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="./noise-learning.html" rel="bookmark"
+             title="Permalink to ノイズの学習">ノイズの学習</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-12-03T00:00:00+09:00">
+                Published: 火 03 12月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/ml.html">ML</a> <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->        <h2>ELFノイズを機械学習してみる</h2>
+<h1></h1>
+<p>磁気ピックアップでELF・VLF帯域のノイズを記録してみると50Hz商用電源の高調波、特に奇数時の高調波が強烈でした</p>
+<p>時間領域でみても10msや20msを周期にしたインパルス状の信号が見てとれます
+<img src="./images/elf-time-domain.png" alt="Noise - time domain" width="640"></p>
+<p>このノイズをLSTMを使った簡単な学習で予測してみました</p>
+<p>モデルは</p>
+<ul>
+<li>hidden layer のサイズが 128 の LSTM が2層と線形層</li>
+</ul>
+<p>で学習は</p>
+<ul>
+<li>batch size 40, BPTT 60 で epoch 50</li>
+</ul>
+<p>で行いました</p>
+<p>学習したものとは別のELFノイズを入力に学習後のモデルでの予測をした結果は
+<img src="./images/elf-input-predict.png" alt="input vs predict" width="640"></p>
+<p>で、簡単なモデルでもある程度ノイズが学習できているように見えます</p>
+<p>次にELFノイズに疑似wistler波を加えた信号入力
+<img src="./images/elf-spectrogram-mod40.png" alt="spectrogram of ELF noise + small signal" width="640"></p>
+<p>に対して上で学習したモデルを使って予測を行い、入力と予測の差を取ってみました
+<img src="./images/elf-spectrogram-clean40.png" alt="spectrogram of input - predict" width="640"></p>
+<p>この例では2kHz辺りまでの商用電源高調波由来のノイズが減衰し12kHz超の帯域が少し強調されているように見えますが、詳しく調べれば通常のフィルタなどとは相当違う挙動を示すかもしれません</p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>
