@@ -61,6 +61,40 @@
 
                 <li><article class="hentry">
                     <header>
+                        <h1><a href="../deepfilternet-memo.html" rel="bookmark"
+                               title="Permalink to DeepFilterNet メモ">DeepFilterNet メモ</a></h1>
+                    </header>
+
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-12-02T00:00:00+09:00">
+                Published: 月 02 12月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/ml.html">ML</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->                        <h2><a href="https://github.com/Rikorose/DeepFilterNet.git">DeepFilterNet</a> メモ</h2>
+<h1>やったこと</h1>
+<ul>
+<li>github から DeepFilterNet を clone</li>
+</ul>
+<div class="highlight"><pre><span></span><code>git clone https://github.com/Rikorose/DeepFilterNet.git
+cd DeepFilterNet/DeepFilterNet
+</code></pre></div>
+
+<ul>
+<li>README.md に従って必要な python library を install</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">torch</span><span class="w"> </span><span class="n">torchaudio</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">whl</span><span class="o">/</span><span class="n">cpu</span><span class="o">/</span><span class="n">torch_stabl …</span></code></pre></div>
+                        <a class="readmore" href="../deepfilternet-memo.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+
+                <li><article class="hentry">
+                    <header>
                         <h1><a href="../look-for-signal.html" rel="bookmark"
                                title="Permalink to 信号を探して">信号を探して</a></h1>
                     </header>
@@ -276,32 +310,6 @@ add CuArrays
 <meta property="og:description" content="A primitive use of Geometric Algebra." /><p>以前紹介した <a class="reference external" href="https://kazkojima.github.io/versor-app.html">室内測位システム</a> ではフレームの姿勢をMAVLinkで貰ってるんですが室内なのとコアレスモーターがついてるせいでフレームに載せているコンパスがくるってしまい、それで得られるyawの値も酷いものなので代わりに天井のカムからみたマーカーで推定できるヘッドの方向を使っています.</p>
 <p>一般には斜め上からみることになるの …</p>
                         <a class="readmore" href="../visual-yaw.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../versor-app.html" rel="bookmark"
-                               title="Permalink to 貧者的局所測位系 The versorer's apprentice">貧者的局所測位系 The versorer's apprentice</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-01-28T00:00:00+09:00">
-                Published: 日 28 1月 2018
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/esp32.html">esp32</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>        
-</footer><!-- /.post-info -->                        <meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/versor-app.html" />
-<meta property="og:title" content="貧者的局所測位系" />
-<meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenMV cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計す …</p>
-                        <a class="readmore" href="../versor-app.html">read more</a>
                     </div><!-- /.entry-content -->
                 </article></li>
                     </ol><!-- /#posts-list -->
