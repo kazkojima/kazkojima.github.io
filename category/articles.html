@@ -19,7 +19,44 @@
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="../noise-learning.html">ノイズの学習</a></h1>
+                        <h1 class="entry-title"><a href="../noise-cancelling-classic.html">古典的ノイズキャンセラー</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2024-12-15T00:00:00+09:00">
+                Published: 日 15 12月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info --><h2>ノイズアンテナによるノイズ低減</h2>
+<h1>ELF/VLF ノイズ源</h1>
+<p>私が室内で観察できる200Hz-12kHz帯のノイズのうち最大のものは2kHz以下の50Hz商用電源の高調波で特に奇数時の高調波が強烈です</p>
+<p>そのノイズ源を探してみるとどうやらすぐ近くにある柱上変圧器つきの電柱のようです
+<img src="../images/pmtrans.jpg" alt="trans" width="480"></p>
+<p>ノイズの発生自体は別の場所でそれが伝わってここから発生しているように見えているのかもしれません</p>
+<p>この電柱に一番近いところにノイズを拾うためのループアンテナを置き、得られたノイズ信号をアッテネータで磁気ピックアップでのノイズレベルにまで落とし逆位相で合成することでノイズのキャンセルを試みました</p>
+<p>アッテネータで1/N にした場合、遠方からの信号は 1-1/N に減少しますがノイズの方は大きく低減できるはずという原理です</p>
+<p><img src="../images/nc-classic.jpg" alt="pickup" width="640"></p>
+<p>もちろんノイズ部分は完全に N 倍というわけではないのでそんなにうまくはいかないのですが単純な仕掛けである程度の効果を狙います</p>
+<p>ノイズキャンセルなしだとこんな感じだったのですが
+<img src="../images/elf-spectrogram-nonc.png" alt="spectrum" width="640"></p>
+<p>ノイズキャンセル後はスペクトログラムがかなり静かになります
+<img src="../images/elf-spectrogram-nc.png" alt="spectrum" width="640"></p>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../noise-learning.html" rel="bookmark"
+                               title="Permalink to ノイズの学習">ノイズの学習</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2024-12-03T00:00:00+09:00">
                 Published: 火 03 12月 2024
@@ -30,7 +67,7 @@
                 </address>
         <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/ml.html">ML</a> <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info --><h2>ELFノイズを機械学習してみる</h2>
+</footer><!-- /.post-info -->                        <h2>ELFノイズを機械学習してみる</h2>
 <h1></h1>
 <p>磁気ピックアップでELF・VLF帯域のノイズを記録してみると50Hz商用電源の高調波、特に奇数時の高調波が強烈でした</p>
 <p>時間領域でみても10msや20msを周期にしたインパルス状の信号が見てとれます
@@ -38,26 +75,10 @@
 <p>このノイズをLSTMを使った簡単な学習で予測してみました</p>
 <p>モデルは</p>
 <ul>
-<li>hidden layer のサイズが 128 の LSTM が2層と線形層</li>
-</ul>
-<p>で学習は</p>
-<ul>
-<li>batch size 40, BPTT 60 で epoch 50</li>
-</ul>
-<p>で行いました</p>
-<p>学習したものとは別のELFノイズを入力に学習後のモデルでの予測をした結果は
-<img src="../images/elf-input-predict.png" alt="input vs predict" width="640"></p>
-<p>で、簡単なモデルでもある程度ノイズが学習できているように見えます</p>
-<p>次にELFノイズに疑似wistler波を加えた信号入力
-<img src="../images/elf-spectrogram-mod40.png" alt="spectrogram of ELF noise + small signal" width="640"></p>
-<p>に対して上で学習したモデルを使って予測を行い、入力と予測の差を取ってみました
-<img src="../images/elf-spectrogram-clean40.png" alt="spectrogram of input - predict" width="640"></p>
-<p>この例では2kHz辺りまでの商用電源高調波由来のノイズが減衰し12kHz超の帯域が少し強調されているように見えますが、詳しく調べれば通常のフィルタなどとは相当違う挙動を示すかもしれません</p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+<li>hidden layer …</li></ul>
+                        <a class="readmore" href="../noise-learning.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
                 <li><article class="hentry">
                     <header>
@@ -283,33 +304,6 @@ add CuArrays
 <p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
 <p>の紹介のために書きました …</p>
                         <a class="readmore" href="../ga-intro-j.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../visual-yaw.html" rel="bookmark"
-                               title="Permalink to Visual yaw estimation">Visual yaw estimation</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-02-15T00:00:00+09:00">
-                Published: 木 15 2月 2018
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/geometricalgebra.html">GeometricAlgebra</a> <a href="../tag/openmv.html">openmv</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>        
-</footer><!-- /.post-info -->                        <meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/visual-yaw.html" />
-<meta property="og:title" content="Visual yaw estimation" />
-<meta property="og:description" content="A primitive use of Geometric Algebra." /><p>以前紹介した <a class="reference external" href="https://kazkojima.github.io/versor-app.html">室内測位システム</a> ではフレームの姿勢をMAVLinkで貰ってるんですが室内なのとコアレスモーターがついてるせいでフレームに載せているコンパスがくるってしまい、それで得られるyawの値も酷いものなので代わりに天井のカムからみたマーカーで推定できるヘッドの方向を使っています.</p>
-<p>一般には斜め上からみることになるの …</p>
-                        <a class="readmore" href="../visual-yaw.html">read more</a>
                     </div><!-- /.entry-content -->
                 </article></li>
                     </ol><!-- /#posts-list -->
