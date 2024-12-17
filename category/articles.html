@@ -19,7 +19,44 @@
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="../noise-cancelling-classic.html">古典的ノイズキャンセラー</a></h1>
+                        <h1 class="entry-title"><a href="../look-for-signal-2.html">信号を探して(2)</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2024-12-17T00:00:00+09:00">
+                Published: 火 17 12月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info --><h2>疑似 whistler 波の検出</h2>
+<h1><a href="articles/look-for-signal.html">信号を探して</a>の続き</h1>
+<p>実際に<a href="https://www.youtube.com/watch?v=yl1jMs3iPmU">人工衛星で受信された whistler 波</a>の一部を磁気ピックアップで得られた信号に重ねて同期検波での検出を実験してみます</p>
+<p>テスト関数としては exp(2πj * (α/t)) の t = [0.7, 1.2] の部分を使います</p>
+<p>αは whistler 波のパラメータで whistler 波の通る経路の長さやプラズマや地磁気の状態できまり、周波数の降下の程度を表しています</p>
+<p>実験では α を 2300-2500 の間としました</p>
+<p>whistler 波のデータを 0.01倍し磁気ピックアップで得られたノイズ信号と加え3秒のデータを作りました</p>
+<p><img src="../images/noise-and-whistler-injun3.png" alt="test signal" width="640"></p>
+<p>ノイズに埋もれていますが2秒あたりに典型的な whistler 波があります</p>
+<p>このデータを信号とし時間を10msずらしながら0.5秒間同期検波してその値の絶対値の2乗をαを 2300-2500の間で1づつ変化させてヒートマップにしました</p>
+<p><img src="../images/phd-heatmap-0.png" alt="heatmap" width="640"></p>
+<p>t=1.9秒 α=2380 に値が 125 ほどの明るいピーク点があることがわかります</p>
+<p>ピックアップで得られるデータの1.5、2.7、2.9秒付近のスペクトルの広いインパルス状ノイズがあるのですがそれがヒートマップの 1.2、2.2、2.5秒辺りの計算結果でのノイズになっていることも見て取れます</p>
+<p>この散発的なノイズの由来はわかっていないのですが、これらを計算から取り除くことができればより正確な結果が得られるかもしれません</p>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../noise-cancelling-classic.html" rel="bookmark"
+                               title="Permalink to 古典的ノイズキャンセラー">古典的ノイズキャンセラー</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2024-12-15T00:00:00+09:00">
                 Published: 日 15 12月 2024
@@ -30,25 +67,13 @@
                 </address>
         <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info --><h2>ノイズアンテナによるノイズ低減</h2>
+</footer><!-- /.post-info -->                        <h2>ノイズアンテナによるノイズ低減</h2>
 <h1>ELF/VLF ノイズ源</h1>
 <p>私が室内で観察できる200Hz-12kHz帯のノイズのうち最大のものは2kHz以下の50Hz商用電源の高調波で特に奇数時の高調波が強烈です</p>
-<p>そのノイズ源を探してみるとどうやらすぐ近くにある柱上変圧器つきの電柱のようです
-<img src="../images/pmtrans.jpg" alt="trans" width="480"></p>
-<p>ノイズの発生自体は別の場所でそれが伝わってここから発生しているように見えているのかもしれません</p>
-<p>この電柱に一番近いところにノイズを拾うためのループアンテナを置き、得られたノイズ信号をアッテネータで磁気ピックアップでのノイズレベルにまで落とし逆位相で合成することでノイズのキャンセルを試みました</p>
-<p>アッテネータで1/N にした場合、遠方からの信号は 1-1/N に減少しますがノイズの方は大きく低減できるはずという原理です</p>
-<p><img src="../images/nc-classic.jpg" alt="pickup" width="640"></p>
-<p>もちろんノイズ部分は完全に N 倍というわけではないのでそんなにうまくはいかないのですが単純な仕掛けである程度の効果を狙います</p>
-<p>ノイズキャンセルなしだとこんな感じだったのですが
-<img src="../images/elf-spectrogram-nonc.png" alt="spectrum" width="640"></p>
-<p>ノイズキャンセル後はスペクトログラムがかなり静かになります
-<img src="../images/elf-spectrogram-nc.png" alt="spectrum" width="640"></p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+<p>そのノイズ源を探してみるとどうやらす …</p>
+                        <a class="readmore" href="../noise-cancelling-classic.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
                 <li><article class="hentry">
                     <header>
@@ -275,43 +300,12 @@ add CuArrays
                         <a class="readmore" href="../aircraft-control-simulation-memo1.html">read more</a>
                     </div><!-- /.entry-content -->
                 </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../ga-intro-j.html" rel="bookmark"
-                               title="Permalink to "Geometric Algebra for Computer Science" 紹介">"Geometric Algebra for Computer Science" 紹介</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-05-05T00:00:00+09:00">
-                Published: 土 05 5月 2018
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/versor.html">versor</a> <a href="../tag/book.html">book</a> </p>        
-</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/ga-intro-j.html" />
-<meta property="og:title" content="Geometric Algebra for computer science の紹介" />
-<meta property="og:description" content="本の紹介のために" />
-<meta property="og:image" content="https://kazkojima.github.io/images/GA-Dorst.jpg" /></p>
-<h2>Geometric Algebra 幾何学的代数</h2>
-<p>これは幾何学的代数をテーマにした本</p>
-<p>"Geometric Algebra for Computer Science", Leo Dorst, Daniel Fontijne, Stephen Mann (ISBN 9780123749420)</p>
-<p>の紹介のために書きました …</p>
-                        <a class="readmore" href="../ga-intro-j.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
                     </ol><!-- /#posts-list -->
   <nav>
     <ul>
-      <li>Page 1 / 2</li>
+      <li>Page 1 / 3</li>
         <li><a href="../category/articles2.html">&rang;</a></li>
-        <li><a href="../category/articles2.html">&Rang;</a></li>
+        <li><a href="../category/articles3.html">&Rang;</a></li>
     </ul>
   </nav>
                     </section><!-- /#content -->
