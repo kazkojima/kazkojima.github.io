@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>信号を探して(3)</title>
+                        <link rel="stylesheet" href="./theme/css/main.css" />
+    <meta name="description" content="ELF 受信信号のノイズリダクション 信号を探して(2)の続き 磁気ピックアップで得られた ELF 信号には商用電源の高調 …" />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="./">My Bug Has A Program!</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="./category/articles.html">articles</a></li>
+                                                <li><a href="./category/english.html">English</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="./look-for-signal-3.html" rel="bookmark"
+             title="Permalink to 信号を探して(3)">信号を探して(3)</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-03-18T00:00:00+09:00">
+                Published: 月 18 3月 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/whistler.html">whistler</a> <a href="./tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->        <h2>ELF 受信信号のノイズリダクション</h2>
+<h1><a href="articles/look-for-signal-2.html">信号を探して(2)</a>の続き</h1>
+<p>磁気ピックアップで得られた ELF 信号には商用電源の高調波や散発的なインパルス状のノイズが含まれていて目的信号の検出の障害になっていました</p>
+<p>これらをクラシカルな線形予測器を使って減らすことを試してみました</p>
+<p>線形予測器は FIR フィルタの係数を出力が与えられた目的信号に近づくようにアップデートするものとみなすことができます</p>
+<p>機械学習のような万能的な予測性はありませんが、計算が軽くフィルタ段数の半分の個数の正弦波を予測できることが知られています</p>
+<p>図のように突発ノイズが正弦波に載っている場合</p>
+<p><img src="./images/signal-with-impulse-noise.png" alt="a simple signal with impulse noise" width="640"></p>
+<p>ノイズのある区間では時刻 tｰ1 までの出力から時刻 t の値を線形予測器で予測してそれを出力とし、ノイズのない区間では入力をそのまま出力することで突発ノイズを除くことができます</p>
+<p><img src="./images/impulse-noise-reduction-simple.png" alt="a simple impulse noise reduction" width="640"></p>
+<p>実際の ELF 受信データに適用した例</p>
+<p><img src="./images/impulse-noise-detection-real.png" alt="impulse noise reduction for real data" width="640"></p>
+<p><img src="./images/impulse-noise-reduction-real.png" alt="impulse noise reduction for real data" width="640"></p>
+<p>でも突発ノイズを抑制しそれらしく補間できているようです</p>
+<p>突発ノイズのある区間の検出はごく簡単にはずれ値を見つけてその前後をノイズ区間としています</p>
+<h1>線スペクトルを持つ信号の抑制</h1>
+<p>十分な段数の線形予測器なら信号中の周波数が一定の成分を予測できるはずです</p>
+<p>このことを利用し whistler波のような周波数が時変な目的信号を予測からはずれた誤差として取り出すことで 50Hzの高調波のように線スペクトルに近い信号を抑制することが考えられます</p>
+<p>実際に磁気ピックアップにあらわれる高調波は複雑でこの方法では機械学習によるノイズリダクションのような大きな抑制効果を得ることはできないのですが計算が非常に軽いのが利点です</p>
+<p>150Hz, 250Hz, 350Hz の正弦波を 0.1:0.1:0.05 の割合で足し合わせた信号でこの抑制を実験すると</p>
+<p><img src="./images/ale-simple.png" alt="a simple adaptive line spectrum reduction" width="640"></p>
+<p>のような結果になり時間とともに線形予測が適応していくと３つの正弦波成分はほぼ抑止されていることがわかります</p>
+<p><a href="articles/look-for-signal-2.html">信号を探して(2)</a>で作った実際の磁気ピックアップからの信号に whistler波を合成した信号で突発ノイズと線スペクトルを持つ信号の抑制を行った結果は</p>
+<p><img src="./images/ale-real.png" alt="adaptive line spectrum reduction for real data" width="640"></p>
+<p>のようになりました</p>
+<p>この結果で同様に同期位相検波による whistler波の検出を試みると</p>
+<p><img src="./images/phd-heatmap-NR.png" alt="heatmap with NR" width="640"></p>
+<p>となってノイズによる妨害が改善されていることがわかります</p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="http://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="http://python.org/">Python.org</a></li>
+                                                        <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                                                        <li><a href="http://www.fsij.org/">FSIJ</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="https://twitter.com/1gkojima">twitter</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>
