@@ -19,7 +19,58 @@
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="../look-for-signal-2.html">信号を探して(2)</a></h1>
+                        <h1 class="entry-title"><a href="../look-for-signal-3.html">信号を探して(3)</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2025-03-18T00:00:00+09:00">
+                Published: 火 18 3月 2025
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info --><h2>ELF 受信信号のノイズリダクション</h2>
+<h1><a href="articles/look-for-signal-2.html">信号を探して(2)</a>の続き</h1>
+<p>磁気ピックアップで得られた ELF 信号には商用電源の高調波や散発的なインパルス状のノイズが含まれていて目的信号の検出の障害になっていました</p>
+<p>これらをクラシカルな線形予測器を使って減らすことを試してみました</p>
+<p>線形予測器は FIR フィルタの係数を出力が与えられた目的信号に近づくようにアップデートするものとみなすことができます</p>
+<p>機械学習のような万能的な予測性はありませんが、計算が軽くフィルタ段数の半分の個数の正弦波を予測できることが知られています</p>
+<p>図のように突発ノイズが正弦波に載っている場合</p>
+<p><img src="../images/signal-with-impulse-noise.png" alt="a simple signal with impulse noise" width="640"></p>
+<p>ノイズのある区間では時刻 tｰ1 までの出力から時刻 t の値を線形予測器で予測してそれを出力とし、ノイズのない区間では入力をそのまま出力することで突発ノイズを除くことができます</p>
+<p><img src="../images/impulse-noise-reduction-simple.png" alt="a simple impulse noise reduction" width="640"></p>
+<p>実際の ELF 受信データに適用した例</p>
+<p><img src="../images/impulse-noise-detection-real.png" alt="impulse noise reduction for real data" width="640"></p>
+<p><img src="../images/impulse-noise-reduction-real.png" alt="impulse noise reduction for real data" width="640"></p>
+<p>でも突発ノイズを抑制しそれらしく補間できているようです</p>
+<p>突発ノイズのある区間の検出はごく簡単にはずれ値を見つけてその前後をノイズ区間としています</p>
+<h1>線スペクトルを持つ信号の抑制</h1>
+<p>十分な段数の線形予測器なら信号中の周波数が一定の成分を予測できるはずです</p>
+<p>このことを利用し whistler波のような周波数が時変な目的信号を予測からはずれた誤差として取り出すことで 50Hzの高調波のように線スペクトルに近い信号を抑制することが考えられます</p>
+<p>実際に磁気ピックアップにあらわれる高調波は複雑でこの方法では機械学習によるノイズリダクションのような大きな抑制効果を得ることはできないのですが計算が非常に軽いのが利点です</p>
+<p>150Hz, 250Hz, 350Hz の正弦波を 0.1:0.1:0.05 の割合で足し合わせた信号でこの抑制を実験すると</p>
+<p><img src="../images/ale-simple.png" alt="a simple adaptive line spectrum reduction" width="640"></p>
+<p>のような結果になり時間とともに線形予測が適応していくと３つの正弦波成分はほぼ抑止されていることがわかります</p>
+<p><a href="articles/look-for-signal-2.html">信号を探して(2)</a>で作った実際の磁気ピックアップからの信号に whistler波を合成した信号で突発ノイズと線スペクトルを持つ信号の抑制を行った結果は</p>
+<p><img src="../images/ale-real.png" alt="adaptive line spectrum reduction for real data" width="640"></p>
+<p>のようになりました</p>
+<p>この結果で同様に同期位相検波による whistler波の検出を試みると</p>
+<p><img src="../images/phd-heatmap-NR.png" alt="heatmap with NR" width="640"></p>
+<p>となってノイズによる妨害が改善されていることがわかります</p>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../look-for-signal-2.html" rel="bookmark"
+                               title="Permalink to 信号を探して(2)">信号を探して(2)</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2024-12-17T00:00:00+09:00">
                 Published: 火 17 12月 2024
@@ -30,27 +81,12 @@
                 </address>
         <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info --><h2>疑似 whistler 波の検出</h2>
+</footer><!-- /.post-info -->                        <h2>疑似 whistler 波の検出</h2>
 <h1><a href="articles/look-for-signal.html">信号を探して</a>の続き</h1>
-<p>実際に<a href="https://www.youtube.com/watch?v=yl1jMs3iPmU">人工衛星で受信された whistler 波</a>の一部を磁気ピックアップで得られた信号に重ねて同期検波での検出を実験してみます</p>
-<p>テスト関数としては exp(2πj * (α/t)) の t = [0.7, 1.2] の部分を使います</p>
-<p>αは whistler 波のパラメータで whistler 波の通る経路の長さやプラズマや地磁気の状態できまり、周波数の降下の程度を表しています</p>
-<p>実験では α を 2300-2500 の間としました</p>
-<p>whistler 波のデータを 0.01倍し磁気ピックアップで得られたノイズ信号と加え3秒のデータを作りました</p>
-<p><img src="../images/noise-and-whistler-injun3.png" alt="test signal" width="640"></p>
-<p>ノイズに埋もれていますが2秒あたりに典型的な whistler 波があります</p>
-<p>このデータを信号とし時間を10msずらしながら0.5秒間同期検波してその値の絶対値の2乗をαを 2300-2500の間で1づつ変化させてヒートマップにしました</p>
-<p><img src="../images/phd-heatmap-0.png" alt="heatmap" width="640"></p>
-<p>t=1.9秒 α=2380 に値が 125 ほどの明るいピーク点があることがわかります</p>
-<p>ピックアップで得られるデータの1.5、2.7、2.9秒付近のスペクトルの広いインパルス状ノイズがあるのですがそれがヒートマップの 1.2、2.2、2.5秒辺りの計算結果でのノイズになっていることも見て取れます</p>
-<p>この散発的なノイズの由来はわかっていないのですが、これらを計算から取り除くことができればより正確な結果が得られるかもしれません</p>
-<p>なおデータ3秒でパラメータαが200通り、0.5秒間同期検波の場合、私の PC では CPU 1スレッドの計算で同期検波時にフィルタ処理なしで2秒程度、フィルタ処理を行うと10数秒掛かっています</p>
-<p>こういうのは GPU 向きなようで無印 Jetson nano でさえパラメータで並列化してやると同期検波時のフィルタ処理を行っても計算自体は 0.1秒以下で終了しました</p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+<p>実際に<a href="https://www.youtube.com/watch?v=yl1jMs3iPmU">人工衛星で受信された whistler 波</a>の一部を磁気ピックアップで得られた信号 …</p>
+                        <a class="readmore" href="../look-for-signal-2.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
                 <li><article class="hentry">
                     <header>
@@ -156,30 +192,6 @@
 <li>S/PDIF 出力の ADC</li>
 <li>S …</li></ul>
                         <a class="readmore" href="../noise-viewing.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../look-for-signal-3.html" rel="bookmark"
-                               title="Permalink to 信号を探して(3)">信号を探して(3)</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2024-03-18T00:00:00+09:00">
-                Published: 月 18 3月 2024
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info -->                        <h2>ELF 受信信号のノイズリダクション</h2>
-<h1><a href="articles/look-for-signal-2.html">信号を探して(2)</a>の続き</h1>
-<p>磁気ピックアップで得られた ELF 信号には商用電源の高調 …</p>
-                        <a class="readmore" href="../look-for-signal-3.html">read more</a>
                     </div><!-- /.entry-content -->
                 </article></li>
                     </ol><!-- /#posts-list -->
