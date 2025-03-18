@@ -33,17 +33,17 @@
 </footer><!-- /.post-info --><h2>ELF 受信信号のノイズリダクション</h2>
 <h1><a href="articles/look-for-signal-2.html">信号を探して(2)</a>の続き</h1>
 <p>磁気ピックアップで得られた ELF 信号には商用電源の高調波や散発的なインパルス状のノイズが含まれていて目的信号の検出の障害になっていました</p>
-<p>これらをクラシカルな線形予測器を使って減らすことを試してみました</p>
+<p>これらを文献[1]に従いクラシカルな線形予測器を使って減らすことを試してみました</p>
 <p>線形予測器は FIR フィルタの係数を出力が与えられた目的信号に近づくようにアップデートするものとみなすことができます</p>
 <p>機械学習のような万能的な予測性はありませんが、計算が軽くフィルタ段数の半分の個数の正弦波を予測できることが知られています</p>
 <p>図のように突発ノイズが正弦波に載っている場合</p>
 <p><img src="./images/signal-with-impulse-noise.png" alt="a simple signal with impulse noise" width="640"></p>
 <p>ノイズのある区間では時刻 tｰ1 までの出力から時刻 t の値を線形予測器で予測してそれを出力とし、ノイズのない区間では入力をそのまま出力することで突発ノイズを除くことができます</p>
 <p><img src="./images/impulse-noise-reduction-simple.png" alt="a simple impulse noise reduction" width="640"></p>
-<p>実際の ELF 受信データに適用した例</p>
+<p>実際の ELF 受信データに適用した例でも</p>
 <p><img src="./images/impulse-noise-detection-real.png" alt="impulse noise reduction for real data" width="640"></p>
 <p><img src="./images/impulse-noise-reduction-real.png" alt="impulse noise reduction for real data" width="640"></p>
-<p>でも突発ノイズを抑制しそれらしく補間できているようです</p>
+<p>突発ノイズを抑制しそれらしく補間できているようです</p>
 <p>突発ノイズのある区間の検出はごく簡単にはずれ値を見つけてその前後をノイズ区間としています</p>
 <h1>線スペクトルを持つ信号の抑制</h1>
 <p>十分な段数の線形予測器なら信号中の周波数が一定の成分を予測できるはずです</p>
@@ -57,7 +57,10 @@
 <p>のようになりました</p>
 <p>この結果で同様に同期位相検波による whistler波の検出を試みると</p>
 <p><img src="./images/phd-heatmap-NR.png" alt="heatmap with NR" width="640"></p>
-<p>となってノイズによる妨害が改善されていることがわかります</p>                    </article>
+<p>となってノイズによる妨害が改善されていることがわかります</p>
+<h1>References</h1>
+<p>[1] 音声音響信号処理の基礎と実践 ｰフィルタ、ノイズ除去、音響エフェクトの原理ｰ、川村 新著、コロナ社</p>
+<p>[2] https://github.com/baggepinnen/AdaptiveFilters.jl.git</p>                    </article>
                 </aside><!-- /#featured -->
                     <section id="content" class="body">
                         <h1>Other articles</h1>
