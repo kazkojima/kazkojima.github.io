@@ -4,33 +4,39 @@
                         <meta charset="utf-8" />
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
-                        <title>My Bug Has A Program! - ML</title>
-                        <link rel="stylesheet" href="../theme/css/main.css" />
+                        <title>信号を探して(4)</title>
+                        <link rel="stylesheet" href="./theme/css/main.css" />
+    <meta name="description" content="ML による信号検知 信号を探して(3)の続き 磁気ピックアップで得られた ELF 信号中のノイズに埋もれた目的信号の検 …" />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="../">My Bug Has A Program!</a></h1>
+                        <h1><a href="./">My Bug Has A Program!</a></h1>
                         <nav><ul>
-                                                <li><a href="../category/articles.html">articles</a></li>
-                                                <li><a href="../category/english.html">English</a></li>
+                                                <li class="active"><a href="./category/articles.html">articles</a></li>
+                                                <li><a href="./category/english.html">English</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="./look-for-signal-4.html" rel="bookmark"
+             title="Permalink to 信号を探して(4)">信号を探して(4)</a></h1>
+      </header>
 
-                <aside id="featured" class="body">
-                    <article>
-                        <h1 class="entry-title"><a href="../look-for-signal-4.html">信号を探して(4)</a></h1>
+      <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2026-01-06T00:00:00+09:00">
                 Published: 火 06 1月 2026
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
                 </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/ml.html">ML</a> <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info --><h2>ML による信号検知</h2>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/ml.html">ML</a> <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/whistler.html">whistler</a> <a href="./tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->        <h2>ML による信号検知</h2>
 <h1><a href="https://kazkojima.github.io/look-for-signal-3.html">信号を探して(3)</a>の続き</h1>
 <p>磁気ピックアップで得られた ELF 信号中のノイズに埋もれた目的信号の検出に ML を使えないかというのをいろいろ試してきたのですがなかなかうまくいっていません</p>
 <p>現在までの試みやその結果についてまとめてみました</p>
@@ -46,86 +52,19 @@
 <p>別の方向として線スペクトルノイズのリダクションを線形予測器で行った後での目標信号の検知に ML が使えないかというのを文献[1]をヒントに試してみました</p>
 <p>文献[1]では音響信号のデノイズを行うために音響信号を STFT で周波数領域に変換して U-Net autoencoder でノイズのない信号を予測し、最後に inverse STFT で時間領域の音響信号に戻すことでノイズリダクションを行っています</p>
 <p>そこで  whistler wave の形をしたいろいろな synthetic signal を作り</p>
-<p><img src="../images/synthetic-whistler-signal.png" alt="a simple synthetic whistler signal with small noise" width="640"></p>
+<p><img src="./images/synthetic-whistler-signal.png" alt="a simple synthetic whistler signal with small noise" width="640"></p>
 <p>それと線スペクトルノイズのリダクションまでを行った複数の実際の ELF 信号と足し合わせてノイズのある信号とし、そこから whistler wave 信号を復元するように U-Net autoencoder を学習させました</p>
 <p>実際に観測された whistler 波とELFノイズを合成し線形予測器でノイズリダクションした後、学習済みモデルで信号を予測してみました</p>
-<p><img src="../images/unet-predict-signal.png" alt="an example of prediction with U-Net autoencoder" width="640"></p>
+<p><img src="./images/unet-predict-signal.png" alt="an example of prediction with U-Net autoencoder" width="640"></p>
 <p>この結果を見てもわかるのですがうまく予測されている信号、予測できなかった信号の他に偽の信号が生成されることがあります</p>
 <p>現在の学習データだと学習時に epoch を増やしすぎると偽の信号が生成されやすくなるようです</p>
 <p>なおモデルは convolution 層後の活性化関数として ReLU ではなく leaky ReLU を使っていますが、その方が学習時の挙動が落ち着いているようです. GeLU でも同様の傾向を示していました</p>
 <h1>References</h1>
-<p>[1] https://github.com/rdadlaney/Audio-Denoiser-CNN.git</p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+<p>[1] https://github.com/rdadlaney/Audio-Denoiser-CNN.git</p>
+      </div><!-- /.entry-content -->
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../noise-learning.html" rel="bookmark"
-                               title="Permalink to ノイズの学習">ノイズの学習</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2024-12-03T00:00:00+09:00">
-                Published: 火 03 12月 2024
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/ml.html">ML</a> <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info -->                        <h2>ELFノイズを機械学習してみる</h2>
-<h1></h1>
-<p>磁気ピックアップでELF・VLF帯域のノイズを記録してみると50Hz商用電源の高調波、特に奇数時の高調波が強烈でした</p>
-<p>時間領域でみても10msや20msを周期にしたインパルス状の信号が見てとれます
-<img src="../images/elf-time-domain.png" alt="Noise - time domain" width="640"></p>
-<p>このノイズをLSTMを使った簡単な学習で予測してみました</p>
-<p>モデルは</p>
-<ul>
-<li>hidden layer …</li></ul>
-                        <a class="readmore" href="../noise-learning.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../deepfilternet-memo.html" rel="bookmark"
-                               title="Permalink to DeepFilterNet メモ">DeepFilterNet メモ</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2024-12-02T00:00:00+09:00">
-                Published: 月 02 12月 2024
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/ml.html">ML</a> <a href="../tag/noise.html">noise</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info -->                        <h2><a href="https://github.com/Rikorose/DeepFilterNet.git">DeepFilterNet</a> メモ</h2>
-<h1>やったこと</h1>
-<ul>
-<li>github から DeepFilterNet を clone</li>
-</ul>
-<div class="highlight"><pre><span></span><code>git clone https://github.com/Rikorose/DeepFilterNet.git
-cd DeepFilterNet/DeepFilterNet
-</code></pre></div>
-
-<ul>
-<li>README.md に従って必要な python library を install</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">torch</span><span class="w"> </span><span class="n">torchaudio</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">whl</span><span class="o">/</span><span class="n">cpu</span><span class="o">/</span><span class="n">torch_stabl …</span></code></pre></div>
-                        <a class="readmore" href="../deepfilternet-memo.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-                    </ol><!-- /#posts-list -->
-                    </section><!-- /#content -->
+    </article>
+  </section>
                 <section id="extras" class="body">
                                 <div class="blogroll">
                                         <h2>links</h2>

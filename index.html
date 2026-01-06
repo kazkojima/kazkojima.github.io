@@ -19,7 +19,55 @@
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="./look-for-signal-3.html">信号を探して(3)</a></h1>
+                        <h1 class="entry-title"><a href="./look-for-signal-4.html">信号を探して(4)</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2026-01-06T00:00:00+09:00">
+                Published: 火 06 1月 2026
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="./category/articles.html">articles</a>.</p>
+<p>tags: <a href="./tag/ml.html">ML</a> <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/whistler.html">whistler</a> <a href="./tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info --><h2>ML による信号検知</h2>
+<h1><a href="https://kazkojima.github.io/look-for-signal-3.html">信号を探して(3)</a>の続き</h1>
+<p>磁気ピックアップで得られた ELF 信号中のノイズに埋もれた目的信号の検出に ML を使えないかというのをいろいろ試してきたのですがなかなかうまくいっていません</p>
+<p>現在までの試みやその結果についてまとめてみました</p>
+<p>すでに<a href="https://kazkojima.github.io/noise-learning.html">ノイズの学習</a>で実験したように LSTM でELF 信号中のノイズの予測器をつくることは簡単なのですが、困ったことに目的とする whistler wave 信号は短い時間では線スペクトルを持つノイズ成分に近いため、単純な LSTM や TCN ではノイズと同様に予測されてしまいノイズとの分離ができません</p>
+<p>ノイズリダクションに使われる例が多い LSTM autoencoder モデルもこの場合のように</p>
+<ul>
+<li>ノイズと目的信号のレベルが近い</li>
+<li>目的信号が短い時間ではノイズと区別が難しい</li>
+</ul>
+<p>という条件では良い結果が得られませんでした</p>
+<p>大きなタイムステップを持つ LSTM や TCN だと良くなりそうなのですがこれは普通の計算資源では実現が困難です</p>
+<p>今のところ線スペクトルを持つ成分の分離/削減についてはクラシカルな線形予測器を上回るような結果が出せていません</p>
+<p>別の方向として線スペクトルノイズのリダクションを線形予測器で行った後での目標信号の検知に ML が使えないかというのを文献[1]をヒントに試してみました</p>
+<p>文献[1]では音響信号のデノイズを行うために音響信号を STFT で周波数領域に変換して U-Net autoencoder でノイズのない信号を予測し、最後に inverse STFT で時間領域の音響信号に戻すことでノイズリダクションを行っています</p>
+<p>そこで  whistler wave の形をしたいろいろな synthetic signal を作り</p>
+<p><img src="./images/synthetic-whistler-signal.png" alt="a simple synthetic whistler signal with small noise" width="640"></p>
+<p>それと線スペクトルノイズのリダクションまでを行った複数の実際の ELF 信号と足し合わせてノイズのある信号とし、そこから whistler wave 信号を復元するように U-Net autoencoder を学習させました</p>
+<p>実際に観測された whistler 波とELFノイズを合成し線形予測器でノイズリダクションした後、学習済みモデルで信号を予測してみました</p>
+<p><img src="./images/unet-predict-signal.png" alt="an example of prediction with U-Net autoencoder" width="640"></p>
+<p>この結果を見てもわかるのですがうまく予測されている信号、予測できなかった信号の他に偽の信号が生成されることがあります</p>
+<p>現在の学習データだと学習時に epoch を増やしすぎると偽の信号が生成されやすくなるようです</p>
+<p>なおモデルは convolution 層後の活性化関数として ReLU ではなく leaky ReLU を使っていますが、その方が学習時の挙動が落ち着いているようです. GeLU でも同様の傾向を示していました</p>
+<h1>References</h1>
+<p>[1] https://github.com/rdadlaney/Audio-Denoiser-CNN.git</p>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="./look-for-signal-3.html" rel="bookmark"
+                               title="Permalink to 信号を探して(3)">信号を探して(3)</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2025-03-18T00:00:00+09:00">
                 Published: 火 18 3月 2025
@@ -30,42 +78,12 @@
                 </address>
         <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/whistler.html">whistler</a> <a href="./tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info --><h2>ELF 受信信号のノイズリダクション</h2>
+</footer><!-- /.post-info -->                        <h2>ELF 受信信号のノイズリダクション</h2>
 <h1><a href="https://kazkojima.github.io/look-for-signal-2.html">信号を探して(2)</a>の続き</h1>
-<p>磁気ピックアップで得られた ELF 信号には商用電源の高調波や散発的なインパルス状のノイズが含まれていて目的信号の検出の障害になっていました</p>
-<p>これらを文献[1]に従いクラシカルな線形予測器を使って減らすことを試してみました</p>
-<p>線形予測器は FIR フィルタの係数を出力が与えられた目的信号に近づくようにアップデートするものとみなすことができます</p>
-<p>機械学習のような万能的な予測性はありませんが、計算が軽くフィルタ段数の半分の個数の正弦波を予測できることが知られています</p>
-<p>図のように突発ノイズが正弦波に載っている場合</p>
-<p><img src="./images/signal-with-impulse-noise.png" alt="a simple signal with impulse noise" width="640"></p>
-<p>ノイズのある区間では時刻 tｰ1 までの出力から時刻 t の値を線形予測器で予測してそれを出力とし、ノイズのない区間では入力をそのまま出力することで突発ノイズを除くことができます</p>
-<p><img src="./images/impulse-noise-reduction-simple.png" alt="a simple impulse noise reduction" width="640"></p>
-<p>実際の ELF 受信データに適用した例でも</p>
-<p><img src="./images/impulse-noise-detection-real.png" alt="impulse noise reduction for real data" width="640"></p>
-<p><img src="./images/impulse-noise-reduction-real.png" alt="impulse noise reduction for real data" width="640"></p>
-<p>突発ノイズを抑制しそれらしく補間できているようです</p>
-<p>突発ノイズのある区間の検出はごく簡単にはずれ値を見つけてその前後をノイズ区間としています</p>
-<h1>線スペクトルを持つ信号の抑制</h1>
-<p>十分な段数の線形予測器なら信号中の周波数が一定の成分を予測できるはずです</p>
-<p>このことを利用し whistler波のような周波数が時変な目的信号を予測からはずれた誤差として取り出すことで 50Hzの高調波のように線スペクトルに近い信号を抑制することが考えられます</p>
-<p>実際に磁気ピックアップにあらわれる高調波は複雑でこの方法では機械学習によるノイズリダクションのような大きな抑制効果を得ることはできないのですが計算が非常に軽いのが利点です</p>
-<p>150Hz, 250Hz, 350Hz の正弦波を 0.1:0.1:0.05 の割合で足し合わせた信号でこの抑制を実験すると</p>
-<p><img src="./images/ale-simple.png" alt="a simple adaptive line spectrum reduction" width="640"></p>
-<p>のような結果になり時間とともに線形予測が適応していくと３つの正弦波成分はほぼ抑止されていることがわかります</p>
-<p><a href="https://kazkojima.github.io/look-for-signal-2.html">信号を探して(2)</a>で作った実際の磁気ピックアップからの信号に whistler波を合成した信号で突発ノイズと線スペクトルを持つ信号の抑制を行った結果は</p>
-<p><img src="./images/ale-real.png" alt="adaptive line spectrum reduction for real data" width="640"></p>
-<p>のようになりました</p>
-<p>この結果で同様に同期位相検波による whistler波の検出を試みると</p>
-<p><img src="./images/phd-heatmap-NR.png" alt="heatmap with NR" width="640"></p>
-<p>となってノイズによる妨害が改善されていることがわかります</p>
-<h1>References</h1>
-<p>[1] 音声音響信号処理の基礎と実践 ｰフィルタ、ノイズ除去、音響エフェクトの原理ｰ、川村 新著、コロナ社</p>
-<p>[2] https://github.com/baggepinnen/AdaptiveFilters.jl.git</p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+<p>磁気ピックアップで得られた ELF 信号には商用電源の高調 …</p>
+                        <a class="readmore" href="./look-for-signal-3.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
                 <li><article class="hentry">
                     <header>
@@ -289,30 +307,6 @@ add CuArrays
 
 <h1>Sampleを走らせる …</h1>
                         <a class="readmore" href="./cuda-jl.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="./esp-idf-components.html" rel="bookmark"
-                               title="Permalink to M5Stack-IDF = ESP-IDF + arduino の仕掛け">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-10-18T00:00:00+09:00">
-                Published: 木 18 10月 2018
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="./author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="./category/articles.html">articles</a>.</p>
-<p>tags: <a href="./tag/esp32.html">esp32</a> </p>        
-</footer><!-- /.post-info -->                        <h2>M5Stack-IDFの仕掛け</h2>
-<p><a href="https://github.com/m5stack/M5Stack-IDF">M5Stack-IDF</a>はESP-IDFでArduinoとM5Stackのライブラリを使う環境を提供しています。実は<a href="https://github.com/espressif/esp-idf">ESP-IDF</a>は外部ライブラリを追加して使うメカニズムを持っていてM5Stack-IDFはそれを利用します。
-使える外部ライブラリは内部ライブ …</p>
-                        <a class="readmore" href="./esp-idf-components.html">read more</a>
                     </div><!-- /.entry-content -->
                 </article></li>
                     </ol><!-- /#posts-list -->
