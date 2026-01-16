@@ -37,7 +37,9 @@
         <p>In <a href="./category/articles.html">articles</a>.</p>
 <p>tags: <a href="./tag/ml.html">ML</a> <a href="./tag/elf.html">ELF</a> <a href="./tag/noise.html">noise</a> <a href="./tag/whistler.html">whistler</a> <a href="./tag/memo.html">memo</a> </p>        
 </footer><!-- /.post-info -->        <h2>ML による信号検知</h2>
-<h1><a href="https://kazkojima.github.io/look-for-signal-3.html">信号を探して(3)</a>の続き</h1>
+<ul>
+<li><a href="https://kazkojima.github.io/look-for-signal-3.html">信号を探して(3)</a>の続き</li>
+</ul>
 <p>磁気ピックアップで得られた ELF 信号中のノイズに埋もれた目的信号の検出に ML を使えないかというのをいろいろ試してきたのですがなかなかうまくいっていません</p>
 <p>現在までの試みやその結果についてまとめてみました</p>
 <p>すでに<a href="https://kazkojima.github.io/noise-learning.html">ノイズの学習</a>で実験したように LSTM でELF 信号中のノイズの予測器をつくることは簡単なのですが、困ったことに目的とする whistler wave 信号は短い時間では線スペクトルを持つノイズ成分に近いため、単純な LSTM や TCN ではノイズと同様に予測されてしまいノイズとの分離ができません</p>
