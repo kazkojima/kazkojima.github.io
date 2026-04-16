@@ -83,6 +83,27 @@ n_steps = 4*sr
 <p><img src="../images/simple-speaker2-signal.png" alt="a very simple example of separated sound 2" width="640">
 <em>話者2</em></p>
 <p>という分離結果になりました</p>
+<h2>都市ノイズからの信号の分離</h2>
+<p>複雑な場合として Conv-TasNet で</p>
+<ul>
+<li>signal 1: 実際に観測した都市ノイズ信号 4秒</li>
+<li>signal 2: 3khz 程度から周波数が下降していくwhistler 波を模擬した信号 4秒</li>
+</ul>
+<p>を学習してみました</p>
+<p>この場合学習データをかなり増やさないと良い結果が得られない一方で学習の収束が悪くなる傾向がありました</p>
+<p>試行錯誤の結果、単純なケースで得られたパラメータを必要なら学習率をリセットする形で複雑な学習データで再学習していくことで結果を改善できました</p>
+<p>単純な場合と違い signal 2 の whistler 波のレベルは 1/100 程度と低くし、また時間方向へのある程度のオフセットを追加して時間方向でのバリエーションを与えています</p>
+<p>この設定では学習データ数に対して検証データ数が少ないと結果が悪いところで終了していまいがちなので比を 3:1 にとっています</p>
+<p>学習データ数 7500 検証データ数 2500 として学習後、これらのデータにはないノイズと実際の whistler 波を人工的に合成したデータで試した信号を見ると次のようになります</p>
+<p><img src="../images/complex-mixed-signal.png" alt="an example of mixed sound" width="640">
+<em>合成信号</em></p>
+<p><img src="../images/complex-speaker1-signal.png" alt="an example of sparated sound 1" width="640">
+<em>話者1</em></p>
+<p><img src="../images/complex-speaker2-signal.png" alt="an example of separated sound 2" width="640">
+<em>話者2</em></p>
+<p>同じ合成信号を<a href="https://kazkojima.github.io/look-for-signal-3.html">信号を探して(3)</a>で紹介した古典的な適応フィルタ NLMS でノイズリダクションした結果と比較するとその性質がより明らかかもしれません</p>
+<p><img src="../images/complex-mixed-NLMS.png" alt="reduced with NLMS" width="640">
+<em>NLMS</em></p>
 <h1>References</h1>
 <p>[1] <a href="https://doi.org/10.48550/arXiv.1809.07454">Yi Luo, Nima Mesgarani, "Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separation"</a></p>
 <p>[2] <a href="https://github.com/JusperLee/Conv-TasNet.git">https://github.com/JusperLee/Conv-TasNet.git</a></p>                    </article>
