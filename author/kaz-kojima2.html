@@ -21,6 +21,43 @@
                         <ol id="posts-list" class="hfeed" start="9">
                 <li><article class="hentry">
                     <header>
+                        <h1><a href="../cuda-jl.html" rel="bookmark"
+                               title="Permalink to Jetson nanoでCUDAnative.jl">Jetson nanoでCUDAnative.jl</a></h1>
+                    </header>
+
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2020-05-16T00:00:00+09:00">
+                Published: 土 16 5月 2020
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->                        <h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
+<h1>Juliaのインストール</h1>
+<ul>
+<li>https://julialang.org/downloads/からGeneric Linux Binaries for ARMの64-bit(AArch64)用のJulia(例えばjulia-1.4.1-linux-aarch64.tar.gz)をdownload</li>
+<li>それを例えば/optに展開し/opt/julia-1.4.1/binをPATHに追加</li>
+</ul>
+<h1>Juliaで必要なパッケージを追加</h1>
+<ul>
+<li>Juliaを起動してpkgモードで</li>
+</ul>
+<div class="highlight"><pre><span></span><code>add CUDAnative
+add CUDAdrv
+add CuArrays
+</code></pre></div>
+
+<h1>Sampleを走らせる …</h1>
+                        <a class="readmore" href="../cuda-jl.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+
+                <li><article class="hentry">
+                    <header>
                         <h1><a href="../esp-idf-components.html" rel="bookmark"
                                title="Permalink to M5Stack-IDF = ESP-IDF + arduino の仕掛け">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
                     </header>
@@ -272,36 +309,6 @@ Looks not so good precision but not so bad as a Poor Man's system. A LOITER and 
 <meta property="og:title" content="貧者的局所測位系" />
 <meta property="og:description" content="Geometric Algebraのc++ライブラリを使ってみました." /><p>小さい機体でもSLAMこそが未来だと思うもののさすがに私では手がでないので貧者的局所測位系と名付けて天井に貼り付けたOpenMV cam+魚眼レンズとフレームからの情報を合わせてフレームにのせたマーカーの水平位置を推計す …</p>
                         <a class="readmore" href="../versor-app.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../m5propo-en.html" rel="bookmark"
-                               title="Permalink to M5 propo - A tiny transmitter">M5 propo - A tiny transmitter</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-12-23T00:00:00+09:00">
-                Published: 土 23 12月 2017
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/english.html">English</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> <a href="../tag/m5stack.html">M5Stack</a> <a href="../tag/ardupilot.html">ardupilot</a> </p>        
-</footer><!-- /.post-info -->                        <p><meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@1gkojima" />
-<meta property="og:url" content="https://kazkojima.github.io/m5propo-en.html" />
-<meta property="og:title" content="M5 propo - A tiny transmitter" />
-<meta property="og:description" content="M5 propo is a tiny transmitter which sends RC input with Wi-Fi." />
-<meta property="og:image" content="https://kazkojima.github.io/images/m5propo.jpg" /></p>
-<p><img src="../images/m5propo.jpg" alt="m5propo" width="640"></p>
-<p>M5 propo is a tiny RC transmitter with <a href="http://www.m5stack.com/">M5Stack</a> which has MPU-9250 9-axis sensor. It sends control PWM values with the format which Parrot Bebop uses.</p>
-<p>There are 4 bars on the LCD. The cyan bar is the roll gage and the green one is the pitch gage. The bottom …</p>
-                        <a class="readmore" href="../m5propo-en.html">read more</a>
                     </div><!-- /.entry-content -->
                 </article></li>
                     </ol><!-- /#posts-list -->

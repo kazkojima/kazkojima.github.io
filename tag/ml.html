@@ -19,7 +19,86 @@
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="../look-for-signal-4.html">信号を探して(4)</a></h1>
+                        <h1 class="entry-title"><a href="../conv-tas-net.html">信号を探して(5)</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2026-04-15T00:00:00+09:00">
+                Published: 水 15 4月 2026
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/ml.html">ML</a> <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info --><h2>Conv-TasNet</h2>
+<ul>
+<li><a href="https://kazkojima.github.io/look-for-signal-4.html">信号を探して(4)</a>の続き</li>
+</ul>
+<p>Conv-TasNet は fully-convolutional time-domain audio separation network の略称で複数話者の混合した音声からそれぞれの話者の音声を分離する目的で作られたモデルです[1]</p>
+<p>前節で STFT で frequency-domain へ変換し U-Net を適用する方法で目的信号を分離する実験を紹介しました</p>
+<p>frequency-domain への変換を使った手法には入力信号の位相情報が損なわれるという困難があります</p>
+<p>Conv-TasNet は time-domain での直接処理を行う小さなモデルであるにも関わらず音声のような長いタイムスパンに渡って依存性を持つ信号を位相情報を無視することなく扱うことができます</p>
+<p>Conv-TasNet は</p>
+<ul>
+<li>1d convolution による encoder</li>
+<li>dilation が指数的に増えていく複数レイヤをさらに何段かスタックした一種の TCN で話者毎のマスクを出力する separation module</li>
+<li>encoder 出力に separation module のマスク出力を適用</li>
+<li>1d convolution による decoder</li>
+</ul>
+<p>という構成で分離された各話者音声の予測を行います(詳細は[1])</p>
+<p>ここでは pytorch 上の Conv-TasNet の実装[2] を使って試みたいくつかの実験結果を紹介します</p>
+<h2>簡単な信号の分離</h2>
+<p>実装[2] のデフォルトのハイパーパラメータによる Conv-TasNet で</p>
+<ul>
+<li>signal 1: 少しノイズを加えた 550hz の正弦波 4秒</li>
+<li>signal 2: 3khz 程度から周波数が下降していくwhistler 波を模擬した信号 4秒</li>
+</ul>
+<p>を合成した信号を100 epoch 程学習して信号分離の様子をみてみました</p>
+<div class="highlight"><pre><span></span><code>        fc = 550
+        ph_noise = np.random.normal(0, 0.01)
+        amb_noise =  np.random.normal(0, 0.05, n_steps)
+        sig1 = np.sin(2*np.pi*fc*np.arange(0,t_step*n_steps,t_step)+ph_noise) + amb_noise
+        sig1 = 0.1*sig1/np.max(np.abs(sig1))
+        alpha = np.random.uniform(2350.0,2450.0)
+        t_start = np.random.uniform(0.65,0.725)
+        sig2 = np.sin(2*np.pi*alpha/np.arange(t_start,t_start+t_step*n_steps,t_step))
+        sig2 = 0.1*sig2*window
+        mix = (sig1 + sig2)
+</code></pre></div>
+
+<p>t_step と n_steps は次のように定義されています</p>
+<div class="highlight"><pre><span></span><code>sr = 12000
+t_step = 1.0/sr
+n_steps = 4*sr
+</code></pre></div>
+
+<p>また window は signal 2 の不要な部分を減衰させるための窓関数を表現するリストでこんな形をしています</p>
+<p><img src="../images/synth-window.png" alt="a window function" width="320"></p>
+<p>このような (mix, sig1, sig2)を1000個生成し900個を学習に100個を検証に使いました</p>
+<p>学習後に検証データの一つで合成信号とConv-TasNet で処理した信号を見ると</p>
+<p><img src="../images/simple-mixed-signal.png" alt="a very simple example of mixed sound" width="640">
+<em>合成信号</em></p>
+<p><img src="../images/simple-speaker1-signal.png" alt="a very simple example of sparated sound 1" width="640">
+<em>話者1</em></p>
+<p><img src="../images/simple-speaker2-signal.png" alt="a very simple example of separated sound 2" width="640">
+<em>話者2</em></p>
+<p>という分離結果になりました</p>
+<h1>References</h1>
+<p>[1] <a href="https://doi.org/10.48550/arXiv.1809.07454">Yi Luo, Nima Mesgarani, "Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separation"</a></p>
+<p>[2] <a href="https://github.com/JusperLee/Conv-TasNet.git">https://github.com/JusperLee/Conv-TasNet.git</a></p>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="../look-for-signal-4.html" rel="bookmark"
+                               title="Permalink to 信号を探して(4)">信号を探して(4)</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2026-01-06T00:00:00+09:00">
                 Published: 火 06 1月 2026
@@ -30,39 +109,15 @@
                 </address>
         <p>In <a href="../category/articles.html">articles</a>.</p>
 <p>tags: <a href="../tag/ml.html">ML</a> <a href="../tag/elf.html">ELF</a> <a href="../tag/noise.html">noise</a> <a href="../tag/whistler.html">whistler</a> <a href="../tag/memo.html">memo</a> </p>        
-</footer><!-- /.post-info --><h2>ML による信号検知</h2>
+</footer><!-- /.post-info -->                        <h2>ML による信号検知</h2>
 <ul>
 <li><a href="https://kazkojima.github.io/look-for-signal-3.html">信号を探して(3)</a>の続き</li>
+<li>(続きは<a href="https://kazkojima.github.io/conv-tas-net.html">信号を探して(5)</a>)</li>
 </ul>
-<p>磁気ピックアップで得られた ELF 信号中のノイズに埋もれた目的信号の検出に ML を使えないかというのをいろいろ試してきたのですがなかなかうまくいっていません</p>
-<p>現在までの試みやその結果についてまとめてみました</p>
-<p>すでに<a href="https://kazkojima.github.io/noise-learning.html">ノイズの学習</a>で実験したように LSTM でELF 信号中のノイズの予測器をつくることは簡単なのですが、困ったことに目的とする whistler wave 信号は短い時間では線スペクトルを持つノイズ成分に近いため、単純な LSTM や TCN ではノイズと同様に予測されてしまいノイズとの分離ができません</p>
-<p>ノイズリダクションに使われる例が多い LSTM autoencoder モデルもこの場合のように</p>
-<ul>
-<li>ノイズと目的信号のレベルが近い</li>
-<li>目的信号が短い時間ではノイズと区別が難しい</li>
-</ul>
-<p>という条件では良い結果が得られませんでした</p>
-<p>通常のタイムステップの LSTM や TCN では目的信号とノイズの位相情報の扱いがうまくいかないので大きなタイムステップを持つ LSTM や TCN だと良くなりそうなのですがこれは普通の計算資源では実現が難しそうです</p>
-<p>位相情報の扱いが精密だとされる DeepFilterNet や Conv-TasNet を試すべきかもしれません</p>
-<p>今のところ線スペクトルを持つ成分の分離/削減についてはクラシカルな線形予測器を上回るような結果が出せていません</p>
-<p>別の方向として線スペクトルノイズのリダクションを線形予測器で行った後での目標信号の検知に ML が使えないかというのを文献[1]をヒントに試してみました</p>
-<p>文献[1]では音響信号のデノイズを行うために音響信号を STFT で周波数領域に変換して U-Net autoencoder でノイズのない信号を予測し、最後に inverse STFT で時間領域の音響信号に戻すことでノイズリダクションを行っています</p>
-<p>そこで  whistler wave の形をしたいろいろな synthetic signal を作り</p>
-<p><img src="../images/synthetic-whistler-signal.png" alt="a simple synthetic whistler signal with small noise" width="640"></p>
-<p>それと線スペクトルノイズのリダクションまでを行った複数の実際の ELF 信号と足し合わせてノイズのある信号とし、そこから whistler wave 信号を復元するように U-Net autoencoder を学習させました</p>
-<p>実際に観測された whistler 波とELFノイズを合成し線形予測器でノイズリダクションした後、学習済みモデルで信号を予測してみました</p>
-<p><img src="../images/unet-predict-signal.png" alt="an example of prediction with U-Net autoencoder" width="640"></p>
-<p>この結果を見てもわかるのですがうまく予測されている信号、予測できなかった信号の他に偽の信号が生成されることがあります</p>
-<p>現在の学習データだと学習時に epoch を増やしすぎると偽の信号が生成されやすくなるようです</p>
-<p>なおモデルは convolution 層後の活性化関数として ReLU ではなく leaky ReLU を使っていますが、その方が学習時の挙動が落ち着いているようです. GeLU でも同様の傾向を示していました</p>
-<h1>References</h1>
-<p>[1] https://github.com/rdadlaney/Audio-Denoiser-CNN.git</p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+<p>磁気ピックアップで得られた ELF 信号中のノイズに …</p>
+                        <a class="readmore" href="../look-for-signal-4.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
                 <li><article class="hentry">
                     <header>

@@ -21,6 +21,43 @@
                         <ol id="posts-list" class="hfeed" start="9">
                 <li><article class="hentry">
                     <header>
+                        <h1><a href="../cuda-jl.html" rel="bookmark"
+                               title="Permalink to Jetson nanoでCUDAnative.jl">Jetson nanoでCUDAnative.jl</a></h1>
+                    </header>
+
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2020-05-16T00:00:00+09:00">
+                Published: 土 16 5月 2020
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
+                </address>
+        <p>In <a href="../category/articles.html">articles</a>.</p>
+<p>tags: <a href="../tag/julia.html">Julia</a> <a href="../tag/cuda.html">CUDA</a> <a href="../tag/memo.html">memo</a> </p>        
+</footer><!-- /.post-info -->                        <h2>Jetson nanoでCUDAnative.jlのサンプルを実行</h2>
+<h1>Juliaのインストール</h1>
+<ul>
+<li>https://julialang.org/downloads/からGeneric Linux Binaries for ARMの64-bit(AArch64)用のJulia(例えばjulia-1.4.1-linux-aarch64.tar.gz)をdownload</li>
+<li>それを例えば/optに展開し/opt/julia-1.4.1/binをPATHに追加</li>
+</ul>
+<h1>Juliaで必要なパッケージを追加</h1>
+<ul>
+<li>Juliaを起動してpkgモードで</li>
+</ul>
+<div class="highlight"><pre><span></span><code>add CUDAnative
+add CUDAdrv
+add CuArrays
+</code></pre></div>
+
+<h1>Sampleを走らせる …</h1>
+                        <a class="readmore" href="../cuda-jl.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+
+                <li><article class="hentry">
+                    <header>
                         <h1><a href="../esp-idf-components.html" rel="bookmark"
                                title="Permalink to M5Stack-IDF = ESP-IDF + arduino の仕掛け">M5Stack-IDF = ESP-IDF + arduino の仕掛け</a></h1>
                     </header>
@@ -260,36 +297,6 @@
 <p>ただ次のことに注意:</p>
 <p>絶対値1のQuaternion q, q'を3次元球面上の点だと思うとq' …</p>
                         <a class="readmore" href="../madgwick-filter-memo.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="../testing-espnow.html" rel="bookmark"
-                               title="Permalink to Testing ESPNOW">Testing ESPNOW</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-10-28T00:00:00+09:00">
-                Published: 土 28 10月 2017
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="../author/kaz-kojima.html">Kaz Kojima</a>
-                </address>
-        <p>In <a href="../category/articles.html">articles</a>.</p>
-<p>tags: <a href="../tag/esp32.html">esp32</a> </p>        
-</footer><!-- /.post-info -->                        <p>ESP32の <a class="reference external" href="../esp32-phy.html">etherボード</a> とESP32の <a class="reference external" href="../images/bee3-board.png">センサボード</a>  でESPNOWでの通信を試して挙動を調べました.  全体の構成は</p>
-<img alt="esp32 ether-espnow brigde" src="../images/ether-now-bridge.png" style="width: 640px; height: 400px;" />
-<p>でPCの上ではarducopterとテスト用のUDPサーバの両方を動かして試してみました.</p>
-<p><em>結果</em></p>
-<p>現在のESP32のespnowは次のような挙動をするようです.</p>
-<blockquote>
-<ul class="simple">
-<li>近接で通信した場合latencyは2ms位で安定している</li>
-<li>送信と送信の間で間隔を空ける …</li></ul></blockquote>
-                        <a class="readmore" href="../testing-espnow.html">read more</a>
                     </div><!-- /.entry-content -->
                 </article></li>
                     </ol><!-- /#posts-list -->
